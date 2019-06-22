@@ -24,7 +24,7 @@ def calculate_overtones_share(timbre_spec: TimbreSpec) -> float:
     return overtones_share
 
 
-def validate_timbre_spec(timbre_spec: TimbreSpec) -> type(None):
+def validate_timbre_spec(timbre_spec: TimbreSpec) -> None:
     """
     Validate specification of a timbre.
 
