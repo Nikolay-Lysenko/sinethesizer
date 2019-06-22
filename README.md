@@ -2,4 +2,4 @@
 
 ## Overview
 
-It is an extendable virtual synthesizer that is targeted to support automated music creation.
+It is a virtual analog synthesizer that provides a flexible way to create new digital instruments with their own timbres.
