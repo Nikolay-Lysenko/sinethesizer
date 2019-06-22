@@ -1,0 +1,5 @@
+-r base.txt
+codecov==2.0.15
+coverage==4.5.3
+pytest==4.6.3
+pytest-cov==2.7.1
