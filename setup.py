@@ -23,6 +23,7 @@ setup(
     version='0.1.0',
     description=description,
     long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/Nikolay-Lysenko/sinethesizer',
     author='Nikolay Lysenko',
     author_email='nikolay-lysenco@yandex.ru',
