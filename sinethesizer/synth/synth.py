@@ -13,8 +13,8 @@ from sinethesizer.synth.utils import calculate_overtones_share
 
 
 def synthesize(
-        timbre_spec: TimbreSpec,
-        frequency: int, volume: float, duration: int, frame_rate: int = 44100
+        timbre_spec: TimbreSpec, frequency: float, volume: float,
+        duration: float, frame_rate: int = 44100
 ) -> np.ndarray:
     """
     Synthesize sound fragment that corresponds to one note.

@@ -1,0 +1,62 @@
+{
+  "frame_rate": 44100,
+  "silence_at_the_end": 2,
+  "events": [
+    {
+      "timbre": "sine_with_harmonics",
+      "frequency": 261.63,
+      "volume": 1,
+      "start_time": 1,
+      "duration": 1
+    },
+    {
+      "timbre": "sine_with_harmonics",
+      "frequency": 293.66,
+      "volume": 1,
+      "start_time": 2,
+      "duration": 1
+    },
+    {
+      "timbre": "sine_with_harmonics",
+      "frequency": 329.63,
+      "volume": 1,
+      "start_time": 3,
+      "duration": 1
+    },
+    {
+      "timbre": "sine_with_harmonics",
+      "frequency": 349.23,
+      "volume": 1,
+      "start_time": 4,
+      "duration": 1
+    },
+    {
+      "timbre": "sine_with_harmonics",
+      "frequency": 392,
+      "volume": 1,
+      "start_time": 5,
+      "duration": 1
+    },
+    {
+      "timbre": "sine_with_harmonics",
+      "frequency": 440,
+      "volume": 1,
+      "start_time": 6,
+      "duration": 1
+    },
+    {
+      "timbre": "sine_with_harmonics",
+      "frequency": 493.88,
+      "volume": 1,
+      "start_time": 7,
+      "duration": 1
+    },
+    {
+      "timbre": "sine_with_harmonics",
+      "frequency": 523.25,
+      "volume": 1,
+      "start_time": 8,
+      "duration": 1
+    }
+  ]
+}

@@ -6,7 +6,7 @@ Author: Nikolay Lysenko
 
 
 import json
-from typing import Dict, Any
+from typing import Tuple, Dict, Any
 
 import numpy as np
 
@@ -63,14 +63,14 @@ def add_event_to_timeline(
     return timeline
 
 
-def convert_json_to_timeline(input_path: str) -> np.ndarray:
+def convert_json_to_timeline(input_path: str) -> Tuple[np.ndarray, int]:
     """
     Create pressure timeline based on JSON file.
 
     :param input_path:
         path to JSON file of special schema
     :return:
-        sound represented as pressure timeline
+        sound represented as pressure timeline and its frame rate
     """
     with open(input_path) as input_file:
         input_data = json.load(input_file)
@@ -78,4 +78,4 @@ def convert_json_to_timeline(input_path: str) -> np.ndarray:
     frame_rate = input_data['frame_rate']
     for event in input_data['events']:
         timeline = add_event_to_timeline(timeline, event, frame_rate)
-    return timeline
+    return timeline, frame_rate

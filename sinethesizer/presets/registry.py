@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from basic_timbres import sine_with_harmonics
+from sinethesizer.presets.basic_timbres import sine_with_harmonics
 
 
 TIMBRES_REGISTRY = {
