@@ -38,6 +38,10 @@ def validate_timbre_spec(timbre_spec: TimbreSpec) -> None:
         raise ValueError(
             f"Unknown name of fundamental waveform: {fundamental_waveform}."
         )
+
+    if len(timbre_spec.overtones_specs) == 0:
+        return
+
     for overtone_spec in timbre_spec.overtones_specs:
         if overtone_spec.waveform not in NAME_TO_WAVEFORM.keys():
             raise ValueError(
@@ -56,4 +60,3 @@ def validate_timbre_spec(timbre_spec: TimbreSpec) -> None:
             "Volume share of overtones must be inside [0, 1), "
             f"found: {overtones_share}."
         )
-

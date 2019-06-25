@@ -5,6 +5,8 @@ Author: Nikolay Lysenko
 """
 
 
+from math import ceil
+
 import numpy as np
 
 from sinethesizer.synth.timbres import TimbreSpec
@@ -32,7 +34,7 @@ def synthesize(
     :return:
         sound wave represented as timeline of pressure deviations
     """
-    duration_in_frames = duration * frame_rate
+    duration_in_frames = ceil(duration * frame_rate)
     envelope = timbre_spec.fundamental_volume_envelope_fn(duration_in_frames)
     overtones_share = calculate_overtones_share(timbre_spec)
     fundamental_share = 1 - overtones_share
