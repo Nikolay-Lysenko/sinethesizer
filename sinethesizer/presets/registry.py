@@ -6,12 +6,13 @@ Author: Nikolay Lysenko
 
 
 from sinethesizer.presets.basic_timbres import (
-    sine, define_sine_with_n_harmonics
+    sine, poor_organ, define_sine_with_n_harmonics
 )
 
 
 TIMBRES_REGISTRY = {
-    'sine': sine
+    'sine': sine,
+    'poor_organ': poor_organ
 }
 
 max_n = 5
