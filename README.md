@@ -6,6 +6,13 @@
 
 It is a virtual analog synthesizer that provides a flexible way to create new digital instruments with their own timbres.
 
+The list of implemented and planned features is as follows:
+- [x] High-level input format with enough freedom for user
+- [x] Stereo sound
+- [ ] Rich collection of presets
+- [ ] Noises and drums
+- [ ] Sound effects (e.g., filters, chorus, overdrive, etc)
+
 ## Installation
 
 To install a stable version, run:

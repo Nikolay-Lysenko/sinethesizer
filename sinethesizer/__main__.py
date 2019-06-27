@@ -55,11 +55,11 @@ def main():
         for _, timbre_spec in TIMBRES_REGISTRY.items():
             validate_timbre_spec(timbre_spec)
     with open(cli_args.config_path) as config_file:
-        config = json.load(config_file)
-    timeline, frame_rate = convert_tsv_to_timeline(
-        cli_args.input_path, config['frame_rate'], config['tail_silence']
+        settings = json.load(config_file)
+    timeline = convert_tsv_to_timeline(cli_args.input_path, settings)
+    write_timeline_to_wav(
+        cli_args.output_path, timeline, settings['frame_rate']
     )
-    write_timeline_to_wav(cli_args.output_path, timeline, frame_rate)
 
 
 if __name__ == '__main__':

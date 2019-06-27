@@ -24,4 +24,4 @@ def write_timeline_to_wav(
     :return:
         None
     """
-    scipy.io.wavfile.write(output_path, frame_rate, timeline)
+    scipy.io.wavfile.write(output_path, frame_rate, timeline.T)

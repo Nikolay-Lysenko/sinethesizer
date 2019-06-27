@@ -1,9 +1,9 @@
 timbre	start_time	duration	frequency	volume	location
 sine_with_3_harmonics	1	1	C4	0.7	0
-sine_with_3_harmonics	2	1	D4	0.7	0.2
-sine_with_3_harmonics	3	1	E4	0.7	-0.2
-sine_with_3_harmonics	4	1	F4	0.7	0.4
-sine_with_3_harmonics	5	1	G4	0.7	-0.4
-sine_with_3_harmonics	6	1	A4	0.7	0.6
-sine_with_3_harmonics	7	1	B4	0.7	-0.6
-sine_with_3_harmonics	8	1	C5	0.7	0.8
+sine_with_3_harmonics	2	1	D4	0.7	0.1
+sine_with_3_harmonics	3	1	E4	0.7	-0.1
+sine_with_3_harmonics	4	1	F4	0.7	0.2
+sine_with_3_harmonics	5	1	G4	0.7	-0.2
+sine_with_3_harmonics	6	1	A4	0.7	0.3
+sine_with_3_harmonics	7	1	B4	0.7	-0.3
+sine_with_3_harmonics	8	1	C5	0.7	0.4

@@ -6,7 +6,7 @@ Author: Nikolay Lysenko
 
 
 from math import ceil
-from typing import List, Tuple, Dict, Any, Union
+from typing import List, Dict, Any, Union
 
 import numpy as np
 
@@ -35,12 +35,14 @@ def create_empty_timeline(
     )
     duration_in_seconds = max_event_time + tail_silence
     duration_in_frames = ceil(frame_rate * duration_in_seconds)
-    timeline = np.zeros(duration_in_frames)
+    mono_timeline = np.zeros(duration_in_frames)
+    timeline = np.vstack((mono_timeline, mono_timeline))
     return timeline
 
 
 def add_event_to_timeline(
-        timeline: np.ndarray, event: Dict[str, Any], frame_rate: int
+        timeline: np.ndarray, event: Dict[str, Any],
+        max_channel_delay: float, frame_rate: int
 ) -> np.ndarray:
     """
     Add sound event (say, played note) to timeline.
@@ -49,6 +51,9 @@ def add_event_to_timeline(
         timeline of pressure deviations
     :param event:
         parameters of sound piece that should be added
+    :param max_channel_delay:
+        maximum possible delay between channels in seconds;
+        it is a measure of potential size of space occupied by sound sources
     :param frame_rate:
         number of frames per second
     :return:
@@ -63,11 +68,16 @@ def add_event_to_timeline(
         frequency,
         event['volume'],
         event['duration'],
+        event['location'],
+        max_channel_delay,
         frame_rate
     )
-    left_padding = np.zeros(ceil(frame_rate * event['start_time']))
-    right_padding = np.zeros(len(timeline) - len(sound) - len(left_padding))
-    sound = np.concatenate((left_padding, sound, right_padding))
+    mono_past_padding = np.zeros(ceil(frame_rate * event['start_time']))
+    past_padding = np.vstack((mono_past_padding, mono_past_padding))
+    n_frames_left = timeline.shape[1] - sound.shape[1] - past_padding.shape[1]
+    mono_future_padding = np.zeros(n_frames_left)
+    future_padding = np.vstack((mono_future_padding, mono_future_padding))
+    sound = np.concatenate((past_padding, sound, future_padding), axis=1)
     timeline += sound
     return timeline
 
@@ -104,28 +114,31 @@ def set_types(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 
 def convert_tsv_to_timeline(
-        input_path: str, frame_rate: int, tail_silence: float
-) -> Tuple[np.ndarray, int]:
+        input_path: str, settings: Dict[str, Any]
+) -> np.ndarray:
     """
     Create pressure timeline based on TSV file.
 
     :param input_path:
         path to JSON file of special schema
-    :param frame_rate:
-        number of frames per second
-    :param tail_silence:
-        number of seconds with silence at the end of the timeline
+    :param settings:
+        global settings for the track
     :return:
-        sound represented as pressure timeline and its frame rate
+        sound represented as pressure timeline
     """
     events = []
     with open(input_path) as input_file:
-        schema = input_file.readline().split('\t')
+        schema = input_file.readline().rstrip().split('\t')
         for line in input_file.readlines():
-            events.append(dict(zip(schema, line.split('\t'))))
+            events.append(dict(zip(schema, line.rstrip().split('\t'))))
     events = set_types(events)
 
-    timeline = create_empty_timeline(events, frame_rate, tail_silence)
+    timeline = create_empty_timeline(
+        events, settings['frame_rate'], settings['tail_silence']
+    )
     for event in events:
-        timeline = add_event_to_timeline(timeline, event, frame_rate)
-    return timeline, frame_rate
+        timeline = add_event_to_timeline(
+            timeline, event,
+            settings['max_channel_delay'], settings['frame_rate']
+        )
+    return timeline

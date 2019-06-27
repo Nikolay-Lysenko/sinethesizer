@@ -16,7 +16,8 @@ from sinethesizer.synth.utils import calculate_overtones_share
 
 def synthesize(
         timbre_spec: TimbreSpec, frequency: float, volume: float,
-        duration: float, frame_rate: int = 44100
+        duration: float, location: float, max_channel_delay: float,
+        frame_rate: int = 44100
 ) -> np.ndarray:
     """
     Synthesize sound fragment that corresponds to one note.
@@ -29,6 +30,12 @@ def synthesize(
         volume of the sound fragment
     :param duration:
         duration of fragment to be generated in seconds
+    :param location:
+        location of sound source;
+        -1 stands for extremely left and 1 stands for extremely right
+    :param max_channel_delay:
+        maximum possible delay between channels in seconds;
+        it is a measure of potential size of space occupied by sound sources
     :param frame_rate:
         number of frames per second
     :return:
@@ -41,16 +48,20 @@ def synthesize(
     sound = generate_wave(
         timbre_spec.fundamental_waveform,
         frequency,
-        frame_rate,
-        volume * fundamental_share * envelope
+        volume * fundamental_share * envelope,
+        location,
+        max_channel_delay,
+        frame_rate
     )
     for overtone_spec in timbre_spec.overtones_specs:
         envelope = overtone_spec.volume_envelope_fn(duration_in_frames)
         overtone_sound = generate_wave(
             overtone_spec.waveform,
             overtone_spec.frequency_ratio * frequency,
-            frame_rate,
-            volume * overtone_spec.volume_share * envelope
+            volume * overtone_spec.volume_share * envelope,
+            location,
+            max_channel_delay,
+            frame_rate
         )
         sound += overtone_sound
     return sound
