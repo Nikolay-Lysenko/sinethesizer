@@ -5,8 +5,8 @@ Author: Nikolay Lysenko
 """
 
 
-from . import timbres, utils, waves
+from . import timbre, utils, waves
 from .synth import synthesize
 
 
-__all__ = ['timbres', 'utils', 'waves', 'synthesize']
+__all__ = ['timbre', 'utils', 'waves', 'synthesize']

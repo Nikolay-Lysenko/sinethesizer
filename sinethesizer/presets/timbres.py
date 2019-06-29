@@ -8,7 +8,7 @@ Author: Nikolay Lysenko
 from functools import partial
 from typing import Tuple
 
-from sinethesizer.synth.timbres import TimbreSpec, OvertoneSpec
+from sinethesizer.synth.timbre import TimbreSpec, OvertoneSpec
 from sinethesizer.presets.adsr_envelopes import (
     relative_adsr, constant_with_linear_ends
 )

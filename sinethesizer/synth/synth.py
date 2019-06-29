@@ -9,7 +9,7 @@ from math import ceil
 
 import numpy as np
 
-from sinethesizer.synth.timbres import TimbreSpec
+from sinethesizer.synth.timbre import TimbreSpec
 from sinethesizer.synth.waves import generate_wave
 from sinethesizer.synth.utils import calculate_overtones_share
 

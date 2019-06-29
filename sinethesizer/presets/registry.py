@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from sinethesizer.presets.basic_timbres import (
+from sinethesizer.presets.timbres import (
     sine, poor_organ, define_sine_with_n_harmonics
 )
 

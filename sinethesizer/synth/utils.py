@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from sinethesizer.synth.timbres import TimbreSpec
+from sinethesizer.synth.timbre import TimbreSpec
 from sinethesizer.synth.waves import NAME_TO_WAVEFORM
 
 
