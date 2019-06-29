@@ -26,12 +26,15 @@ class OvertoneSpec(NamedTuple):
     :param volume_envelope_fn:
         function that maps duration in seconds and frame rate to
         volume envelope for this overtone
+    :param effects:
+        sound effects that are applied to the overtone
     """
 
     waveform: str
     frequency_ratio: float
     volume_share: float
-    volume_envelope_fn: Callable[[float], np.ndarray]
+    volume_envelope_fn: Callable[[float, int], np.ndarray]
+    effects: List[Callable[[np.ndarray, int], np.ndarray]]
 
 
 class TimbreSpec(NamedTuple):
@@ -44,10 +47,13 @@ class TimbreSpec(NamedTuple):
     :param fundamental_volume_envelope_fn:
         function that maps duration in seconds and frame rate to
         volume envelope for the fundamental
+    :param fundamental_effects:
+        sound effects that are applied to the fundamental
     :param overtones_specs:
         list of specifications of overtones
     """
 
     fundamental_waveform: str
-    fundamental_volume_envelope_fn: Callable[[float], np.ndarray]
+    fundamental_volume_envelope_fn: Callable[[float, int], np.ndarray]
+    fundamental_effects: List[Callable[[np.ndarray, int], np.ndarray]]
     overtones_specs: List[OvertoneSpec]

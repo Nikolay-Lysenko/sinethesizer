@@ -12,23 +12,27 @@ from sinethesizer.synth.timbre import TimbreSpec, OvertoneSpec
 from sinethesizer.presets.adsr_envelopes import (
     relative_adsr, constant_with_linear_ends
 )
+from sinethesizer.presets.effects import tremolo
 
 
 sine = TimbreSpec(
     fundamental_waveform='sine',
     fundamental_volume_envelope_fn=constant_with_linear_ends,
+    fundamental_effects=[],
     overtones_specs=[]
 )
 
 poor_organ = TimbreSpec(
     fundamental_waveform='sine',
     fundamental_volume_envelope_fn=constant_with_linear_ends,
+    fundamental_effects=[],
     overtones_specs=[
         OvertoneSpec(
             waveform='sine',
             frequency_ratio=1.5,
             volume_share=0.4,
-            volume_envelope_fn=constant_with_linear_ends
+            volume_envelope_fn=constant_with_linear_ends,
+            effects=[partial(tremolo, frequency=3, amplitude=0.25)]
         )
     ]
 )
@@ -53,6 +57,7 @@ def define_sine_with_n_harmonics(n: int) -> Tuple[str, TimbreSpec]:
             sustain_level=0.6,
             release_share=0.2
         ),
+        fundamental_effects=[],
         overtones_specs=[
             OvertoneSpec(
                 waveform='sine',
@@ -64,7 +69,8 @@ def define_sine_with_n_harmonics(n: int) -> Tuple[str, TimbreSpec]:
                     decay_share=0.15,
                     sustain_level=0.6,
                     release_share=0.1 * (i + 1)
-                )
+                ),
+                effects=[]
             )
             for i in range(2, n+2)
         ]

@@ -5,38 +5,11 @@ Author: Nikolay Lysenko
 """
 
 
-import json
-
 import numpy as np
 
 from sinethesizer.synth.timbre import TimbreSpec
 from sinethesizer.synth.waves import generate_wave
 from sinethesizer.synth.utils import calculate_overtones_share
-from sinethesizer.presets import EFFECTS_REGISTRY
-
-
-def apply_effects(
-        sound: np.ndarray, frame_rate: int, effects_def: str
-) -> np.ndarray:
-    """
-    Apply sound effects.
-
-    :param sound:
-        sound to be modified
-    :param frame_rate:
-        number of frames per second
-    :param effects_def:
-        jSON string with list of effects to be applied
-    :return:
-        modified sound
-    """
-    if not effects_def:
-        return sound
-    effects = json.loads(effects_def)
-    for effect in effects:
-        effect_name = effect.pop('name')
-        sound = EFFECTS_REGISTRY[effect_name](sound, frame_rate, **effect)
-    return sound
 
 
 def synthesize(
@@ -77,6 +50,8 @@ def synthesize(
         max_channel_delay,
         frame_rate
     )
+    for effect_fn in timbre_spec.fundamental_effects:
+        sound = effect_fn(sound, frame_rate)
     for overtone_spec in timbre_spec.overtones_specs:
         envelope = overtone_spec.volume_envelope_fn(duration, frame_rate)
         overtone_sound = generate_wave(
@@ -87,5 +62,7 @@ def synthesize(
             max_channel_delay,
             frame_rate
         )
+        for effect_fn in overtone_spec.effects:
+            overtone_sound = effect_fn(overtone_sound, frame_rate)
         sound += overtone_sound
     return sound

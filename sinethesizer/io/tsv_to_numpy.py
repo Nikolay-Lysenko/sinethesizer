@@ -6,13 +6,14 @@ Author: Nikolay Lysenko
 
 
 import os
+import json
 from math import ceil
 from typing import List, Dict, Any, Union
 
 import numpy as np
 
-from sinethesizer.synth import apply_effects, synthesize
-from sinethesizer.presets import TIMBRES_REGISTRY
+from sinethesizer.synth import synthesize
+from sinethesizer.presets import EFFECTS_REGISTRY, TIMBRES_REGISTRY
 from sinethesizer.io.utils import convert_note_to_frequency
 
 
@@ -39,6 +40,30 @@ def create_empty_timeline(
     mono_timeline = np.zeros(duration_in_frames)
     timeline = np.vstack((mono_timeline, mono_timeline))
     return timeline
+
+
+def apply_effects(
+        sound: np.ndarray, frame_rate: int, effects_def: str
+) -> np.ndarray:
+    """
+    Apply sound effects.
+
+    :param sound:
+        sound to be modified
+    :param frame_rate:
+        number of frames per second
+    :param effects_def:
+        jSON string with list of effects to be applied
+    :return:
+        modified sound
+    """
+    if not effects_def:
+        return sound
+    effects = json.loads(effects_def)
+    for effect in effects:
+        effect_name = effect.pop('name')
+        sound = EFFECTS_REGISTRY[effect_name](sound, frame_rate, **effect)
+    return sound
 
 
 def add_event_to_timeline(

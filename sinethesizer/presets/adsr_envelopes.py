@@ -35,17 +35,26 @@ def relative_adsr(
     """
     duration_in_frames = ceil(duration * frame_rate)
 
-    n_frames_with_attack = int(round(attack_share * duration_in_frames))
-    step = 1 / n_frames_with_attack
-    attack = np.arange(0, 1, step)
+    if attack_share > 0:
+        n_frames_with_attack = int(round(attack_share * duration_in_frames))
+        step = 1 / n_frames_with_attack
+        attack = np.arange(0, 1, step)
+    else:
+        attack = np.array([])
 
-    n_frames_with_decay = int(round(decay_share * duration_in_frames))
-    step = (1 - sustain_level) / n_frames_with_decay
-    decay = np.arange(1, sustain_level, -step)
+    if decay_share > 0:
+        n_frames_with_decay = int(round(decay_share * duration_in_frames))
+        step = (1 - sustain_level) / n_frames_with_decay
+        decay = np.arange(1, sustain_level, -step)
+    else:
+        decay = np.array([])
 
-    n_frames_with_release = int(round(release_share * duration_in_frames))
-    step = sustain_level / n_frames_with_release
-    release = np.arange(sustain_level, 0, -step)
+    if release_share > 0:
+        n_frames_with_release = int(round(release_share * duration_in_frames))
+        step = sustain_level / n_frames_with_release
+        release = np.arange(sustain_level, 0, -step)
+    else:
+        release = np.array([])
 
     n_frames_with_sustain = (
         duration_in_frames - len(attack) - len(decay) - len(release)
@@ -102,12 +111,21 @@ def absolute_adsr(
         )
         return envelope
 
-    step = 1 / max_n_frames_with_attack
-    attack = np.arange(0, 1, step)
-    step = (1 - sustain_level) / max_n_frames_with_decay
-    decay = np.arange(1, sustain_level, -step)
-    step = sustain_level / max_n_frames_with_release
-    release = np.arange(sustain_level, 0, -step)
+    if max_n_frames_with_attack > 0:
+        step = 1 / max_n_frames_with_attack
+        attack = np.arange(0, 1, step)
+    else:
+        attack = np.array([])
+    if max_n_frames_with_decay > 0:
+        step = (1 - sustain_level) / max_n_frames_with_decay
+        decay = np.arange(1, sustain_level, -step)
+    else:
+        decay = np.array([])
+    if max_n_frames_with_release > 0:
+        step = sustain_level / max_n_frames_with_release
+        release = np.arange(sustain_level, 0, -step)
+    else:
+        release = np.array([])
     n_frames_with_sustain = (
         duration_in_frames - len(attack) - len(decay) - len(release)
     )
