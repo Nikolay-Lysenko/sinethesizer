@@ -41,8 +41,7 @@ def synthesize(
     :return:
         sound wave represented as timeline of pressure deviations
     """
-    duration_in_frames = ceil(duration * frame_rate)
-    envelope = timbre_spec.fundamental_volume_envelope_fn(duration_in_frames)
+    envelope = timbre_spec.fundamental_volume_envelope_fn(duration, frame_rate)
     overtones_share = calculate_overtones_share(timbre_spec)
     fundamental_share = 1 - overtones_share
     sound = generate_wave(
@@ -54,7 +53,7 @@ def synthesize(
         frame_rate
     )
     for overtone_spec in timbre_spec.overtones_specs:
-        envelope = overtone_spec.volume_envelope_fn(duration_in_frames)
+        envelope = overtone_spec.volume_envelope_fn(duration, frame_rate)
         overtone_sound = generate_wave(
             overtone_spec.waveform,
             overtone_spec.frequency_ratio * frequency,

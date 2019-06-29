@@ -5,7 +5,7 @@
 
 ## Overview
 
-It is a virtual analog synthesizer that provides a flexible way to create new digital instruments with their own timbres.
+It is a digital additive synthesizer that provides a flexible way to create new virtual instruments with their own timbres.
 
 The list of implemented and planned features is as follows:
 - [x] High-level input format with enough freedom for user
@@ -35,7 +35,7 @@ Column | Description
 :-----: | :---------:
 timbre | Name of a registered timbre
 start_time | Time when event starts (in seconds)
-duration | Duration of event (in seconds)
+duration | Duration of event (in seconds) including release stage
 frequency | Frequency of sound (in Hz) or note (like A4); some timbres may ignore it
 volume | Relative volume of the most loud piece of event
 location | Position of sound source; a float between -1 and 1 where -1 stands for left channel only and 1 stands for right channel only

@@ -9,14 +9,14 @@ from functools import partial
 from typing import Tuple
 
 from sinethesizer.synth.timbres import TimbreSpec, OvertoneSpec
-from sinethesizer.presets.basic_envelopes import (
-    constant_with_linear_ends, wide_spike
+from sinethesizer.presets.adsr_envelopes import (
+    relative_adsr, constant_with_linear_ends
 )
 
 
 sine = TimbreSpec(
     fundamental_waveform='sine',
-    fundamental_volume_envelope_fn=wide_spike,
+    fundamental_volume_envelope_fn=constant_with_linear_ends,
     overtones_specs=[]
 )
 
@@ -47,7 +47,11 @@ def define_sine_with_n_harmonics(n: int) -> Tuple[str, TimbreSpec]:
     timbre_spec = TimbreSpec(
         fundamental_waveform='sine',
         fundamental_volume_envelope_fn=partial(
-            constant_with_linear_ends, end_share=0.1
+            relative_adsr,
+            attack_share=0.15,
+            decay_share=0.15,
+            sustain_level=0.6,
+            release_share=0.2
         ),
         overtones_specs=[
             OvertoneSpec(
@@ -55,7 +59,11 @@ def define_sine_with_n_harmonics(n: int) -> Tuple[str, TimbreSpec]:
                 frequency_ratio=i,
                 volume_share=0.2 / 2 ** (i-2),
                 volume_envelope_fn=partial(
-                    constant_with_linear_ends, end_share=0.1 * i
+                    relative_adsr,
+                    attack_share=0.15,
+                    decay_share=0.15,
+                    sustain_level=0.6,
+                    release_share=0.1 * (i + 1)
                 )
             )
             for i in range(2, n+2)

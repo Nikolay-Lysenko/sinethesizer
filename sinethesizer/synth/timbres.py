@@ -24,8 +24,8 @@ class OvertoneSpec(NamedTuple):
         including the fundamental) that is taken by the overtone
         if all partials have unit volume on their envelopes
     :param volume_envelope_fn:
-        function that maps duration in frames to array of relative volumes
-        of time frames
+        function that maps duration in seconds and frame rate to
+        volume envelope for this overtone
     """
 
     waveform: str
@@ -42,8 +42,8 @@ class TimbreSpec(NamedTuple):
         form of fundamental wave;
         it can be one of 'sine', 'square', 'triangle', and 'sawtooth'
     :param fundamental_volume_envelope_fn:
-        function that maps duration in frames to array of relative volumes
-        of time frames for the fundamental
+        function that maps duration in seconds and frame rate to
+        volume envelope for the fundamental
     :param overtones_specs:
         list of specifications of overtones
     """

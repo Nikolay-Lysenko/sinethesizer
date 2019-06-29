@@ -28,7 +28,7 @@ setup(
     author='Nikolay Lysenko',
     author_email='nikolay-lysenco@yandex.ru',
     license='MIT',
-    keywords='synthesizer analog_synthesizer music timbre',
+    keywords='synthesizer analog_synthesizer additive_synthesis music timbre',
     packages=find_packages(exclude=['tests', 'docs']),
     python_requires='>=3.6',
     install_requires=['numpy', 'scipy']
