@@ -5,12 +5,13 @@ Author: Nikolay Lysenko
 """
 
 
+import os
 from math import ceil
 from typing import List, Dict, Any, Union
 
 import numpy as np
 
-from sinethesizer.synth import synthesize
+from sinethesizer.synth import apply_effects, synthesize
 from sinethesizer.presets import TIMBRES_REGISTRY
 from sinethesizer.io.utils import convert_note_to_frequency
 
@@ -72,6 +73,7 @@ def add_event_to_timeline(
         max_channel_delay,
         frame_rate
     )
+    sound = apply_effects(sound, frame_rate, event['effects'])
     mono_past_padding = np.zeros(ceil(frame_rate * event['start_time']))
     past_padding = np.vstack((mono_past_padding, mono_past_padding))
     n_frames_left = timeline.shape[1] - sound.shape[1] - past_padding.shape[1]
@@ -128,9 +130,11 @@ def convert_tsv_to_timeline(
     """
     events = []
     with open(input_path) as input_file:
-        schema = input_file.readline().rstrip().split('\t')
+        schema = input_file.readline().rstrip(os.linesep).split('\t')
         for line in input_file.readlines():
-            events.append(dict(zip(schema, line.rstrip().split('\t'))))
+            events.append(
+                dict(zip(schema, line.rstrip(os.linesep).split('\t')))
+            )
     events = set_types(events)
 
     timeline = create_empty_timeline(

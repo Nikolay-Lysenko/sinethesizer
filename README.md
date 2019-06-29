@@ -25,7 +25,7 @@ pip install sinethesizer
 
 To create a track, two things must be done:
 * The track should be defined as [tab-separated file](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/scale.tsv);
-* All used for this track timbres should be [defined](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/sinethesizer/presets/basic_timbres.py) and [registered](https://github.com/Nikolay-Lysenko/sinethesizer//blob/master/sinethesizer/presets/registry.py).
+* All used for this track [timbres](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/sinethesizer/presets/timbres.py) and [effects](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/sinethesizer/presets/effects.py) should be defined and [registered](https://github.com/Nikolay-Lysenko/sinethesizer//blob/master/sinethesizer/presets/registry.py).
 
 Above links direct to simple examples that demonstrate how to do this. Anyway, for the sake of clarity, let us discuss some steps in details.
 
@@ -39,6 +39,7 @@ duration | Duration of event (in seconds) including release stage
 frequency | Frequency of sound (in Hz) or note (like A4); some timbres may ignore it
 volume | Relative volume of the most loud piece of event
 location | Position of sound source; a float between -1 and 1 where -1 stands for left channel only and 1 stands for right channel only
+effects | List of effects in JSON; each record must have field "name" with registered effect name and, optionally, parameters of the effect; left this field blank if no effects are needed
 
 After all preparations are done, synthesizer can be launched:
 ```

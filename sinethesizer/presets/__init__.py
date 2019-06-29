@@ -5,8 +5,8 @@ Author: Nikolay Lysenko
 """
 
 
-from . import adsr_envelopes, timbres
-from .registry import TIMBRES_REGISTRY
+from . import adsr_envelopes, effects, timbres
+from .registry import EFFECTS_REGISTRY, TIMBRES_REGISTRY
 
 
-__all__ = ['adsr_envelopes', 'timbres', 'TIMBRES_REGISTRY']
+__all__ = ['adsr_envelopes', 'timbres', 'EFFECTS_REGISTRY', 'TIMBRES_REGISTRY']
