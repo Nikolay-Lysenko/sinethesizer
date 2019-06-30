@@ -5,20 +5,21 @@ Author: Nikolay Lysenko
 """
 
 
-from sinethesizer.presets.effects import tremolo
+from sinethesizer.presets.effects import overdrive, tremolo
 from sinethesizer.presets.timbres import (
     sine, poor_organ, define_sine_with_n_harmonics
 )
 
 
 EFFECTS_REGISTRY = {
+    'overdrive': overdrive,
     'tremolo': tremolo
 }
 
 
 TIMBRES_REGISTRY = {
-    'sine': sine,
-    'poor_organ': poor_organ
+    'poor_organ': poor_organ,
+    'sine': sine
 }
 
 max_n = 5
