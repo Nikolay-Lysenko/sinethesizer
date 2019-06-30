@@ -6,8 +6,12 @@ Author: Nikolay Lysenko
 
 
 from . import utils
-from .tsv_to_numpy import convert_tsv_to_timeline
+from .json_to_timbre_specs import create_timbres_registry
 from .numpy_to_wav import write_timeline_to_wav
+from .tsv_to_numpy import convert_tsv_to_timeline
 
 
-__all__ = ['utils', 'convert_tsv_to_timeline', 'write_timeline_to_wav']
+__all__ = [
+    'convert_tsv_to_timeline', 'create_timbres_registry',
+    'utils', 'write_timeline_to_wav'
+]

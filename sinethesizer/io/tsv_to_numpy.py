@@ -12,8 +12,8 @@ from typing import List, Dict, Any, Union
 
 import numpy as np
 
-from sinethesizer.synth import synthesize
-from sinethesizer.presets import EFFECTS_REGISTRY, TIMBRES_REGISTRY
+from sinethesizer.synth import synthesize, get_effects_registry
+from sinethesizer.synth.timbre import TimbreSpec
 from sinethesizer.io.utils import convert_note_to_frequency
 
 
@@ -59,15 +59,17 @@ def apply_effects(
     """
     if not effects_def:
         return sound
+    effects_registry = get_effects_registry()
     effects = json.loads(effects_def)
     for effect in effects:
         effect_name = effect.pop('name')
-        sound = EFFECTS_REGISTRY[effect_name](sound, frame_rate, **effect)
+        sound = effects_registry[effect_name](sound, frame_rate, **effect)
     return sound
 
 
 def add_event_to_timeline(
         timeline: np.ndarray, event: Dict[str, Any],
+        timbres_registry: Dict[str, TimbreSpec],
         max_channel_delay: float, frame_rate: int
 ) -> np.ndarray:
     """
@@ -77,6 +79,8 @@ def add_event_to_timeline(
         timeline of pressure deviations
     :param event:
         parameters of sound piece that should be added
+    :param timbres_registry:
+        mapping from timbre name to its specification
     :param max_channel_delay:
         maximum possible delay between channels in seconds;
         it is a measure of potential size of space occupied by sound sources
@@ -90,7 +94,7 @@ def add_event_to_timeline(
     else:
         frequency = event['frequency']
     sound = synthesize(
-        TIMBRES_REGISTRY[event['timbre']],
+        timbres_registry[event['timbre']],
         frequency,
         event['volume'],
         event['duration'],
@@ -147,7 +151,7 @@ def convert_tsv_to_timeline(
     Create pressure timeline based on TSV file.
 
     :param input_path:
-        path to JSON file of special schema
+        path to TSV file with rows representing events
     :param settings:
         global settings for the track
     :return:
@@ -167,7 +171,7 @@ def convert_tsv_to_timeline(
     )
     for event in events:
         timeline = add_event_to_timeline(
-            timeline, event,
+            timeline, event, settings['timbres_registry'],
             settings['max_channel_delay'], settings['frame_rate']
         )
     return timeline

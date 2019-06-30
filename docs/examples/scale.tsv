@@ -4,6 +4,6 @@ sine_with_3_harmonics	2	1	D4	0.7	0.1
 sine_with_3_harmonics	3	1	E4	0.7	-0.1	
 sine_with_3_harmonics	4	1	F4	0.7	0.2	
 sine_with_3_harmonics	5	1	G4	0.7	-0.2	
-sine_with_3_harmonics	6	1	A4	0.7	0.3	[{"name": "tremolo", "frequency": 6, "amplitude": 0.5}]
+sine_with_3_harmonics	6	1	A4	0.7	0.3	[{"name": "tremolo", "frequency": 6, "amplitude": 0.35}]
 sine_with_3_harmonics	7	1	B4	0.7	-0.3	
 sine_with_3_harmonics	8	1	C5	0.7	0.4	

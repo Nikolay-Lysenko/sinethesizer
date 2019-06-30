@@ -25,7 +25,7 @@ pip install sinethesizer
 
 To create a track, two things must be done:
 * The track should be defined as [tab-separated file](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/scale.tsv);
-* All used for this track [timbres](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/sinethesizer/presets/timbres.py) and [effects](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/sinethesizer/presets/effects.py) should be defined and [registered](https://github.com/Nikolay-Lysenko/sinethesizer//blob/master/sinethesizer/presets/registry.py).
+* All used for this track virtual instruments should be [defined](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/presets/demo.json).
 
 Above links direct to simple examples that demonstrate how to do this. Anyway, for the sake of clarity, let us discuss some steps in details.
 

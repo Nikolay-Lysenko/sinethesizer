@@ -6,12 +6,16 @@ Author: Nikolay Lysenko
 
 
 from math import ceil
+from typing import Callable, Dict
 
 import numpy as np
 
 
+ENVELOPE_FN_TYPE = Callable[[float, int], np.ndarray]
+
+
 def relative_adsr(
-        duration: int, frame_rate: int,
+        duration: float, frame_rate: int,
         attack_share: float = 0.15, decay_share: float = 0.15,
         sustain_level: float = 0.6, release_share: float = 0.2
 ) -> np.ndarray:
@@ -66,7 +70,7 @@ def relative_adsr(
 
 
 def absolute_adsr(
-        duration: int, frame_rate: int,
+        duration: float, frame_rate: int,
         attack_time: float = 0.3, decay_time: float = 0.2,
         sustain_level: float = 0.6, release_time: float = 0.49
 ) -> np.ndarray:
@@ -136,7 +140,7 @@ def absolute_adsr(
 
 
 def spike(
-        duration: int, frame_rate: int, breakpoint_location: float = 0.2
+        duration: float, frame_rate: int, breakpoint_location: float = 0.2
 ) -> np.ndarray:
     """
     Create envelope with amplitude that grows linearly and then falls linearly.
@@ -161,7 +165,7 @@ def spike(
 
 
 def constant_with_linear_ends(
-        duration: int, frame_rate: int,
+        duration: float, frame_rate: int,
         begin_share: float = 0.1, end_share: float = 0.1
 ) -> np.ndarray:
     """
@@ -186,3 +190,19 @@ def constant_with_linear_ends(
         release_share=end_share
     )
     return envelope
+
+
+def get_envelopes_registry() -> Dict[str, ENVELOPE_FN_TYPE]:
+    """
+    Get mapping from envelope names to functions that create them.
+
+    :return:
+        registry of effects
+    """
+    registry = {
+        'absolute_adsr': absolute_adsr,
+        'relative_adsr': relative_adsr,
+        'spike': spike,
+        'constant_with_linear_ends': constant_with_linear_ends
+    }
+    return registry

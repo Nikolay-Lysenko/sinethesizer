@@ -5,9 +5,14 @@ Author: Nikolay Lysenko
 """
 
 
+from typing import Callable, Dict
+
 import numpy as np
 
 from sinethesizer.synth.waves import generate_wave
+
+
+EFFECT_FN_TYPE = Callable[[np.ndarray, int],  np.ndarray]
 
 
 def overdrive(
@@ -76,3 +81,17 @@ def tremolo(
     volume_wave += 1
     sound *= volume_wave
     return sound
+
+
+def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
+    """
+    Get mapping from effect names to functions that apply effects.
+
+    :return:
+        registry of effects
+    """
+    registry = {
+        'overdrive': overdrive,
+        'tremolo': tremolo
+    }
+    return registry
