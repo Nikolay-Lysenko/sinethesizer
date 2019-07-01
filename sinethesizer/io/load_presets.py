@@ -5,9 +5,10 @@ Author: Nikolay Lysenko
 """
 
 
-import json
 from functools import partial
 from typing import List, Dict, Any
+
+import yaml
 
 from sinethesizer.synth import get_effects_registry, get_envelopes_registry
 from sinethesizer.synth.adsr_envelopes import ENVELOPE_FN_TYPE
@@ -94,7 +95,7 @@ def create_timbres_registry(input_path: str) -> Dict[str, Any]:
         timbres registry
     """
     with open(input_path) as input_file:
-        input_data = json.load(input_file)
+        input_data = yaml.safe_load(input_file)
     timbres_registry = {}
     for timbre_data in input_data:
         timbres_registry[timbre_data['name']] = TimbreSpec(

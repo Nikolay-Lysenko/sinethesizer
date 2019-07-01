@@ -1,0 +1,61 @@
+---
+
+# This instrument is just a bare sine wave.
+- name: sine
+  fundamental_waveform: sine
+  fundamental_volume_envelope:
+    name: constant_with_linear_ends
+
+# This instrument is a sine wave with modulated harmonics.
+- name: sine_with_3_harmonics
+  fundamental_waveform: sine
+  fundamental_volume_envelope:
+    name: relative_adsr
+    attack_share: 0.15
+    decay_share: 0.15
+    sustain_level: 0.6
+    release_share: 0.2
+  overtones_specs:
+  - waveform: sine
+    frequency_ratio: 2
+    volume_share: 0.2
+    volume_envelope:
+      name: relative_adsr
+      attack_share: 0.15
+      decay_share: 0.15
+      sustain_level: 0.6
+      release_share: 0.3
+  - waveform: sine
+    frequency_ratio: 3
+    volume_share: 0.1
+    volume_envelope:
+      name: relative_adsr
+      attack_share: 0.15
+      decay_share: 0.15
+      sustain_level: 0.6
+      release_share: 0.4
+  - waveform: sine
+    frequency_ratio: 4
+    volume_share: 0.05
+    volume_envelope:
+      name: relative_adsr
+      attack_share: 0.15
+      decay_share: 0.15
+      sustain_level: 0.6
+      release_share: 0.5
+
+# This instrument resembles organ a bit.
+- name: poor_organ
+  fundamental_waveform: sine
+  fundamental_volume_envelope:
+    name: constant_with_linear_ends
+  overtones_specs:
+  - waveform: sine
+    frequency_ratio: 1.5
+    volume_share: 0.4
+    volume_envelope:
+      name: constant_with_linear_ends
+    effects:
+    - name: tremolo
+      frequency: 3
+      amplitude: 0.25

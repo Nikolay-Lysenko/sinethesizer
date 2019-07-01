@@ -31,5 +31,5 @@ setup(
     keywords='synthesizer analog_synthesizer additive_synthesis music timbre',
     packages=find_packages(exclude=['tests', 'docs']),
     python_requires='>=3.6',
-    install_requires=['numpy', 'scipy']
+    install_requires=['numpy', 'PyYAML', 'scipy']
 )

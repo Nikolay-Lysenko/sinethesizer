@@ -1,5 +1,0 @@
-{
-    "frame_rate": 44100,
-    "tail_silence": 2,
-    "max_channel_delay": 0.02
-}

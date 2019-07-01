@@ -6,7 +6,7 @@ Author: Nikolay Lysenko
 
 
 from . import utils
-from .json_to_timbre_specs import create_timbres_registry
+from .load_presets import create_timbres_registry
 from .numpy_to_wav import write_timeline_to_wav
 from .tsv_to_numpy import convert_tsv_to_timeline
 
