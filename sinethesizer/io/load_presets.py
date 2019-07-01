@@ -1,5 +1,5 @@
 """
-Create timbres based on JSON file.
+Create timbres of virtual instruments based on YAML file.
 
 Author: Nikolay Lysenko
 """
@@ -90,7 +90,7 @@ def create_timbres_registry(input_path: str) -> Dict[str, Any]:
     Create mapping from timbre names to their specifications.
 
     :param input_path:
-        path to JSON file with definitions of timbres
+        path to YAML file with definitions of timbres
     :return:
         timbres registry
     """

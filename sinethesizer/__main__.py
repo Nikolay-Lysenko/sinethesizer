@@ -1,5 +1,5 @@
 """
-Take user-defined options and run requested tasks.
+Parse user-defined options and run requested tasks.
 
 Author: Nikolay Lysenko
 """
@@ -38,7 +38,7 @@ def parse_cli_args() -> argparse.Namespace:
     )
     parser.add_argument(
         '-p', '--presets_path', type=str, default=None,
-        help='path to JSON file with definitions of timbres to be used'
+        help='path to YAML file with definitions of timbres to be used'
     )
     parser.add_argument(
         '-s', '--safe_mode', dest='safe', action='store_true',

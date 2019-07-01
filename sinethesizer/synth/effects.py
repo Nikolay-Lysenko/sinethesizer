@@ -71,7 +71,7 @@ def tremolo(
     :return:
         sound with vibrating volume
     """
-    if amplitude <= 0 or amplitude > 1:
+    if not (0 < amplitude <= 1):
         raise ValueError("Amplitude for tremolo must be between 0 and 1.")
     amplitudes = amplitude * np.ones(sound.shape[1])
     volume_wave = generate_wave(

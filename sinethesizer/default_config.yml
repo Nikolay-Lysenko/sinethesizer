@@ -1,3 +1,7 @@
+# Number of frames per second.
 frame_rate: 44100
-tail_silence: 2
+# Duration of silence in seconds added to the end of a track.
+trailing_silence: 2
+# Maximum delay (in ms) between channels.
+# It affects size of imaginary space occupied by sound sources.
 max_channel_delay: 0.02

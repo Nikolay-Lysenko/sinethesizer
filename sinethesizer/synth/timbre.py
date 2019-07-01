@@ -5,9 +5,10 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Callable, List, NamedTuple
+from typing import List, NamedTuple
 
-import numpy as np
+from sinethesizer.synth.adsr_envelopes import ENVELOPE_FN_TYPE
+from sinethesizer.synth.effects import EFFECT_FN_TYPE
 
 
 class OvertoneSpec(NamedTuple):
@@ -33,8 +34,8 @@ class OvertoneSpec(NamedTuple):
     waveform: str
     frequency_ratio: float
     volume_share: float
-    volume_envelope_fn: Callable[[float, int], np.ndarray]
-    effects: List[Callable[[np.ndarray, int], np.ndarray]]
+    volume_envelope_fn: ENVELOPE_FN_TYPE
+    effects: List[EFFECT_FN_TYPE]
 
 
 class TimbreSpec(NamedTuple):
@@ -54,6 +55,6 @@ class TimbreSpec(NamedTuple):
     """
 
     fundamental_waveform: str
-    fundamental_volume_envelope_fn: Callable[[float, int], np.ndarray]
-    fundamental_effects: List[Callable[[np.ndarray, int], np.ndarray]]
+    fundamental_volume_envelope_fn: ENVELOPE_FN_TYPE
+    fundamental_effects: List[EFFECT_FN_TYPE]
     overtones_specs: List[OvertoneSpec]

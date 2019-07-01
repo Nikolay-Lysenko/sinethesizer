@@ -18,7 +18,7 @@ from sinethesizer.io.utils import convert_note_to_frequency
 
 
 def create_empty_timeline(
-        events: List[Dict[str, Any]], frame_rate: int, tail_silence: float
+        events: List[Dict[str, Any]], frame_rate: int, trailing_silence: float
 ) -> np.ndarray:
     """
     Create empty timeline.
@@ -27,7 +27,7 @@ def create_empty_timeline(
         sound events that should fit to the timeline to be created
     :param frame_rate:
         number of frames per second
-    :param tail_silence:
+    :param trailing_silence:
         number of seconds with silence at the end of the timeline
     :return:
         empty timeline
@@ -35,7 +35,7 @@ def create_empty_timeline(
     max_event_time = max(
         event['start_time'] + event['duration'] for event in events
     )
-    duration_in_seconds = max_event_time + tail_silence
+    duration_in_seconds = max_event_time + trailing_silence
     duration_in_frames = ceil(frame_rate * duration_in_seconds)
     mono_timeline = np.zeros(duration_in_frames)
     timeline = np.vstack((mono_timeline, mono_timeline))
@@ -167,7 +167,7 @@ def convert_tsv_to_timeline(
     events = set_types(events)
 
     timeline = create_empty_timeline(
-        events, settings['frame_rate'], settings['tail_silence']
+        events, settings['frame_rate'], settings['trailing_silence']
     )
     for event in events:
         timeline = add_event_to_timeline(

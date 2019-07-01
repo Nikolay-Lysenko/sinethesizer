@@ -35,13 +35,13 @@ def generate_wave(
         frequency of sine wave; it defines pitch of sound
     :param amplitudes:
         array of amplitudes for each time frame;
-        it defines volume of sound, its duration, and its ADSR envelope
+        it defines volume of sound, its duration, and its volume envelope
     :param location:
         location of sound source;
         -1 stands for extremely left and 1 stands for extremely right
     :param max_channel_delay:
         maximum possible delay between channels in seconds;
-        it is a measure of potential size of space occupied by sound sources
+        it is correlated with size of imaginary space occupied by sound sources
     :param frame_rate:
         number of frames per second
     :param phase:
