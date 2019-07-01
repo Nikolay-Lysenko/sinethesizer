@@ -8,11 +8,11 @@
 It is a digital additive synthesizer that provides a flexible way to create new virtual instruments with their own timbres.
 
 The list of implemented and planned features is as follows:
-- [x] High-level input format with enough freedom for user
+- [x] Balance between freedom for user and simplicity of input formats
 - [x] Stereo sound
-- [ ] Rich collection of presets
+- [x] Sound effects (e.g., tremolo, vibrato, overdrive, etc)
 - [ ] Noises and drums
-- [ ] Sound effects (e.g., filters, chorus, overdrive, etc)
+- [ ] Rich collection of presets
 
 ## Installation
 

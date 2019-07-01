@@ -55,7 +55,7 @@ def overdrive(
 
 def tremolo(
         sound: np.ndarray, frame_rate: int,
-        frequency: float = 50, amplitude: float = 0.5
+        frequency: float = 6, amplitude: float = 0.5
 ) -> np.ndarray:
     """
     Make sound volume vibrating.
@@ -83,6 +83,44 @@ def tremolo(
     return sound
 
 
+def vibrato(
+        sound: np.ndarray, frame_rate: int,
+        frequency: float = 4, max_delay: float = 0.0004
+) -> np.ndarray:
+    """
+    Make sound frequency oscillating.
+
+    :param sound:
+        sound to be modified
+    :param frame_rate:
+        number of frames per second
+    :param frequency:
+        frequency of sound frequency oscillations (in Hz)
+    :param max_delay:
+        maximum delay of modified sound comparing to original sound
+    :return:
+        sound with vibrating volume
+    """
+    amplitudes = max_delay * frame_rate * np.ones(sound.shape[1])
+    frequency_wave = generate_wave(
+        'sine', frequency, amplitudes,
+        location=0, max_channel_delay=0, frame_rate=frame_rate
+    )
+    time_indices = np.ones(sound.shape[1]).cumsum() - 1 + frequency_wave[0, :]
+
+    upper_indices = np.ceil(time_indices).astype(int)
+    upper_indices = np.clip(upper_indices, 0, sound.shape[1] - 1)
+    upper_sound = sound[:, upper_indices]
+
+    lower_indices = np.floor(time_indices).astype(int)
+    lower_indices = np.clip(lower_indices, 0, sound.shape[1] - 1)
+    lower_sound = sound[:, lower_indices]
+
+    weights = time_indices - lower_indices
+    sound = weights * upper_sound + (1 - weights) * lower_sound
+    return sound
+
+
 def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
     """
     Get mapping from effect names to functions that apply effects.
@@ -92,6 +130,7 @@ def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
     """
     registry = {
         'overdrive': overdrive,
-        'tremolo': tremolo
+        'tremolo': tremolo,
+        'vibrato': vibrato
     }
     return registry
