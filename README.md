@@ -23,25 +23,16 @@ pip install sinethesizer
 
 ## Usage
 
-To create a track, two things must be done:
-* The track should be defined as [tab-separated file](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/scale.tsv);
-* All used for this track virtual instruments should be [defined](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/presets/demo.yml).
-
-Above links direct to simple examples that demonstrate how to do this. Anyway, for the sake of clarity, let us discuss some steps in details.
-
-A tab-separated file with track definition has rows that represent sound events (loosely speaking, an event is a played note) and columns that represent properties of events. Required columns are as follows:
-
-Column | Description
-:-----: | :---------:
-timbre | Name of a registered timbre
-start_time | Time when event starts (in seconds)
-duration | Duration of event (in seconds) including release stage
-frequency | Frequency of sound (in Hz) or note (like A4); some timbres may ignore it
-volume | Relative volume of the most loud piece of event
-location | Position of sound source; a float between -1 and 1 where -1 stands for left channel only and 1 stands for right channel only
-effects | List of effects in JSON; each record must have field "name" with registered effect name and, optionally, parameters of the effect; left this field blank if no effects are needed
-
-After all preparations are done, synthesizer can be launched:
+This synthesizer converts text files with parameters of sound events to WAV files with resulting audio tracks. It can be done with the following command:
 ```
-python -m sinethesizer -i path/to/file.tsv -o path/to/output.wav
+python -m sinethesizer -i path/to/track.tsv -p path/to/presets.yml -o path/to/output.wav
 ```
+
+Below table provides links to detailed information about input files that are required from user.
+
+Option | Description | Example
+:----: | :---------: | :-----|
+-i path/to/track.tsv | [Track definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/track_definition.md) | [Scale](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/scale.tsv)
+-p path/to/presets.yml | [Timbres definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/timbres_creation.md) | [Demo timbres](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/presets/demo.yml)
+
+If something is still unclear, you can read source code, because it is well organized and has built-in documentation. Also your questions are welcome.

@@ -97,7 +97,7 @@ def vibrato(
     :param frequency:
         frequency of sound frequency oscillations (in Hz)
     :param max_delay:
-        maximum delay of modified sound comparing to original sound
+        maximum delay of modified sound comparing to original sound (in sec)
     :return:
         sound with vibrating volume
     """
