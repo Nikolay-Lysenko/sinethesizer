@@ -8,7 +8,7 @@ Parameter | Description
 :-------: | :---------:
 fundamental_waveform | Form of wave; one of 'sine', 'square', 'triangle', and 'sawtooth'
 fundamental_volume_envelope | Function that maps duration of sound event in seconds to [dynamic](https://en.wikipedia.org/wiki/Envelope_(music)) of fundamental's volume in time; supported names of [functions](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/sinethesizer/synth/adsr_envelopes.py) are 'relative_adsr', 'absolute_adsr', 'constant_with_linear_ends', and 'spike'
-fundamental_effects | Effects (e.g., tremolo) that are always applied to fundamental; this field is optional
+fundamental_effects | [Effects](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/sinethesizer/synth/effects.py) (e.g., tremolo) that are always applied to fundamental; this field is optional
 
 Each overtone has parameters similar to that of fundamental and some additional parameters:
 
