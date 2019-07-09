@@ -1,0 +1,17 @@
+[run]
+branch = True
+source = sinethesizer
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if .debug:
+    if __name__ == .__main__.:
+    raise AssertionError
+    raise NotImplementedError
+    raise RuntimeError
+    raise AttributeError
+    raise ValueError
+    raise TypeError
+    pass

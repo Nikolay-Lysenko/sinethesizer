@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/Nikolay-Lysenko/sinethesizer.svg?branch=master)](https://travis-ci.org/Nikolay-Lysenko/sinethesizer)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a43618b5f9454d01186c/maintainability)](https://codeclimate.com/github/Nikolay-Lysenko/sinethesizer/maintainability)
 [![PyPI version](https://badge.fury.io/py/sinethesizer.svg)](https://badge.fury.io/py/sinethesizer)
 
