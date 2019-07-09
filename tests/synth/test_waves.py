@@ -32,6 +32,13 @@ from sinethesizer.synth.waves import generate_wave
             ])
         ),
         (
+            'sine', 1, np.array([1, 1, 1, 1]), 0.5, 0.5, 12,
+            np.array([
+                [0, 0, 0, 0, 0.25, sqrt(3) / 4, 0.5],
+                [0, 0.75, 1.5 * sqrt(3) / 2, 1.5, 0, 0, 0],
+            ])
+        ),
+        (
             'square', 1, np.array([1, 2, 1, 2, 1, 2, 1, 2]), 0, 10, 8,
             np.array([
                 [1.0, 2, 1, 2, -1, -2, -1, -2],
