@@ -38,7 +38,7 @@ from sinethesizer.synth.effects import tremolo
                 )
             }
         ),
-(
+        (
             [
                 "---",
                 "- name: poor_organ",
@@ -70,6 +70,43 @@ from sinethesizer.synth.effects import tremolo
                             effects=[
                                 partial(tremolo, frequency=3, amplitude=0.25)
                             ]
+                        )
+                    ]
+                )
+            }
+        ),
+        (
+            [
+                "---",
+                "- name: another_poor_organ",
+                "  fundamental_waveform: sine",
+                "  fundamental_volume_envelope:",
+                "    name: constant_with_linear_ends",
+                "  fundamental_effects:",
+                "  - name: tremolo",
+                "    frequency: 3",
+                "    amplitude: 0.25",
+                "  overtones_specs:",
+                "  - waveform: sine",
+                "    frequency_ratio: 1.5",
+                "    volume_share: 0.4",
+                "    volume_envelope:",
+                "      name: constant_with_linear_ends"
+            ],
+            {
+                'another_poor_organ': TimbreSpec(
+                    fundamental_waveform='sine',
+                    fundamental_volume_envelope_fn=constant_with_linear_ends,
+                    fundamental_effects=[
+                        partial(tremolo, frequency=3, amplitude=0.25)
+                    ],
+                    overtones_specs=[
+                        OvertoneSpec(
+                            waveform='sine',
+                            frequency_ratio=1.5,
+                            volume_share=0.4,
+                            volume_envelope_fn=constant_with_linear_ends,
+                            effects=[]
                         )
                     ]
                 )
