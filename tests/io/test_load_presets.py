@@ -13,8 +13,9 @@ import pytest
 
 from sinethesizer.io.load_presets import create_timbres_registry
 from sinethesizer.synth import synthesize
-from sinethesizer.synth.timbre import TimbreSpec
+from sinethesizer.synth.timbre import TimbreSpec, OvertoneSpec
 from sinethesizer.synth.adsr_envelopes import constant_with_linear_ends
+from sinethesizer.synth.effects import tremolo
 
 
 @pytest.mark.parametrize(
@@ -36,7 +37,44 @@ from sinethesizer.synth.adsr_envelopes import constant_with_linear_ends
                     overtones_specs=[]
                 )
             }
-        )
+        ),
+(
+            [
+                "---",
+                "- name: poor_organ",
+                "  fundamental_waveform: sine",
+                "  fundamental_volume_envelope:",
+                "    name: constant_with_linear_ends",
+                "  overtones_specs:",
+                "  - waveform: sine",
+                "    frequency_ratio: 1.5",
+                "    volume_share: 0.4",
+                "    volume_envelope:",
+                "      name: constant_with_linear_ends",
+                "    effects:",
+                "    - name: tremolo",
+                "      frequency: 3",
+                "      amplitude: 0.25"
+            ],
+            {
+                'poor_organ': TimbreSpec(
+                    fundamental_waveform='sine',
+                    fundamental_volume_envelope_fn=constant_with_linear_ends,
+                    fundamental_effects=[],
+                    overtones_specs=[
+                        OvertoneSpec(
+                            waveform='sine',
+                            frequency_ratio=1.5,
+                            volume_share=0.4,
+                            volume_envelope_fn=constant_with_linear_ends,
+                            effects=[
+                                partial(tremolo, frequency=3, amplitude=0.25)
+                            ]
+                        )
+                    ]
+                )
+            }
+        ),
     ]
 )
 def test_create_timbres_registry(
