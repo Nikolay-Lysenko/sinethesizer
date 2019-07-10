@@ -85,7 +85,7 @@ def tremolo(
 
 def vibrato(
         sound: np.ndarray, frame_rate: int,
-        frequency: float = 4, max_delay: float = 0.0004
+        oscillation_frequency: float = 4, oscillation_width: float = 0.2
 ) -> np.ndarray:
     """
     Make sound frequency oscillating.
@@ -94,16 +94,28 @@ def vibrato(
         sound to be modified
     :param frame_rate:
         number of frames per second
-    :param frequency:
-        frequency of sound frequency oscillations (in Hz)
-    :param max_delay:
-        maximum delay of modified sound comparing to original sound (in sec)
+    :param oscillation_frequency:
+        frequency of sound's frequency oscillations (in Hz)
+    :param oscillation_width:
+        difference between the highest frequency of oscillating sound
+        and the lowest frequency of oscillating sound (in semitones)
     :return:
         sound with vibrating volume
     """
+    semitone = 2 ** (1 / 12)
+    highest_to_lowest_ratio = semitone ** oscillation_width
+    # If x = 0, d(x + m * sin(2 * \pi * f * x))/dx = 1 + 2 * \pi * f * m.
+    # If x = \pi, d(x + m * sin(2 * \pi * f * x))/dx = 1 - 2 * \pi * f * m.
+    # Ratio of above right sides is `highest_to_lowest_ratio`.
+    # Let us solve it for `m` (`max_delay`).
+    max_delay = (
+        (highest_to_lowest_ratio - 1)
+        / ((highest_to_lowest_ratio + 1) * 2 * np.pi * oscillation_frequency)
+    )
+
     amplitudes = max_delay * frame_rate * np.ones(sound.shape[1])
     frequency_wave = generate_wave(
-        'sine', frequency, amplitudes,
+        'sine', oscillation_frequency, amplitudes,
         location=0, max_channel_delay=0, frame_rate=frame_rate
     )
     time_indices = np.ones(sound.shape[1]).cumsum() - 1 + frequency_wave[0, :]
