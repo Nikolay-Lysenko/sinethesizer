@@ -20,7 +20,7 @@ with open(os.path.join(current_dir, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='sinethesizer',
-    version='0.2.2',
+    version='0.2.3',
     description=description,
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -30,9 +30,7 @@ setup(
     license='MIT',
     keywords='synthesizer analog_synthesizer additive_synthesis music timbre',
     packages=find_packages(),
-    data_files=[
-        ('sinethesizer', [os.path.join('sinethesizer', 'default_config.yml')])
-    ],
+    package_data={'sinethesizer': 'default_config.yml'},
     python_requires='>=3.6',
     install_requires=['numpy', 'PyYAML', 'scipy'],
     classifiers=[

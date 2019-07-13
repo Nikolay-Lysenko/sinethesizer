@@ -29,16 +29,16 @@ def parse_cli_args() -> argparse.Namespace:
         help='path to input TSV file with definition of a track to be played'
     )
     parser.add_argument(
+        '-p', '--presets_path', type=str, required=True,
+        help='path to YAML file with definitions of timbres to be used'
+    )
+    parser.add_argument(
         '-o', '--output_path', type=str, required=True,
         help='path to output file where result is going to be saved as WAV'
     )
     parser.add_argument(
         '-c', '--config_path', type=str, default=None,
         help='path to configuration file'
-    )
-    parser.add_argument(
-        '-p', '--presets_path', type=str, default=None,
-        help='path to YAML file with definitions of timbres to be used'
     )
     parser.add_argument(
         '-s', '--safe_mode', dest='safe', action='store_true',
