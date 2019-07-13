@@ -70,4 +70,4 @@ def test_generate_wave(
     result = generate_wave(
         form, frequency, amplitudes, location, max_channel_delay, frame_rate
     )
-    np.testing.assert_allclose(result, expected, atol=1e-8)
+    np.testing.assert_almost_equal(result, expected)
