@@ -29,15 +29,17 @@ setup(
     author_email='nikolay-lysenco@yandex.ru',
     license='MIT',
     keywords='synthesizer analog_synthesizer additive_synthesis music timbre',
-    packages=find_packages(
-        exclude=[
-            '*.tests', '*.tests.*', 'tests.*', 'tests',
-            '*.docs', '*.docs.*', 'docs.*', 'docs'
-        ]
-    ),
+    packages=find_packages(),
     data_files=[
         ('sinethesizer', [os.path.join('sinethesizer', 'default_config.yml')])
     ],
     python_requires='>=3.6',
-    install_requires=['numpy', 'PyYAML', 'scipy']
+    install_requires=['numpy', 'PyYAML', 'scipy'],
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'Topic :: Artistic Software',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 3'
+    ]
 )
