@@ -3,6 +3,8 @@ branch = True
 source = sinethesizer
 
 [report]
+omit =
+    */__main__.py
 exclude_lines =
     pragma: no cover
     def __repr__
