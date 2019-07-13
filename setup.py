@@ -29,7 +29,7 @@ setup(
     author_email='nikolay-lysenco@yandex.ru',
     license='MIT',
     keywords='synthesizer analog_synthesizer additive_synthesis music timbre',
-    packages=find_packages(exclude=['tests', 'docs']),
+    packages=find_packages(exclude=['tests', 'tests.*', 'docs', 'docs.*']),
     data_files=[
         ('sinethesizer', [os.path.join('sinethesizer', 'default_config.yml')])
     ],
