@@ -30,6 +30,9 @@ setup(
     license='MIT',
     keywords='synthesizer analog_synthesizer additive_synthesis music timbre',
     packages=find_packages(exclude=['tests', 'docs']),
+    data_files=[
+        ('sinethesizer', os.path.join('sinethesizer', 'default_config.yml'))
+    ],
     python_requires='>=3.6',
     install_requires=['numpy', 'PyYAML', 'scipy']
 )
