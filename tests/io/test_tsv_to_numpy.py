@@ -12,7 +12,7 @@ import pytest
 import numpy as np
 
 from sinethesizer.io.tsv_to_numpy import convert_tsv_to_timeline
-from sinethesizer.synth.adsr_envelopes import constant_with_linear_ends
+from sinethesizer.synth.adsr_envelopes import trapezoid
 from sinethesizer.synth.timbre import TimbreSpec
 
 
@@ -33,7 +33,7 @@ from sinethesizer.synth.timbre import TimbreSpec
                     'sine': TimbreSpec(
                         fundamental_waveform='sine',
                         fundamental_volume_envelope_fn=partial(
-                            constant_with_linear_ends,
+                            trapezoid,
                             begin_share=0, end_share=0
                         ),
                         fundamental_effects=[],

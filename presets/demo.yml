@@ -4,7 +4,7 @@
 - name: sine
   fundamental_waveform: sine
   fundamental_volume_envelope:
-    name: constant_with_linear_ends
+    name: trapezoid
 
 # This instrument is a sine wave with modulated harmonics.
 - name: sine_with_3_harmonics
@@ -48,13 +48,13 @@
 - name: poor_organ
   fundamental_waveform: sine
   fundamental_volume_envelope:
-    name: constant_with_linear_ends
+    name: trapezoid
   overtones_specs:
   - waveform: sine
     frequency_ratio: 1.5
     volume_share: 0.4
     volume_envelope:
-      name: constant_with_linear_ends
+      name: trapezoid
     effects:
     - name: tremolo
       frequency: 3

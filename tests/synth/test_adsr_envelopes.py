@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 
 from sinethesizer.synth.adsr_envelopes import (
-    relative_adsr, absolute_adsr, spike, constant_with_linear_ends
+    relative_adsr, absolute_adsr, spike, trapezoid
 )
 
 
@@ -100,12 +100,12 @@ def test_spike(
         ),
     ]
 )
-def test_constant_with_linear_ends(
+def test_trapezoid(
         duration: float, frame_rate: int,
         begin_share: float, end_share: float, expected: np.ndarray
 ) -> None:
-    """Test `constant_with_linear_ends` function."""
-    result = constant_with_linear_ends(
+    """Test `trapezoid` function."""
+    result = trapezoid(
         duration, frame_rate, begin_share, end_share
     )
     np.testing.assert_almost_equal(result, expected)

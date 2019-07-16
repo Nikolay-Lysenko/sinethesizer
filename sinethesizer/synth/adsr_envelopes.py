@@ -164,9 +164,9 @@ def spike(
     return envelope
 
 
-def constant_with_linear_ends(
+def trapezoid(
         duration: float, frame_rate: int,
-        begin_share: float = 0.1, end_share: float = 0.1
+        begin_share: float = 0.2, end_share: float = 0.1
 ) -> np.ndarray:
     """
     Create envelope with amplitude that is constant everywhere except its ends.
@@ -203,6 +203,6 @@ def get_envelopes_registry() -> Dict[str, ENVELOPE_FN_TYPE]:
         'absolute_adsr': absolute_adsr,
         'relative_adsr': relative_adsr,
         'spike': spike,
-        'constant_with_linear_ends': constant_with_linear_ends
+        'trapezoid': trapezoid
     }
     return registry
