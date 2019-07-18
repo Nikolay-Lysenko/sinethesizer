@@ -5,12 +5,38 @@ Author: Nikolay Lysenko
 """
 
 
+from typing import List
+
 import numpy as np
 import pytest
 
 from sinethesizer.synth.effects import (
-    overdrive, tremolo, vibrato
+    frequency_filter, overdrive, tremolo, vibrato
 )
+from sinethesizer.synth.waves import generate_wave
+
+
+@pytest.mark.parametrize(
+    "frequencies, frame_rate, min_frequency, max_frequency, invert, order",
+    [
+        ([220, 440, 660], 44100, 330, 550, False, 10),
+        ([220, 440, 660], 44100, 330, 550, True, 10),
+    ]
+)
+def test_frequency_filter(
+        frequencies: List[float], frame_rate: int, min_frequency: float,
+        max_frequency: float, invert: bool, order: int
+) -> None:
+    """Test `frequency_filter` function."""
+    waves = [
+        generate_wave('sine', frequency, np.ones(frame_rate), 0, 0, frame_rate)
+        for frequency in frequencies
+    ]
+    sound = sum(waves)
+    result = frequency_filter(
+        sound, frame_rate, min_frequency, max_frequency, invert, order
+    )
+    assert np.all(np.isfinite(result))
 
 
 @pytest.mark.parametrize(

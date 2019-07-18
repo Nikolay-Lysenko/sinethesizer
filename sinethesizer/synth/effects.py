@@ -5,14 +5,58 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Callable, Dict
+from typing import Callable, Dict, Optional
 
 import numpy as np
+from scipy.signal import butter, sosfilt
 
 from sinethesizer.synth.waves import generate_wave
 
 
 EFFECT_FN_TYPE = Callable[[np.ndarray, int],  np.ndarray]
+
+
+def frequency_filter(
+        sound: np.ndarray, frame_rate: int,
+        min_frequency: Optional[float] = None,
+        max_frequency: Optional[float] = None,
+        invert: bool = True, order: int = 10
+) -> np.ndarray:
+    """
+    Filter some frequencies from original sound.
+
+    :param sound:
+        sound to be modified
+    :param frame_rate:
+        number of frames per second
+    :param min_frequency:
+        cutoff frequency for high-pass filtering;
+        there is no high-pass filtering by default
+    :param max_frequency:
+        cutoff frequency for low-pass filtering;
+        there is no low-pass filtering by default
+    :param invert:
+        if it is `True` and both `min_frequency` and `max_frequency`
+        are passed, band-stop filter is applied instead of band-pass filter
+    :param order:
+        order of the filter; the higher it is, the steeper cutoff is
+    :return:
+        sound with some frequencies muted
+    """
+    if invert and min_frequency is not None and max_frequency is not None:
+        filter_type = 'bandstop'
+    else:
+        filter_type = 'bandpass'
+    nyquist_frequency = 0.5 * frame_rate
+    min_frequency = min_frequency or 0
+    max_frequency = max_frequency or nyquist_frequency
+    min_threshold = min_frequency / nyquist_frequency
+    max_threshold = max_frequency / nyquist_frequency
+    second_order_sections = butter(
+        order, [min_threshold, max_threshold], btype=filter_type, output='sos'
+    )  # 'ba' is not used, because sometimes it lacks numerical stability.
+    sound = sosfilt(second_order_sections, sound)
+    return sound
 
 
 def overdrive(
@@ -141,6 +185,7 @@ def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
         registry of effects
     """
     registry = {
+        'filter': frequency_filter,
         'overdrive': overdrive,
         'tremolo': tremolo,
         'vibrato': vibrato
