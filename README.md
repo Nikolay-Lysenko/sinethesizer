@@ -13,6 +13,7 @@ The list of implemented and planned features is as follows:
 - [x] Balance between freedom for user and simplicity of input formats
 - [x] Stereo sound
 - [x] Sound effects (e.g., tremolo, vibrato, overdrive, etc)
+- [x] Partial support of subtractive synthesis and FM synthesis
 - [ ] Noises and drums
 - [ ] Rich collection of presets
 
