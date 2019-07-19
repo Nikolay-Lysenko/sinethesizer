@@ -48,8 +48,8 @@ def frequency_filter(
     else:
         filter_type = 'bandpass'
     nyquist_frequency = 0.5 * frame_rate
-    min_frequency = min_frequency or 0
-    max_frequency = max_frequency or nyquist_frequency
+    min_frequency = min_frequency or 0.1  # An arbitrary small positive number.
+    max_frequency = max_frequency or nyquist_frequency - 0.1
     min_threshold = min_frequency / nyquist_frequency
     max_threshold = max_frequency / nyquist_frequency
     second_order_sections = butter(

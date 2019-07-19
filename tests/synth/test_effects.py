@@ -17,17 +17,40 @@ from sinethesizer.synth.waves import generate_wave
 
 
 @pytest.mark.parametrize(
+    "frequency, frame_rate, min_frequency, max_frequency, invert, order",
+    [
+        (440, 44100, 330, 550, True, 10),
+        (440, 44100, 880, None, False, 10),
+        (440, 44100, None, 220, False, 10),
+    ]
+)
+def test_frequency_filter_with_sine_waves(
+        frequency: float, frame_rate: int, min_frequency: float,
+        max_frequency: float, invert: bool, order: int
+) -> None:
+    """Test that `frequency_filter` function removes requested frequencies."""
+    sound = generate_wave(
+        'sine', frequency, np.ones(frame_rate), 0, 0, frame_rate
+    )
+    result = frequency_filter(
+        sound, frame_rate, min_frequency, max_frequency, invert, order
+    )
+    l1_norm = np.sum(np.abs(result))
+    assert l1_norm / result.shape[1] < 0.01
+
+
+@pytest.mark.parametrize(
     "frequencies, frame_rate, min_frequency, max_frequency, invert, order",
     [
         ([220, 440, 660], 44100, 330, 550, False, 10),
         ([220, 440, 660], 44100, 330, 550, True, 10),
     ]
 )
-def test_frequency_filter(
+def test_frequency_filter_with_arbitrary_input(
         frequencies: List[float], frame_rate: int, min_frequency: float,
         max_frequency: float, invert: bool, order: int
 ) -> None:
-    """Test `frequency_filter` function."""
+    """Test that `frequency_filter` function returns something finite."""
     waves = [
         generate_wave('sine', frequency, np.ones(frame_rate), 0, 0, frame_rate)
         for frequency in frequencies
