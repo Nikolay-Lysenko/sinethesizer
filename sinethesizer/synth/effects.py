@@ -48,8 +48,8 @@ def frequency_filter(
     else:
         filter_type = 'bandpass'
     nyquist_frequency = 0.5 * frame_rate
-    min_frequency = min_frequency or 0.1  # An arbitrary small positive number.
-    max_frequency = max_frequency or nyquist_frequency - 0.1
+    min_frequency = min_frequency or 1e-2  # Arbitrary small positive number.
+    max_frequency = max_frequency or nyquist_frequency - 1e-2
     min_threshold = min_frequency / nyquist_frequency
     max_threshold = max_frequency / nyquist_frequency
     second_order_sections = butter(
@@ -99,7 +99,7 @@ def overdrive(
 
 def tremolo(
         sound: np.ndarray, frame_rate: int,
-        frequency: float = 6, amplitude: float = 0.5
+        frequency: float = 6, amplitude: float = 0.5, waveform: str = 'sine'
 ) -> np.ndarray:
     """
     Make sound volume vibrating.
@@ -112,16 +112,15 @@ def tremolo(
         frequency of volume oscillations (in Hz)
     :param amplitude:
         relative amplitude of volume oscillations, must be between 0 and 1
+    :param waveform:
+        form of volume oscillations wave
     :return:
         sound with vibrating volume
     """
     if not (0 < amplitude <= 1):
         raise ValueError("Amplitude for tremolo must be between 0 and 1.")
     amplitudes = amplitude * np.ones(sound.shape[1])
-    volume_wave = generate_wave(
-        'sine', frequency, amplitudes,
-        location=0, max_channel_delay=0, frame_rate=frame_rate
-    )
+    volume_wave = generate_wave(waveform, frequency, amplitudes, frame_rate)
     volume_wave += 1
     sound *= volume_wave
     return sound
@@ -129,7 +128,7 @@ def tremolo(
 
 def vibrato(
         sound: np.ndarray, frame_rate: int,
-        frequency: float = 4, width: float = 0.2
+        frequency: float = 4, width: float = 0.2, waveform: str = 'sine'
 ) -> np.ndarray:
     """
     Make sound frequency vibrating.
@@ -143,6 +142,8 @@ def vibrato(
     :param width:
         difference between the highest frequency of oscillating sound
         and the lowest frequency of oscillating sound (in semitones)
+    :param waveform:
+        form of frequency oscillations wave
     :return:
         sound with vibrating frequency
     """
@@ -158,10 +159,7 @@ def vibrato(
     )
 
     amplitudes = max_delay * frame_rate * np.ones(sound.shape[1])
-    frequency_wave = generate_wave(
-        'sine', frequency, amplitudes,
-        location=0, max_channel_delay=0, frame_rate=frame_rate
-    )
+    frequency_wave = generate_wave(waveform, frequency, amplitudes, frame_rate)
     time_indices = np.ones(sound.shape[1]).cumsum() - 1 + frequency_wave[0, :]
 
     upper_indices = np.ceil(time_indices).astype(int)

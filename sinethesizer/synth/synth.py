@@ -46,9 +46,9 @@ def synthesize(
         timbre_spec.fundamental_waveform,
         frequency,
         volume * fundamental_share * envelope,
+        frame_rate,
         location,
-        max_channel_delay,
-        frame_rate
+        max_channel_delay
     )
     for effect_fn in timbre_spec.fundamental_effects:
         sound = effect_fn(sound, frame_rate)
@@ -58,9 +58,9 @@ def synthesize(
             overtone_spec.waveform,
             overtone_spec.frequency_ratio * frequency,
             volume * overtone_spec.volume_share * envelope,
+            frame_rate,
             location,
-            max_channel_delay,
-            frame_rate
+            max_channel_delay
         )
         for effect_fn in overtone_spec.effects:
             overtone_sound = effect_fn(overtone_sound, frame_rate)

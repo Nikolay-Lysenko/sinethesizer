@@ -29,9 +29,7 @@ def test_frequency_filter_with_sine_waves(
         max_frequency: float, invert: bool, order: int
 ) -> None:
     """Test that `frequency_filter` function removes requested frequencies."""
-    sound = generate_wave(
-        'sine', frequency, np.ones(frame_rate), 0, 0, frame_rate
-    )
+    sound = generate_wave('sine', frequency, np.ones(frame_rate), frame_rate)
     result = frequency_filter(
         sound, frame_rate, min_frequency, max_frequency, invert, order
     )
@@ -52,7 +50,7 @@ def test_frequency_filter_with_arbitrary_input(
 ) -> None:
     """Test that `frequency_filter` function returns something finite."""
     waves = [
-        generate_wave('sine', frequency, np.ones(frame_rate), 0, 0, frame_rate)
+        generate_wave('sine', frequency, np.ones(frame_rate), frame_rate)
         for frequency in frequencies
     ]
     sound = sum(waves)

@@ -48,7 +48,10 @@ def oscillate_between_sounds(
     thresholds = np.arange(-1, 1 + 1e-7, step)
     weights = np.tile(thresholds.reshape((-1, 1)), (1, sounds.shape[2]))
     wave = generate_wave(
-        waveform, frequency, np.ones(sounds.shape[2]), 0, 0, frame_rate
+        waveform,
+        frequency,
+        np.ones(sounds.shape[2]),
+        frame_rate
     )
     wave = wave[0, :]
     weights = (
