@@ -10,7 +10,7 @@ timbre | Name of timbre
 start_time | Time when event starts (in seconds)
 duration | Duration of event (in seconds) including release stage
 frequency | Frequency of sound (in Hz) or note (like A4); some timbres may ignore it
-volume | Relative volume of the most loud piece of event
+volume | Relative volume of the most loud piece of event where 1 is the maximum value (all that is higher will be clipped by your device when played)
 location | Position of sound source; a float between -1 and 1 where -1 stands for left channel only and 1 stands for right channel only
 effects | List of [effects](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/sinethesizer/synth/effects.py) in JSON; each record must have field "name" with supported effect name and, optionally, parameters of the effect; left this field blank if no effects are needed
 
