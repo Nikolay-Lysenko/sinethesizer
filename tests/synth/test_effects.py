@@ -5,13 +5,14 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import List
+from typing import List, Optional, Tuple
 
 import numpy as np
 import pytest
 
 from sinethesizer.synth.effects import (
-    frequency_filter, overdrive, tremolo, vibrato
+    frequency_filter, oscillate_between_sounds, filter_sweep,
+    overdrive, tremolo, vibrato
 )
 from sinethesizer.synth.waves import generate_wave
 
@@ -33,8 +34,7 @@ def test_frequency_filter_with_sine_waves(
     result = frequency_filter(
         sound, frame_rate, min_frequency, max_frequency, invert, order
     )
-    l1_norm = np.sum(np.abs(result))
-    assert l1_norm / result.shape[1] < 0.01
+    assert np.sum(np.abs(result)) < 0.01 * np.sum(np.abs(sound))
 
 
 @pytest.mark.parametrize(
@@ -58,6 +58,99 @@ def test_frequency_filter_with_arbitrary_input(
         sound, frame_rate, min_frequency, max_frequency, invert, order
     )
     assert np.all(np.isfinite(result))
+    assert np.sum(np.abs(result)) < np.sum(np.abs(sound))
+
+
+@pytest.mark.parametrize(
+    "sounds, frame_rate, frequency, waveform, expected",
+    [
+        (
+            np.array(
+                [
+                    [[1, 2, 3, 4, 5, 6, 7, 8]],
+                    [[-1, -2, -3, -4, -5, -6, -7, -8]]
+                ]
+            ),
+            4, 1, 'sine',
+            np.array([[0, -2, 0, 4, 0, -6, 0, 8]])
+        ),
+        (
+            np.array(
+                [
+                    [[1, 2, 3, 4, 5, 6, 7, 8]],
+                    [[-1, -1, -1, -1, -1, -1, -1, -1]],
+                    [[-2, -2, -2, -2, -2, -2, -2, -2]],
+                    [[11, 12, 13, 14, 15, 16, 17, 18]],
+                ]
+            ),
+            4, 0.5, 'triangle',
+            np.array([[1, -0.25, -1.5, 2, 15, 2.5, -1.5, 1.25]])
+        ),
+        (
+            np.array(
+                [
+                    [
+                        [1, 2, 3, 4, 5, 6, 7, 8],
+                        [1, 2, 3, 4, 5, 6, 7, 8]
+                    ],
+                    [
+                        [-1, -1, -1, -1, -1, -1, -1, -1],
+                        [-1, -1, -1, -1, -1, -1, -1, -1]
+                    ],
+                    [
+                        [-2, -2, -2, -2, -2, -2, -2, -2],
+                        [-2, -2, -2, -2, -2, -2, -2, -2]
+                    ],
+                    [
+                        [11, 12, 13, 14, 15, 16, 17, 18],
+                        [11, 12, 13, 14, 15, 16, 17, 18]
+                    ],
+                ]
+            ),
+            4, 0.5, 'triangle',
+            np.array([
+                [1, -0.25, -1.5, 2, 15, 2.5, -1.5, 1.25],
+                [1, -0.25, -1.5, 2, 15, 2.5, -1.5, 1.25]
+            ])
+        ),
+    ]
+)
+def test_oscillate_between_sounds(
+        sounds: np.ndarray, frame_rate: int, frequency: float,
+        waveform: str, expected: np.ndarray
+) -> None:
+    """Test `oscillate_between_sounds` function."""
+    result = oscillate_between_sounds(sounds, frame_rate, frequency, waveform)
+    np.testing.assert_almost_equal(result, expected)
+
+
+@pytest.mark.parametrize(
+    "frequencies, frame_rate, bands, osc_frequency, waveform",
+    [
+        ([220, 440], 44100, [(4000, None), (110, None)], 0.5, 'triangle'),
+    ]
+)
+def test_muting_of_filter_sweep(
+        frequencies: List[float], frame_rate: int,
+        bands: List[Tuple[Optional[float], Optional[float]]],
+        osc_frequency: float, waveform: str
+) -> None:
+    """Test that `filter_sweep` function mutes what it must mute."""
+    waves = [
+        generate_wave('sine', frequency, np.ones(frame_rate), frame_rate)
+        for frequency in frequencies
+    ]
+    sound = sum(waves)
+    result = filter_sweep(
+        sound, frame_rate, bands, frequency=osc_frequency, waveform=waveform)
+    assert (
+        np.sum(np.abs(result[:, :100]))
+        < 0.01 * np.sum(np.abs(sound[:, :100]))
+    )
+    assert (
+        np.sum(np.abs(result[:, -100:]))
+        > 0.5 * np.sum(np.abs(sound[:, -100:]))
+    )
 
 
 @pytest.mark.parametrize(

@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Callable, Dict, Optional
+from typing import Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 from scipy.signal import butter, sosfilt
@@ -20,7 +20,7 @@ def frequency_filter(
         sound: np.ndarray, frame_rate: int,
         min_frequency: Optional[float] = None,
         max_frequency: Optional[float] = None,
-        invert: bool = True, order: int = 10
+        invert: bool = False, order: int = 10
 ) -> np.ndarray:
     """
     Filter some frequencies from original sound.
@@ -30,10 +30,10 @@ def frequency_filter(
     :param frame_rate:
         number of frames per second
     :param min_frequency:
-        cutoff frequency for high-pass filtering;
+        cutoff frequency for high-pass filtering (in Hz);
         there is no high-pass filtering by default
     :param max_frequency:
-        cutoff frequency for low-pass filtering;
+        cutoff frequency for low-pass filtering (in Hz);
         there is no low-pass filtering by default
     :param invert:
         if it is `True` and both `min_frequency` and `max_frequency`
@@ -56,6 +56,94 @@ def frequency_filter(
         order, [min_threshold, max_threshold], btype=filter_type, output='sos'
     )  # 'ba' is not used, because sometimes it lacks numerical stability.
     sound = sosfilt(second_order_sections, sound)
+    return sound
+
+
+def oscillate_between_sounds(
+        sounds: np.ndarray, frame_rate: int, frequency: float,
+        waveform: str = 'sine'
+) -> np.ndarray:
+    """
+    Combine multiple sounds into one sound by oscillating between them.
+
+    :param sounds:
+        array of shape (n_sounds, n_channels, n_frames)
+    :param frame_rate:
+        number of frames per second
+    :param frequency:
+        frequency of oscillations between sound sources
+    :param waveform:
+        form of oscillations wave
+    :return:
+        sound composed from input sounds
+    """
+    step = 2 / (sounds.shape[0] - 1)
+    thresholds = np.arange(-1, 1 + 1e-7, step)
+    weights = np.tile(thresholds.reshape((-1, 1)), (1, sounds.shape[2]))
+    wave = generate_wave(
+        waveform,
+        frequency,
+        np.ones(sounds.shape[2]),
+        frame_rate
+    )
+    wave = wave[0, :]
+    weights = (
+        (1 - np.abs(weights - wave) / step) * (np.abs(weights - wave) < step)
+    )
+    weights = weights.reshape((weights.shape[0], 1, weights.shape[1]))
+    sound = np.sum(sounds * weights, axis=0)
+    return sound
+
+
+def filter_sweep(
+        sound: np.ndarray, frame_rate: int,
+        bands: List[Tuple[Optional[float], Optional[float]]] = None,
+        invert: bool = False, order: int = 10,
+        frequency: Optional[float] = 6, waveform: str = 'sine'
+) -> np.ndarray:
+    """
+    Filter sound with oscillating cutoff frequencies.
+
+    :param sound:
+        sound to be modified
+    :param frame_rate:
+        number of frames per second
+    :param bands:
+        list of pairs of minimum and maximum cutoff frequencies (in Hz);
+        oscillations are between sounds obtained from input sound after
+        applying filters with such cutoff frequencies
+    :param invert:
+        if it is `True`, for bands with both cutoff frequencies set not to
+        `None`, band-stop filters are applied instead of band-pass filters
+    :param order:
+        order of filters; the higher it is, the steeper cutoffs are
+    :param frequency:
+        frequency of oscillations between filtered sounds (in Hz)
+    :param waveform:
+        form of wave that specifies oscillations between filtered sounds
+    :return:
+        sound filtered with varying cutoff frequencies
+    """
+    bands = bands or [(None, None)]
+    if len(bands) == 1:
+        sound = frequency_filter(
+            sound, frame_rate, bands[0][0], bands[0][1], invert, order
+        )
+        return sound
+    filtered_sounds = [
+        frequency_filter(
+            sound, frame_rate, min_cutoff_frequency, max_cutoff_frequency,
+            invert, order
+        )
+        for min_cutoff_frequency, max_cutoff_frequency in bands
+    ]
+    filtered_sounds = [
+        x.reshape((1, x.shape[0], x.shape[1])) for x in filtered_sounds
+    ]
+    filtered_sounds = np.concatenate(filtered_sounds)
+    sound = oscillate_between_sounds(
+        filtered_sounds, frame_rate, frequency, waveform
+    )
     return sound
 
 
@@ -184,6 +272,7 @@ def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
     """
     registry = {
         'filter': frequency_filter,
+        'filter_sweep': filter_sweep,
         'overdrive': overdrive,
         'tremolo': tremolo,
         'vibrato': vibrato
