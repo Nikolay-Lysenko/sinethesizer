@@ -5,11 +5,50 @@ Author: Nikolay Lysenko
 """
 
 
+import numpy as np
 import pytest
 
 from sinethesizer.synth.adsr_envelopes import trapezoid
 from sinethesizer.synth.timbre import OvertoneSpec, TimbreSpec
-from sinethesizer.synth.utils import validate_timbre_spec
+from sinethesizer.synth.utils import (
+    oscillate_between_sounds, validate_timbre_spec
+)
+
+
+@pytest.mark.parametrize(
+    "sounds, frame_rate, frequency, waveform, expected",
+    [
+        (
+            np.array(
+                [
+                    [[1, 2, 3, 4, 5, 6, 7, 8]],
+                    [[-1, -2, -3, -4, -5, -6, -7, -8]]
+                ]
+            ),
+            4, 1, 'sine',
+            np.array([[0, -2, 0, 4, 0, -6, 0, 8]])
+        ),
+        (
+            np.array(
+                [
+                    [[1, 2, 3, 4, 5, 6, 7, 8]],
+                    [[-1, -1, -1, -1, -1, -1, -1, -1]],
+                    [[-2, -2, -2, -2, -2, -2, -2, -2]],
+                    [[11, 12, 13, 14, 15, 16, 17, 18]],
+                ]
+            ),
+            4, 0.5, 'triangle',
+            np.array([[1, -0.25, -1.5, 2, 15, 2.5, -1.5, 1.25]])
+        ),
+    ]
+)
+def test_oscillate_between_sounds(
+        sounds: np.ndarray, frame_rate: int, frequency: float,
+        waveform: str, expected: np.ndarray
+) -> None:
+    """Test `oscillate_between_sounds` function."""
+    result = oscillate_between_sounds(sounds, frame_rate, frequency, waveform)
+    np.testing.assert_almost_equal(result, expected)
 
 
 @pytest.mark.parametrize(
