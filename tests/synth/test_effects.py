@@ -12,7 +12,7 @@ import pytest
 
 from sinethesizer.synth.effects import (
     frequency_filter, oscillate_between_sounds, filter_sweep,
-    overdrive, tremolo, vibrato
+    overdrive, phaser, tremolo, vibrato
 )
 from sinethesizer.synth.waves import generate_wave
 
@@ -210,6 +210,19 @@ def test_overdrive(
         sound, frame_rate, fraction_to_clip, strength
     )
     np.testing.assert_almost_equal(result, expected)
+
+
+@pytest.mark.parametrize(
+    "frequency, frame_rate",
+    [
+        (440, 44100),
+    ]
+)
+def test_phaser(frequency: float, frame_rate: int) -> None:
+    """Test that `phaser` function runs without failures."""
+    sound = generate_wave('sine', frequency, np.ones(frame_rate), frame_rate)
+    result = phaser(sound, frame_rate)
+    assert np.all(np.isfinite(result))
 
 
 @pytest.mark.parametrize(

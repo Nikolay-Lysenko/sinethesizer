@@ -12,7 +12,7 @@ It is a digital additive synthesizer that provides a flexible way to create new 
 The list of implemented and planned features is as follows:
 - [x] Balance between freedom for user and simplicity of input formats
 - [x] Stereo sound
-- [x] Sound effects (e.g., tremolo, vibrato, overdrive, etc)
+- [x] Sound effects (e.g., vibrato, overdrive, phaser, etc)
 - [x] Partial support of subtractive synthesis and FM synthesis
 - [ ] Noises and drums
 - [ ] Rich collection of presets

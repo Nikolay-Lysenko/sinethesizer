@@ -99,7 +99,7 @@ def filter_sweep(
         sound: np.ndarray, frame_rate: int,
         bands: List[Tuple[Optional[float], Optional[float]]] = None,
         invert: bool = False, order: int = 10,
-        frequency: Optional[float] = 6, waveform: str = 'sine'
+        frequency: float = 6, waveform: str = 'sine'
 ) -> np.ndarray:
     """
     Filter sound with oscillating cutoff frequencies.
@@ -182,6 +182,57 @@ def overdrive(
         + clipping_cond * clipped_sound
     )
     sound /= (1 - strength)
+    return sound
+
+
+def phaser(
+        sound: np.ndarray, frame_rate: int,
+        min_center: float = 220, max_center: float = 880,
+        band_width: float = 20, n_bands: int = 10, order: int = 10,
+        frequency: float = 5, waveform: str = 'sine',
+        original_share: float = 0.75, wahwah: bool = False
+) -> np.ndarray:
+    """
+    Apply phaser effect to sound.
+
+    :param sound:
+        sound to be modified
+    :param frame_rate:
+        number of frames per second
+    :param min_center:
+        central frequency of the lowest band (in Hz)
+    :param max_center:
+        central frequency of the highest band (in Hz)
+    :param band_width:
+        width of sweeping band (in Hz)
+    :param n_bands:
+        number of band positions to consider; the higher it is, the more close
+        to classical phaser result is, but also the longer computations are
+        and the higher RAM consumption is during track creation
+    :param order:
+        order of filters; the higher it is, the steeper cutoffs are
+    :param frequency:
+        frequency of sweeping band oscillations
+    :param waveform:
+        form of wave of sweeping band oscillations
+    :param original_share:
+        share of original sound in resulting sound
+    :param wahwah:
+        if it is `True`, band-pass filters are used instead of band-stop
+        filters and so the effect to be applied is called wah-wah, not phaser
+    :return:
+        phased sound
+    """
+    step = (max_center - min_center) / n_bands
+    bands = [
+        (center - band_width / 2, center + band_width / 2)
+        for center in np.arange(min_center, max_center + 1e-7, step)
+    ]
+    invert = not wahwah
+    filtered_sound = filter_sweep(
+        sound, frame_rate, bands, invert, order, frequency, waveform
+    )
+    sound = original_share * sound + (1 - original_share) * filtered_sound
     return sound
 
 
@@ -274,6 +325,7 @@ def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
         'filter': frequency_filter,
         'filter_sweep': filter_sweep,
         'overdrive': overdrive,
+        'phaser': phaser,
         'tremolo': tremolo,
         'vibrato': vibrato
     }
