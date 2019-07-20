@@ -195,6 +195,13 @@ def phaser(
     """
     Apply phaser effect to sound.
 
+    Here, phaser is defined as weighted sum of:
+    1) original sound;
+    2) original sound modified by sweeping band-stop filter of narrow band.
+
+    Note that playing with arguments can significantly change resulting sound
+    and some settings produce awkward non-musical sounds.
+
     :param sound:
         sound to be modified
     :param frame_rate:
@@ -212,7 +219,8 @@ def phaser(
     :param order:
         order of filters; the higher it is, the steeper cutoffs are
     :param frequency:
-        frequency of sweeping band oscillations
+        frequency of sweeping band oscillations;
+        the higher it is, the more input sound is distorted
     :param waveform:
         form of wave of sweeping band oscillations
     :param original_share:
