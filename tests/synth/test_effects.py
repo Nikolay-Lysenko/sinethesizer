@@ -142,7 +142,8 @@ def test_muting_of_filter_sweep(
     ]
     sound = sum(waves)
     result = filter_sweep(
-        sound, frame_rate, bands, frequency=osc_frequency, waveform=waveform)
+        sound, frame_rate, bands, frequency=osc_frequency, waveform=waveform
+    )
     assert (
         np.sum(np.abs(result[:, :100]))
         < 0.01 * np.sum(np.abs(sound[:, :100]))
@@ -150,6 +151,24 @@ def test_muting_of_filter_sweep(
     assert (
         np.sum(np.abs(result[:, -100:]))
         > 0.5 * np.sum(np.abs(sound[:, -100:]))
+    )
+
+
+@pytest.mark.parametrize(
+    "frequency, frame_rate, bands, osc_frequency, waveform",
+    [
+        (440, 44100, [(4000, None)], 0.5, 'sine'),
+    ]
+)
+def test_filter_sweep_on_one_band(
+        frequency: float, frame_rate: int,
+        bands: List[Tuple[Optional[float], Optional[float]]],
+        osc_frequency: float, waveform: str
+) -> None:
+    """Test that `filter_sweep` function runs if there is one band only."""
+    sound = generate_wave('sine', frequency, np.ones(frame_rate), frame_rate)
+    _ = filter_sweep(
+        sound, frame_rate, bands, frequency=osc_frequency, waveform=waveform
     )
 
 
