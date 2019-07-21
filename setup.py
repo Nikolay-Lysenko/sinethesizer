@@ -12,15 +12,15 @@ from setuptools import setup, find_packages
 current_dir = os.path.abspath(os.path.dirname(__file__))
 
 description = (
-   'A virtual analog synthesizer that provides a flexible way to create '
-   'new digital instruments with their own timbres.'
+   'A digital additive synthesizer that provides a flexible way to create '
+   'new virtual instruments with their own timbres.'
 )
 with open(os.path.join(current_dir, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
     name='sinethesizer',
-    version='0.2.5',
+    version='0.2.6',
     description=description,
     long_description=long_description,
     long_description_content_type='text/markdown',
