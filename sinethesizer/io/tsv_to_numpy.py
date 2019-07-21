@@ -8,7 +8,7 @@ Author: Nikolay Lysenko
 import os
 import json
 from math import ceil
-from typing import List, Dict, Any, Union
+from typing import List, Dict, Any
 
 import numpy as np
 
@@ -53,7 +53,7 @@ def apply_effects(
     :param frame_rate:
         number of frames per second
     :param effects_def:
-        jSON string with list of effects to be applied
+        JSON string with list of effects to be applied
     :return:
         modified sound
     """
@@ -83,19 +83,15 @@ def add_event_to_timeline(
         mapping from timbre name to its specification
     :param max_channel_delay:
         maximum possible delay between channels in seconds;
-        it is a measure of potential size of space occupied by sound sources
+        it is a measure of size of imaginary space occupied by sound sources
     :param frame_rate:
         number of frames per second
     :return:
         timeline with sound event added
     """
-    if isinstance(event['frequency'], str):
-        frequency = convert_note_to_frequency(event['frequency'])
-    else:
-        frequency = event['frequency']
     sound = synthesize(
         timbres_registry[event['timbre']],
-        frequency,
+        event['frequency'],
         event['volume'],
         event['duration'],
         event['location'],
@@ -123,17 +119,17 @@ def set_types(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         sound events where values have proper types
     """
 
-    def maybe_convert_to_float(x: str) -> Union[str, float]:
+    def parse_frequency(x: str) -> float:
         try:
             x = float(x)
         except ValueError:
-            pass
+            x = convert_note_to_frequency(x)
         return x
 
     field_to_caster = {
         'start_time': float,
         'duration': float,
-        'frequency': maybe_convert_to_float,
+        'frequency': parse_frequency,
         'volume': float,
         'location': float
     }
@@ -159,10 +155,10 @@ def convert_tsv_to_timeline(
     """
     events = []
     with open(input_path) as input_file:
-        schema = input_file.readline().rstrip(os.linesep).split('\t')
+        column_names = input_file.readline().rstrip(os.linesep).split('\t')
         for line in input_file.readlines():
             events.append(
-                dict(zip(schema, line.rstrip(os.linesep).split('\t')))
+                dict(zip(column_names, line.rstrip(os.linesep).split('\t')))
             )
     events = set_types(events)
 

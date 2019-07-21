@@ -1,12 +1,13 @@
+# This file contains examples of `sinethesizer` timbres.
 ---
 
-# This instrument is just a bare sine wave.
+# This is a minimal example.
 - name: sine
   fundamental_waveform: sine
   fundamental_volume_envelope:
-    name: constant_with_linear_ends
+    name: trapezoid
 
-# This instrument is a sine wave with modulated harmonics.
+# This is an example of additive synthesis (overtones are added explicitly).
 - name: sine_with_3_harmonics
   fundamental_waveform: sine
   fundamental_volume_envelope:
@@ -44,18 +45,25 @@
       sustain_level: 0.6
       release_share: 0.5
 
-# This instrument resembles organ a bit.
-- name: poor_organ
+# This is an example of subtractive synthesis (some frequencies are filtered out).
+- name: poor_violin
+  fundamental_waveform: sawtooth
+  fundamental_volume_envelope:
+    name: trapezoid
+  fundamental_effects:
+    - name: filter
+      min_frequency: 800
+      max_frequency: 2000
+    - name: vibrato
+      frequency: 2
+      width: 0.1
+
+# This is an example of FM synthesis (ultra fast vibrato modifies timbre).
+- name: fm_sine
   fundamental_waveform: sine
   fundamental_volume_envelope:
-    name: constant_with_linear_ends
-  overtones_specs:
-  - waveform: sine
-    frequency_ratio: 1.5
-    volume_share: 0.4
-    volume_envelope:
-      name: constant_with_linear_ends
-    effects:
-    - name: tremolo
-      frequency: 3
-      amplitude: 0.25
+    name: relative_adsr
+  fundamental_effects:
+    - name: vibrato
+      frequency: 100
+      width: 0.5

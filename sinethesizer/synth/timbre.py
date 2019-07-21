@@ -23,7 +23,9 @@ class OvertoneSpec(NamedTuple):
     :param volume_share:
         share of total volume (volume of all partials
         including the fundamental) that is taken by the overtone
-        if all partials have unit volume on their envelopes
+        if all partials have unit volume on their envelopes;
+        in other words, it is peak volume of this overtone
+        divided by sum of peak volumes of all overtones and fundamental
     :param volume_envelope_fn:
         function that maps duration in seconds and frame rate to
         volume envelope for this overtone

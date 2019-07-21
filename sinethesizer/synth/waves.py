@@ -21,9 +21,8 @@ NAME_TO_WAVEFORM = {
 
 
 def generate_wave(
-        form: str, frequency: float, amplitudes: np.ndarray,
-        location: float, max_channel_delay: float, frame_rate: int,
-        phase: int = 0,
+        form: str, frequency: float, amplitudes: np.ndarray, frame_rate: int,
+        location: float = 0, max_channel_delay: float = 0, phase: int = 0
 ) -> np.ndarray:
     """
     Generate sound wave.
@@ -32,18 +31,18 @@ def generate_wave(
         form of wave;
         it can be one of 'sine', 'square', 'triangle', and 'sawtooth'
     :param frequency:
-        frequency of sine wave; it defines pitch of sound
+        frequency of wave; it defines pitch of sound
     :param amplitudes:
         array of amplitudes for each time frame;
         it defines volume of sound, its duration, and its volume envelope
+    :param frame_rate:
+        number of frames per second
     :param location:
         location of sound source;
         -1 stands for extremely left and 1 stands for extremely right
     :param max_channel_delay:
         maximum possible delay between channels in seconds;
         it is correlated with size of imaginary space occupied by sound sources
-    :param frame_rate:
-        number of frames per second
     :param phase:
         phase shift in frames
     :return:

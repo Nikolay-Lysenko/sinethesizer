@@ -14,7 +14,7 @@ import pytest
 from sinethesizer.io.load_presets import create_timbres_registry
 from sinethesizer.synth import synthesize
 from sinethesizer.synth.timbre import TimbreSpec, OvertoneSpec
-from sinethesizer.synth.adsr_envelopes import constant_with_linear_ends
+from sinethesizer.synth.adsr_envelopes import trapezoid
 from sinethesizer.synth.effects import tremolo
 
 
@@ -27,12 +27,12 @@ from sinethesizer.synth.effects import tremolo
                 "- name: sine",
                 "  fundamental_waveform: sine",
                 "  fundamental_volume_envelope:",
-                "    name: constant_with_linear_ends"
+                "    name: trapezoid"
             ],
             {
                 'sine': TimbreSpec(
                     fundamental_waveform='sine',
-                    fundamental_volume_envelope_fn=constant_with_linear_ends,
+                    fundamental_volume_envelope_fn=trapezoid,
                     fundamental_effects=[],
                     overtones_specs=[]
                 )
@@ -44,13 +44,13 @@ from sinethesizer.synth.effects import tremolo
                 "- name: poor_organ",
                 "  fundamental_waveform: sine",
                 "  fundamental_volume_envelope:",
-                "    name: constant_with_linear_ends",
+                "    name: trapezoid",
                 "  overtones_specs:",
                 "  - waveform: sine",
                 "    frequency_ratio: 1.5",
                 "    volume_share: 0.4",
                 "    volume_envelope:",
-                "      name: constant_with_linear_ends",
+                "      name: trapezoid",
                 "    effects:",
                 "    - name: tremolo",
                 "      frequency: 3",
@@ -59,14 +59,14 @@ from sinethesizer.synth.effects import tremolo
             {
                 'poor_organ': TimbreSpec(
                     fundamental_waveform='sine',
-                    fundamental_volume_envelope_fn=constant_with_linear_ends,
+                    fundamental_volume_envelope_fn=trapezoid,
                     fundamental_effects=[],
                     overtones_specs=[
                         OvertoneSpec(
                             waveform='sine',
                             frequency_ratio=1.5,
                             volume_share=0.4,
-                            volume_envelope_fn=constant_with_linear_ends,
+                            volume_envelope_fn=trapezoid,
                             effects=[
                                 partial(tremolo, frequency=3, amplitude=0.25)
                             ]
@@ -81,7 +81,7 @@ from sinethesizer.synth.effects import tremolo
                 "- name: another_poor_organ",
                 "  fundamental_waveform: sine",
                 "  fundamental_volume_envelope:",
-                "    name: constant_with_linear_ends",
+                "    name: trapezoid",
                 "  fundamental_effects:",
                 "  - name: tremolo",
                 "    frequency: 3",
@@ -91,12 +91,12 @@ from sinethesizer.synth.effects import tremolo
                 "    frequency_ratio: 1.5",
                 "    volume_share: 0.4",
                 "    volume_envelope:",
-                "      name: constant_with_linear_ends"
+                "      name: trapezoid"
             ],
             {
                 'another_poor_organ': TimbreSpec(
                     fundamental_waveform='sine',
-                    fundamental_volume_envelope_fn=constant_with_linear_ends,
+                    fundamental_volume_envelope_fn=trapezoid,
                     fundamental_effects=[
                         partial(tremolo, frequency=3, amplitude=0.25)
                     ],
@@ -105,7 +105,7 @@ from sinethesizer.synth.effects import tremolo
                             waveform='sine',
                             frequency_ratio=1.5,
                             volume_share=0.4,
-                            volume_envelope_fn=constant_with_linear_ends,
+                            volume_envelope_fn=trapezoid,
                             effects=[]
                         )
                     ]

@@ -32,6 +32,7 @@ def relative_adsr(
         share of decay stage
     :param sustain_level:
         volume level at sustain stage where 1 is the peak level
+        (i.e., level at the end of attack)
     :param release_share:
         share of release stage
     :return:
@@ -87,6 +88,7 @@ def absolute_adsr(
         maximum decay time in seconds
     :param sustain_level:
         volume level at sustain stage where 1 is the peak level
+        (i.e., level at the end of attack)
     :param release_time:
         maximum release time in seconds
     :return:
@@ -164,9 +166,9 @@ def spike(
     return envelope
 
 
-def constant_with_linear_ends(
+def trapezoid(
         duration: float, frame_rate: int,
-        begin_share: float = 0.1, end_share: float = 0.1
+        begin_share: float = 0.2, end_share: float = 0.1
 ) -> np.ndarray:
     """
     Create envelope with amplitude that is constant everywhere except its ends.
@@ -203,6 +205,6 @@ def get_envelopes_registry() -> Dict[str, ENVELOPE_FN_TYPE]:
         'absolute_adsr': absolute_adsr,
         'relative_adsr': relative_adsr,
         'spike': spike,
-        'constant_with_linear_ends': constant_with_linear_ends
+        'trapezoid': trapezoid
     }
     return registry

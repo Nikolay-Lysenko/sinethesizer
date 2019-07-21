@@ -60,9 +60,8 @@ def main():
             validate_timbre_spec(timbre_spec)
 
     if cli_args.config_path is None:
-        settings = yaml.safe_load(
-            resource_string(__name__, 'default_config.yml')
-        )
+        config = resource_string(__name__, 'default_config.yml')
+        settings = yaml.safe_load(config)
     else:
         with open(cli_args.config_path) as config_file:
             settings = yaml.safe_load(config_file)
@@ -70,7 +69,9 @@ def main():
 
     timeline = convert_tsv_to_timeline(cli_args.input_path, settings)
     write_timeline_to_wav(
-        cli_args.output_path, timeline, settings['frame_rate']
+        cli_args.output_path,
+        timeline,
+        settings['frame_rate']
     )
 
 
