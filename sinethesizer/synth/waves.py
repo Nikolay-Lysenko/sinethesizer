@@ -31,7 +31,7 @@ def generate_wave(
         form of wave;
         it can be one of 'sine', 'square', 'triangle', and 'sawtooth'
     :param frequency:
-        frequency of sine wave; it defines pitch of sound
+        frequency of wave; it defines pitch of sound
     :param amplitudes:
         array of amplitudes for each time frame;
         it defines volume of sound, its duration, and its volume envelope

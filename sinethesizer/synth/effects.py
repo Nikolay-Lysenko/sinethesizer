@@ -43,10 +43,8 @@ def frequency_filter(
     :return:
         sound with some frequencies muted
     """
-    if invert and min_frequency is not None and max_frequency is not None:
-        filter_type = 'bandstop'
-    else:
-        filter_type = 'bandpass'
+    invert = invert and min_frequency is not None and max_frequency is not None
+    filter_type = 'bandstop' if invert else 'bandpass'
     nyquist_frequency = 0.5 * frame_rate
     min_frequency = min_frequency or 1e-2  # Arbitrary small positive number.
     max_frequency = max_frequency or nyquist_frequency - 1e-2
@@ -102,7 +100,7 @@ def filter_sweep(
         frequency: float = 6, waveform: str = 'sine'
 ) -> np.ndarray:
     """
-    Filter sound with oscillating cutoff frequencies.
+    Filter some frequencies from sound with oscillating cutoffs.
 
     :param sound:
         sound to be modified
@@ -200,7 +198,8 @@ def phaser(
     2) original sound modified by sweeping band-stop filter of narrow band.
 
     Note that playing with arguments can significantly change resulting sound
-    and some settings produce awkward non-musical sounds.
+    and some settings produce awkward non-musical sounds. Also note that this
+    effect should be applied only to sounds with rich spectrum.
 
     :param sound:
         sound to be modified

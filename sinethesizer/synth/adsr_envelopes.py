@@ -32,6 +32,7 @@ def relative_adsr(
         share of decay stage
     :param sustain_level:
         volume level at sustain stage where 1 is the peak level
+        (i.e., level at the end of attack)
     :param release_share:
         share of release stage
     :return:
@@ -87,6 +88,7 @@ def absolute_adsr(
         maximum decay time in seconds
     :param sustain_level:
         volume level at sustain stage where 1 is the peak level
+        (i.e., level at the end of attack)
     :param release_time:
         maximum release time in seconds
     :return:
