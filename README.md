@@ -34,7 +34,7 @@ python -m sinethesizer -i path/to/track.tsv -p path/to/presets.yml -o path/to/ou
 Below table provides links to detailed information about input files that are required from user.
 
 Option | Description | Example
-:----: | :---------: | :-----|
+:----: | :---------: | :-----:
 -i path/to/track.tsv | [Track definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/track_definition.md) | [Scale](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/scale.tsv)
 -p path/to/presets.yml | [Timbres definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/timbres_creation.md) | [Demo timbres](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/presets/demo.yml)
 
