@@ -24,10 +24,12 @@ def test_get_list_of_notes() -> None:
     "note, expected",
     [
         ('A4', 440.0),
-        ('Cs5', 554.37),
+        ('C#5', 554.37),
+        ('Db5', 554.37),
         ('E3', 164.81),
-        ('Gs1', 51.91),
-        ('C8', 4186.01)
+        ('G#1', 51.91),
+        ('C8', 4186.01),
+        ('A###b4', 493.88)
     ]
 )
 def test_convert_note_to_frequency(
