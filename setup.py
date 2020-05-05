@@ -38,6 +38,7 @@ setup(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Topic :: Artistic Software',
+        'Topic :: Multimedia :: Sound/Audio :: Sound Synthesis',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3'
     ]
