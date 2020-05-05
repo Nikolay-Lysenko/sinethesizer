@@ -6,7 +6,7 @@ Author: Nikolay Lysenko
 
 
 import argparse
-from pkg_resources import resource_string
+from pkg_resources import resource_filename
 
 import yaml
 
@@ -59,12 +59,10 @@ def main():
         for _, timbre_spec in timbres_registry.items():
             validate_timbre_spec(timbre_spec)
 
-    if cli_args.config_path is None:
-        config = resource_string(__name__, 'default_config.yml')
-        settings = yaml.safe_load(config)
-    else:
-        with open(cli_args.config_path) as config_file:
-            settings = yaml.safe_load(config_file)
+    default_config_path = resource_filename(__name__, 'default_config.yml')
+    config_path = cli_args.config_path or default_config_path
+    with open(config_path) as config_file:
+        settings = yaml.safe_load(config_file)
     settings['timbres_registry'] = timbres_registry
 
     timeline = convert_tsv_to_timeline(cli_args.input_path, settings)

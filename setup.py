@@ -20,7 +20,7 @@ with open(os.path.join(current_dir, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='sinethesizer',
-    version='0.2.8',
+    version='0.2.9',
     description=description,
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -38,6 +38,7 @@ setup(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Topic :: Artistic Software',
+        'Topic :: Multimedia :: Sound/Audio :: Sound Synthesis',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3'
     ]
