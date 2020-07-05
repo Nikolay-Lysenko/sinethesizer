@@ -54,13 +54,15 @@ def synthesize(
         sound = effect_fn(sound, frame_rate)
     for overtone_spec in timbre_spec.overtones_specs:
         envelope = overtone_spec.volume_envelope_fn(duration, frame_rate)
+        overtone_frequency = overtone_spec.frequency_ratio * frequency
         overtone_sound = generate_wave(
             overtone_spec.waveform,
-            overtone_spec.frequency_ratio * frequency,
+            overtone_frequency,
             volume * overtone_spec.volume_share * envelope,
             frame_rate,
             location,
-            max_channel_delay
+            max_channel_delay,
+            int(round((frame_rate / overtone_frequency * overtone_spec.phase)))
         )
         for effect_fn in overtone_spec.effects:
             overtone_sound = effect_fn(overtone_sound, frame_rate)

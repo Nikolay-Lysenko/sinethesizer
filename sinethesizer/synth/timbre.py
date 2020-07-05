@@ -29,6 +29,8 @@ class OvertoneSpec(NamedTuple):
     :param volume_envelope_fn:
         function that maps duration in seconds and frame rate to
         volume envelope for this overtone
+    :param phase:
+        phase shift as fraction of the overtone's period
     :param effects:
         sound effects that are applied to the overtone
     """
@@ -37,6 +39,7 @@ class OvertoneSpec(NamedTuple):
     frequency_ratio: float
     volume_share: float
     volume_envelope_fn: ENVELOPE_FN_TYPE
+    phase: float
     effects: List[EFFECT_FN_TYPE]
 
 
