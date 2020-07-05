@@ -77,6 +77,7 @@ def create_overtones_specs(
             volume_envelope_fn=create_volume_envelope_fn(
                 overtone_data['volume_envelope']
             ),
+            phase=overtone_data.get('phase', 0),
             effects=create_list_of_effect_fns(
                 overtone_data.get('effects', [])
             )

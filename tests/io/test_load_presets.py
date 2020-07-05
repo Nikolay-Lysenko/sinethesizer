@@ -67,6 +67,7 @@ from sinethesizer.synth.effects import tremolo
                             frequency_ratio=1.5,
                             volume_share=0.4,
                             volume_envelope_fn=trapezoid,
+                            phase=0,
                             effects=[
                                 partial(tremolo, frequency=3, amplitude=0.25)
                             ]
@@ -106,6 +107,7 @@ from sinethesizer.synth.effects import tremolo
                             frequency_ratio=1.5,
                             volume_share=0.4,
                             volume_envelope_fn=trapezoid,
+                            phase=0,
                             effects=[]
                         )
                     ]

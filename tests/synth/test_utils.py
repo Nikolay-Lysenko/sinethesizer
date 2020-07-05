@@ -5,7 +5,6 @@ Author: Nikolay Lysenko
 """
 
 
-import numpy as np
 import pytest
 
 from sinethesizer.synth.adsr_envelopes import trapezoid
@@ -36,6 +35,7 @@ from sinethesizer.synth.utils import validate_timbre_spec
                         frequency_ratio=1.5,
                         volume_share=0.4,
                         volume_envelope_fn=trapezoid,
+                        phase=0,
                         effects=[]
                     )
                 ]
@@ -62,6 +62,7 @@ from sinethesizer.synth.utils import validate_timbre_spec
                         frequency_ratio=1.5,
                         volume_share=0.4,
                         volume_envelope_fn=trapezoid,
+                        phase=0,
                         effects=[]
                     )
                 ]
@@ -79,6 +80,7 @@ from sinethesizer.synth.utils import validate_timbre_spec
                         frequency_ratio=0.5,
                         volume_share=0.4,
                         volume_envelope_fn=trapezoid,
+                        phase=0,
                         effects=[]
                     )
                 ]
@@ -96,6 +98,7 @@ from sinethesizer.synth.utils import validate_timbre_spec
                         frequency_ratio=1.5,
                         volume_share=2,
                         volume_envelope_fn=trapezoid,
+                        phase=0,
                         effects=[]
                     )
                 ]
