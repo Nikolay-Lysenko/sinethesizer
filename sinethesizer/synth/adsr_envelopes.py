@@ -123,6 +123,7 @@ def generic_adsr(
         step = 1 / n_frames_with_release
         xs = np.arange(0, 1, step)
         release = sustain_level * (1 - xs ** release_degree)
+        release = release[:n_frames_with_release]
     else:
         release = np.array([])
     remaining_duration_in_frames -= len(release)
