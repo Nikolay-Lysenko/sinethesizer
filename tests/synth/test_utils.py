@@ -7,7 +7,7 @@ Author: Nikolay Lysenko
 
 import pytest
 
-from sinethesizer.synth.adsr_envelopes import trapezoid
+from sinethesizer.synth.envelopes import trapezoid
 from sinethesizer.synth.timbre import OvertoneSpec, TimbreSpec
 from sinethesizer.synth.utils import validate_timbre_spec
 

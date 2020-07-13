@@ -1,17 +1,17 @@
 """
-Test `sinethesizer.synth.adsr_envelopes` module.
+Test `sinethesizer.synth.envelopes` module.
 
 Author: Nikolay Lysenko
 """
 
 
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pytest
 
-from sinethesizer.synth.adsr_envelopes import (
-    generic_adsr, relative_adsr, spike, trapezoid
+from sinethesizer.synth.envelopes import (
+    generic_adsr, relative_adsr, spike, trapezoid, user_defined_envelope
 )
 
 
@@ -204,4 +204,38 @@ def test_trapezoid(
     result = trapezoid(
         duration, frame_rate, begin_share, end_share
     )
+    np.testing.assert_almost_equal(result, expected)
+
+
+@pytest.mark.parametrize(
+    "duration, frame_rate, parts, expected",
+    [
+        (
+            # `duration`
+            2,
+            # `frame_rate`
+            10,
+            # `parts`
+            [
+                {
+                    'values': [1.0, 1.0, 0.9, 0.2, 0.1],
+                    'max_duration': None
+                },
+            ],
+            # `expected`
+            np.array([
+                0.5128205, 0.7692308, 0.974359, 0.974359, 0.974359,
+                0.974359, 0.974359, 0.9487179, 0.9230769, 0.8974359,
+                0.8769231, 0.6974359, 0.5179487, 0.3384615, 0.1948718,
+                0.1692308, 0.1435897, 0.1179487, 0.0974359, 0.0717949
+            ])
+        ),
+    ]
+)
+def test_user_defined_envelope(
+        duration: float, frame_rate: int, parts: List[Dict[str, Any]],
+        expected: np.ndarray
+) -> None:
+    """Test `user_defined_envelope` function."""
+    result = user_defined_envelope(duration, frame_rate, parts)
     np.testing.assert_almost_equal(result, expected)

@@ -1,14 +1,19 @@
 """
-Define ADSR (Attack-Decay-Sustain-Release) envelopes for wave amplitude.
+Define envelopes for wave amplitude.
+
+Supported types of envelopes are as follows:
+* ADSR (Attack-Decay-Sustain-Release);
+* user-defined.
 
 Author: Nikolay Lysenko
 """
 
 
 from math import ceil, floor
-from typing import Callable, Dict, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 import numpy as np
+from scipy.signal import upfirdn
 
 
 ENVELOPE_FN_TYPE = Callable[[float, int], np.ndarray]
@@ -242,6 +247,52 @@ def trapezoid(
     return envelope
 
 
+def user_defined_envelope(
+        duration: float, frame_rate: int, parts: List[Dict[str, Any]]
+) -> np.ndarray:
+    """
+    Upsample user-defined envelope to desired frame rate.
+
+    :param duration:
+        duration of sound in seconds
+    :param frame_rate:
+        number of frames per second
+    :param parts:
+        list of dictionaries representing successive parts of an envelope;
+        there, 'values' key relates to envelope values and 'max_duration' key
+        relates to maximum duration of this part in seconds
+    :return:
+        envelope
+    """
+    remaining_duration_in_frames = ceil(duration * frame_rate)
+    remaining_length = sum(len(part['values']) for part in parts)
+    results = []
+    for part in parts:
+        current_length = len(part['values'])
+        fraction = current_length / remaining_length
+        part_duration_in_frames = min(
+            floor(fraction * remaining_duration_in_frames),
+            floor((part['max_duration'] or 1e7) * frame_rate)
+        )
+        step = 1 / (2 * part_duration_in_frames - 1)
+        convolution_weights = 1 - 2 * np.abs(np.arange(0, 1, step) - 0.5)
+        over_upsampled_result = upfirdn(
+            convolution_weights,
+            np.array(part['values']),
+            up=part_duration_in_frames
+        )
+        start = ceil(part_duration_in_frames / 2)
+        stop = -floor(part_duration_in_frames / 2)
+        current_result = over_upsampled_result[start:stop:current_length]
+        results.append(current_result)
+        remaining_length -= current_length
+        remaining_duration_in_frames -= len(current_result)
+    zero_padding = np.zeros(remaining_duration_in_frames)
+    results.append(zero_padding)
+    envelope = np.concatenate(results)
+    return envelope
+
+
 def get_envelopes_registry() -> Dict[str, ENVELOPE_FN_TYPE]:
     """
     Get mapping from envelope names to functions that create them.
@@ -253,6 +304,7 @@ def get_envelopes_registry() -> Dict[str, ENVELOPE_FN_TYPE]:
         'generic_adsr': generic_adsr,
         'relative_adsr': relative_adsr,
         'spike': spike,
-        'trapezoid': trapezoid
+        'trapezoid': trapezoid,
+        'user_defined': user_defined_envelope,
     }
     return registry

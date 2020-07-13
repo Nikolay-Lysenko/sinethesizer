@@ -12,7 +12,7 @@ import pytest
 import numpy as np
 
 from sinethesizer.io.tsv_to_numpy import convert_tsv_to_timeline
-from sinethesizer.synth.adsr_envelopes import trapezoid
+from sinethesizer.synth.envelopes import trapezoid
 from sinethesizer.synth.timbre import TimbreSpec
 
 

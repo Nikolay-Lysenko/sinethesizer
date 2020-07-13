@@ -14,8 +14,8 @@ import pytest
 from sinethesizer.io.load_presets import create_timbres_registry
 from sinethesizer.synth import synthesize
 from sinethesizer.synth.timbre import TimbreSpec, OvertoneSpec
-from sinethesizer.synth.adsr_envelopes import trapezoid
 from sinethesizer.synth.effects import tremolo
+from sinethesizer.synth.envelopes import trapezoid
 
 
 @pytest.mark.parametrize(
