@@ -251,7 +251,7 @@ def user_defined_envelope(
         duration: float, frame_rate: int, parts: List[Dict[str, Any]]
 ) -> np.ndarray:
     """
-    Upsample user-defined envelope to desired frame rate.
+    Create envelope that is an upsampled version of a user-defined envelope.
 
     :param duration:
         duration of sound in seconds
@@ -259,34 +259,37 @@ def user_defined_envelope(
         number of frames per second
     :param parts:
         list of dictionaries representing successive parts of an envelope;
-        there, 'values' key relates to envelope values and 'max_duration' key
-        relates to maximum duration of this part in seconds
+        there, 'values' key relates to envelope values (from its very
+        beginning up to its very end inclusively) and 'max_duration' key
+        relates to maximum allowed duration of this part in seconds
     :return:
         envelope
     """
     remaining_duration_in_frames = ceil(duration * frame_rate)
-    remaining_length = sum(len(part['values']) for part in parts)
+    # 1 is subtracted, because there are N - 1 intervals between N points.
+    remaining_length = sum(len(part['values']) - 1 for part in parts)
     results = []
     for part in parts:
-        current_length = len(part['values'])
-        fraction = current_length / remaining_length
+        current_length = len(part['values']) - 1
+        length_fraction = current_length / remaining_length
         part_duration_in_frames = min(
-            floor(fraction * remaining_duration_in_frames),
+            floor(length_fraction * remaining_duration_in_frames),
             floor((part['max_duration'] or 1e7) * frame_rate)
         )
-        step = 1 / (2 * part_duration_in_frames - 1)
-        convolution_weights = 1 - 2 * np.abs(np.arange(0, 1, step) - 0.5)
-        over_upsampled_result = upfirdn(
-            convolution_weights,
-            np.array(part['values']),
-            up=part_duration_in_frames
-        )
-        start = ceil(part_duration_in_frames / 2)
-        stop = -floor(part_duration_in_frames / 2)
-        current_result = over_upsampled_result[start:stop:current_length]
+
+        current_result = np.zeros(part_duration_in_frames)
+        upsampling_ratio = (part_duration_in_frames - 1) / current_length
+        for i, value in enumerate(part['values']):
+            index = int(round(i * upsampling_ratio))
+            current_result[index] = value
+
+        step = 1 / (2 * round(upsampling_ratio))
+        convolution = 1 - 2 * np.abs(np.arange(0, 1, step) - 0.5)[1:]
+        current_result = np.convolve(current_result, convolution, mode='same')
         results.append(current_result)
         remaining_length -= current_length
         remaining_duration_in_frames -= len(current_result)
+
     zero_padding = np.zeros(remaining_duration_in_frames)
     results.append(zero_padding)
     envelope = np.concatenate(results)
