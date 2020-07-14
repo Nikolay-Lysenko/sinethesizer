@@ -33,7 +33,7 @@ setup(
     package_data={'sinethesizer': ['default_config.yml']},
     include_package_data=True,
     python_requires='>=3.6',
-    install_requires=['numpy', 'PyYAML', 'scipy'],
+    install_requires=['numpy', 'pretty-midi', 'PyYAML', 'scipy'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

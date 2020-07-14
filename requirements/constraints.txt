@@ -6,10 +6,12 @@ codecov==2.0.15
 coverage==4.5.3
 idna==2.8
 importlib-metadata==0.18
+mido==1.2.9
 more-itertools==7.0.0
 numpy==1.19.0
 packaging==19.0
 pluggy==0.12.0
+pretty-midi==0.2.9
 py==1.8.0
 pyparsing==2.4.0
 pytest==4.6.3
