@@ -13,7 +13,6 @@ from math import ceil, floor
 from typing import Any, Callable, Dict, List, Optional
 
 import numpy as np
-from scipy.signal import upfirdn
 
 
 ENVELOPE_FN_TYPE = Callable[[float, int], np.ndarray]
