@@ -12,6 +12,6 @@ from .synth import synthesize
 
 
 __all__ = [
-    'envelopes.py', 'effects', 'timbre', 'utils', 'waves',
+    'envelopes', 'effects', 'timbre', 'utils', 'waves',
     'get_effects_registry', 'get_envelopes_registry', 'synthesize'
 ]
