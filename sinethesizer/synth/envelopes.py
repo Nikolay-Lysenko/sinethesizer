@@ -33,7 +33,7 @@ def generic_adsr(
         release_degree: float = 1.0
 ) -> np.ndarray:
     """
-    Create envelope of shape that depends on numerous parameters.
+    Create ADSR envelope of shape that depends on numerous parameters.
 
     :param duration:
         duration of sound in seconds
@@ -85,6 +85,7 @@ def generic_adsr(
     if n_frames_with_attack > 0:
         step = 1 / n_frames_with_attack
         xs = np.arange(1, 0, -step)
+        xs = np.clip(xs, 0, None)
         attack = 1 - xs ** attack_degree
     else:
         attack = np.array([])
@@ -276,16 +277,16 @@ def user_defined_envelope(
             floor((part['max_duration'] or 1e7) * frame_rate)
         )
 
-        current_result = np.zeros(part_duration_in_frames)
         upsampling_ratio = (part_duration_in_frames - 1) / current_length
-        for i, value in enumerate(part['values']):
-            index = int(round(i * upsampling_ratio))
-            current_result[index] = value
-
-        step = 1 / (2 * round(upsampling_ratio))
-        convolution = 1 - 2 * np.abs(np.arange(0, 1, step) - 0.5)[1:]
-        current_result = np.convolve(current_result, convolution, mode='same')
+        indices = [
+            int(round(i * upsampling_ratio)) for i in range(current_length + 1)
+        ]
+        all_indices = np.linspace(
+            0, part_duration_in_frames, part_duration_in_frames, dtype=np.int32
+        )
+        current_result = np.interp(all_indices, indices, part['values'])
         results.append(current_result)
+
         remaining_length -= current_length
         remaining_duration_in_frames -= len(current_result)
 
