@@ -26,8 +26,15 @@ pip install sinethesizer
 
 ## Usage
 
-This synthesizer converts text files with parameters of sound events to WAV files with resulting audio tracks. It can be done with the following command:
+This synthesizer converts MIDI files and special text files to WAV files with resulting audio tracks.
+
+For a MIDI file, it can be done with the following command:
+```bash
+python -m sinethesizer -i path/to/track.midi -p path/to/presets.yml -m path/to/mapping.yml -o path/to/output.wav
 ```
+
+However, MIDI files do not carry information about source location and sound effects. Here, TSV (Tab-Separated Values) files of special schema can be used as an alternative to MIDI. To process such file, run:
+```bash
 python -m sinethesizer -i path/to/track.tsv -p path/to/presets.yml -o path/to/output.wav
 ```
 
@@ -37,5 +44,6 @@ Option | Description | Example
 :----: | :---------: | :-----:
 -i path/to/track.tsv | [Track definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/track_definition.md) | [Scale](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/scale.tsv)
 -p path/to/presets.yml | [Timbres definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/timbres_creation.md) | [Demo timbres](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/presets/demo.yml)
+-m path/to/mapping.yml | Mapping from MIDI instrument IDs to timbres | [Demo mapping](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/mapping.yml)
 
-If something is still unclear, you can read the source code, because it is well-organized and has built-in documentation. Also your questions are welcome.
+If something is still unclear, you can read the source code — it is structured and has built-in documentation. Also your questions are welcome.
