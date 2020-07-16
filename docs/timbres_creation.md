@@ -21,4 +21,6 @@ volume_envelope | Function that maps duration of sound event in seconds to [dyna
 phase | Phase shift as fraction of the overtone's period; this field is optional and default value is 0
 effects | [Effects](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/sinethesizer/synth/effects.py) (e.g., tremolo) that are always applied to this overtone; this field is optional
 
-All listed above parameters must be set inside of a YAML file of particular structure. Look at an [example](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/presets/demo.yml) of such file to see how it can be done. Also this example shows that above parametrization is compatible not only with additive synthesis, but with subtractive synthesis and FM synthesis as well. 
+All listed above parameters must be set inside of a YAML file of particular structure. Look at an [example](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/presets/demo.yml) of such file to see how it can be done. Also this example shows that above parametrization is compatible not only with additive synthesis, but with subtractive synthesis and FM synthesis as well.
+
+To see one of possible ways of new presets creation, look at a [notebook](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/timebre_generation.ipynb) with automatic generation of YAML file based on Fourier analysis of a real instrument recording.
