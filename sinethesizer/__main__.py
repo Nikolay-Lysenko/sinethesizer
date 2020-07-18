@@ -11,7 +11,10 @@ from pkg_resources import resource_filename
 import yaml
 
 from sinethesizer.io import (
-    convert_tsv_to_timeline, create_timbres_registry, write_timeline_to_wav
+    convert_midi_to_timeline,
+    convert_tsv_to_timeline,
+    create_timbres_registry,
+    write_timeline_to_wav,
 )
 from sinethesizer.synth.utils import validate_timbre_spec
 
@@ -26,7 +29,7 @@ def parse_cli_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Virtual analog synthesizer')
     parser.add_argument(
         '-i', '--input_path', type=str, required=True,
-        help='path to input TSV file with definition of a track to be played'
+        help='path to input TSV or MIDI file with a track to be played'
     )
     parser.add_argument(
         '-p', '--presets_path', type=str, required=True,
@@ -34,7 +37,11 @@ def parse_cli_args() -> argparse.Namespace:
     )
     parser.add_argument(
         '-o', '--output_path', type=str, required=True,
-        help='path to output file where result is going to be saved as WAV'
+        help='path to output WAV file'
+    )
+    parser.add_argument(
+        '-m', '--timbre_mapping_path', type=str, default=None,
+        help='path to YAML file where MIDI instruments are mapped to timbres'
     )
     parser.add_argument(
         '-c', '--config_path', type=str, default=None,
@@ -65,7 +72,19 @@ def main():
         settings = yaml.safe_load(config_file)
     settings['timbres_registry'] = timbres_registry
 
-    timeline = convert_tsv_to_timeline(cli_args.input_path, settings)
+    extension = cli_args.input_path.split('.')[-1].lower()
+    if extension == 'tsv':
+        timeline = convert_tsv_to_timeline(cli_args.input_path, settings)
+    elif extension in ['midi', 'mid']:
+        timeline = convert_midi_to_timeline(
+            cli_args.input_path, cli_args.timbre_mapping_path, settings
+        )
+    else:
+        raise ValueError(
+            "Only input file with extensions tsv, midi, and mid are "
+            f"allowed, but found: {extension}."
+        )
+
     write_timeline_to_wav(
         cli_args.output_path,
         timeline,

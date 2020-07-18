@@ -7,8 +7,8 @@ Author: Nikolay Lysenko
 
 from typing import List, NamedTuple
 
-from sinethesizer.synth.adsr_envelopes import ENVELOPE_FN_TYPE
 from sinethesizer.synth.effects import EFFECT_FN_TYPE
+from sinethesizer.synth.envelopes import ENVELOPE_FN_TYPE
 
 
 class OvertoneSpec(NamedTuple):

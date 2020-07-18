@@ -1,0 +1,5 @@
+# This is an example of mapping MIDI instrument IDs to timbres.
+0: sine_with_3_harmonics  # So 'Acoustic Grand Piano' is played as 'sine_with_3_harmonics'.
+43: sine_with_user_defined_envelope  # So 'Cello' is played as 'sine_with_user_defined_envelope'.
+
+# If an instrument is used in a MIDI file, but is absent in a mapping file, attempt to play the MIDI file will fail.

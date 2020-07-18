@@ -1,5 +1,5 @@
 """
-Test sinethesizer.io.tsv_to_numpy` module.
+Test `sinethesizer.io.tsv_to_numpy` module.
 
 Author: Nikolay Lysenko
 """
@@ -8,11 +8,11 @@ Author: Nikolay Lysenko
 from functools import partial
 from typing import Any, Dict, List
 
-import pytest
 import numpy as np
+import pytest
 
 from sinethesizer.io.tsv_to_numpy import convert_tsv_to_timeline
-from sinethesizer.synth.adsr_envelopes import trapezoid
+from sinethesizer.synth.envelopes import trapezoid
 from sinethesizer.synth.timbre import TimbreSpec
 
 
@@ -55,7 +55,7 @@ from sinethesizer.synth.timbre import TimbreSpec
                     0, 0, 0, 0
                 ]
             ])
-        )
+        ),
     ]
 )
 def test_convert_tsv_to_timeline(

@@ -1,12 +1,16 @@
 """
-Define ADSR (Attack-Decay-Sustain-Release) envelopes for wave amplitude.
+Define envelopes for wave amplitude.
+
+Supported types of envelopes are as follows:
+* ADSR (Attack-Decay-Sustain-Release);
+* user-defined.
 
 Author: Nikolay Lysenko
 """
 
 
 from math import ceil, floor
-from typing import Callable, Dict, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 import numpy as np
 
@@ -29,7 +33,7 @@ def generic_adsr(
         release_degree: float = 1.0
 ) -> np.ndarray:
     """
-    Create envelope of shape that depends on numerous parameters.
+    Create ADSR envelope of shape that depends on numerous parameters.
 
     :param duration:
         duration of sound in seconds
@@ -81,6 +85,7 @@ def generic_adsr(
     if n_frames_with_attack > 0:
         step = 1 / n_frames_with_attack
         xs = np.arange(1, 0, -step)
+        xs = np.clip(xs, 0, None)
         attack = 1 - xs ** attack_degree
     else:
         attack = np.array([])
@@ -123,6 +128,7 @@ def generic_adsr(
         step = 1 / n_frames_with_release
         xs = np.arange(0, 1, step)
         release = sustain_level * (1 - xs ** release_degree)
+        release = release[:n_frames_with_release]
     else:
         release = np.array([])
     remaining_duration_in_frames -= len(release)
@@ -241,6 +247,55 @@ def trapezoid(
     return envelope
 
 
+def user_defined_envelope(
+        duration: float, frame_rate: int, parts: List[Dict[str, Any]]
+) -> np.ndarray:
+    """
+    Create envelope that is an upsampled version of a user-defined envelope.
+
+    :param duration:
+        duration of sound in seconds
+    :param frame_rate:
+        number of frames per second
+    :param parts:
+        list of dictionaries representing successive parts of an envelope;
+        there, 'values' key relates to envelope values (from its very
+        beginning up to its very end inclusively) and 'max_duration' key
+        relates to maximum allowed duration of this part in seconds
+    :return:
+        envelope
+    """
+    remaining_duration_in_frames = ceil(duration * frame_rate)
+    # 1 is subtracted, because there are N - 1 intervals between N points.
+    remaining_length = sum(len(part['values']) - 1 for part in parts)
+    results = []
+    for part in parts:
+        current_length = len(part['values']) - 1
+        length_fraction = current_length / remaining_length
+        part_duration_in_frames = min(
+            floor(length_fraction * remaining_duration_in_frames),
+            floor((part['max_duration'] or 1e7) * frame_rate)
+        )
+
+        upsampling_ratio = (part_duration_in_frames - 1) / current_length
+        indices = [
+            int(round(i * upsampling_ratio)) for i in range(current_length + 1)
+        ]
+        all_indices = np.linspace(
+            0, part_duration_in_frames, part_duration_in_frames, dtype=np.int32
+        )
+        current_result = np.interp(all_indices, indices, part['values'])
+        results.append(current_result)
+
+        remaining_length -= current_length
+        remaining_duration_in_frames -= len(current_result)
+
+    zero_padding = np.zeros(remaining_duration_in_frames)
+    results.append(zero_padding)
+    envelope = np.concatenate(results)
+    return envelope
+
+
 def get_envelopes_registry() -> Dict[str, ENVELOPE_FN_TYPE]:
     """
     Get mapping from envelope names to functions that create them.
@@ -252,6 +307,7 @@ def get_envelopes_registry() -> Dict[str, ENVELOPE_FN_TYPE]:
         'generic_adsr': generic_adsr,
         'relative_adsr': relative_adsr,
         'spike': spike,
-        'trapezoid': trapezoid
+        'trapezoid': trapezoid,
+        'user_defined': user_defined_envelope,
     }
     return registry

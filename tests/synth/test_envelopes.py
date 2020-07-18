@@ -1,17 +1,17 @@
 """
-Test `sinethesizer.synth.adsr_envelopes` module.
+Test `sinethesizer.synth.envelopes` module.
 
 Author: Nikolay Lysenko
 """
 
 
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pytest
 
-from sinethesizer.synth.adsr_envelopes import (
-    generic_adsr, relative_adsr, spike, trapezoid
+from sinethesizer.synth.envelopes import (
+    generic_adsr, relative_adsr, spike, trapezoid, user_defined_envelope
 )
 
 
@@ -204,4 +204,57 @@ def test_trapezoid(
     result = trapezoid(
         duration, frame_rate, begin_share, end_share
     )
+    np.testing.assert_almost_equal(result, expected)
+
+
+@pytest.mark.parametrize(
+    "duration, frame_rate, parts, expected",
+    [
+        (
+            # `duration`
+            2,
+            # `frame_rate`
+            10,
+            # `parts`
+            [
+                {
+                    'values': [0.0, 1.0, 0.9, 0.1, 0.0],
+                    'max_duration': None
+                },
+            ],
+            # `expected`
+            np.array([
+                0.0, 0.2, 0.4, 0.6, 0.8,
+                1.0, 0.98, 0.96, 0.94, 0.92,
+                0.9, 0.7, 0.5, 0.3, 0.1,
+                0.08, 0.06, 0.04, 0.02, 0.0
+            ])
+        ),
+        (
+            # `duration`
+            2,
+            # `frame_rate`
+            10,
+            # `parts`
+            [
+                {
+                    'values': [0.0, 0.5, 1.0, 0.0],
+                    'max_duration': None
+                },
+            ],
+            # `expected`
+            np.array([
+                0, 1 / 12, 2 / 12, 3 / 12, 4 / 12, 5 / 12,
+                0.5, 8 / 14, 9 / 14, 10 / 14, 11 / 14, 12 / 14, 13 / 14,
+                1, 5 / 6, 4 / 6, 3 / 6, 2 / 6, 1 / 6, 0
+            ])
+        ),
+    ]
+)
+def test_user_defined_envelope(
+        duration: float, frame_rate: int, parts: List[Dict[str, Any]],
+        expected: np.ndarray
+) -> None:
+    """Test `user_defined_envelope` function."""
+    result = user_defined_envelope(duration, frame_rate, parts)
     np.testing.assert_almost_equal(result, expected)
