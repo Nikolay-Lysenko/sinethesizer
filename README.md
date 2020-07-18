@@ -13,7 +13,7 @@ The list of implemented and planned features is as follows:
 - [x] Balance between freedom for user and simplicity of input formats
 - [x] Stereo sound
 - [x] Sound effects (e.g., vibrato, overdrive, phaser, etc)
-- [x] Partial support of subtractive synthesis and FM synthesis
+- [x] Custom amplitude envelopes
 - [ ] Noises and drums
 - [ ] Rich collection of presets
 
@@ -30,15 +30,22 @@ This synthesizer converts MIDI files and special text files to WAV files with re
 
 For a MIDI file, it can be done with the following command:
 ```bash
-python -m sinethesizer -i path/to/track.midi -p path/to/presets.yml -m path/to/mapping.yml -o path/to/output.wav
+python -m sinethesizer \
+    -i path/to/track.midi \
+    -p path/to/presets.yml \
+    -m path/to/mapping.yml \
+    -o path/to/output.wav
 ```
 
-However, MIDI files do not carry information about source location and sound effects. Here, TSV (Tab-Separated Values) files of special schema can be used as an alternative to MIDI. To process such file, run:
+However, MIDI files do not carry information about source location and sound effects. Here, TSV (Tab-Separated Values) files of special schema can be used as a more self-contained alternative to MIDI. To process such file, run:
 ```bash
-python -m sinethesizer -i path/to/track.tsv -p path/to/presets.yml -o path/to/output.wav
+python -m sinethesizer \
+    -i path/to/track.tsv \
+    -p path/to/presets.yml \
+    -o path/to/output.wav
 ```
 
-Below table provides links to detailed information about input files that are required from user.
+Below table provides links to detailed information about input files that are required from a user.
 
 Option | Description | Example
 :----: | :---------: | :-----:
