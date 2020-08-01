@@ -8,8 +8,8 @@ Author: Nikolay Lysenko
 import numpy as np
 
 from sinethesizer.synth.timbre import TimbreSpec
-from sinethesizer.synth.waves import generate_wave
 from sinethesizer.synth.utils import calculate_overtones_share
+from sinethesizer.utils.waves import generate_wave
 
 
 def synthesize(
@@ -50,8 +50,9 @@ def synthesize(
         location,
         max_channel_delay
     )
+    sound_info = {'frame_rate': frame_rate, 'fundamental_frequency': frequency}
     for effect_fn in timbre_spec.fundamental_effects:
-        sound = effect_fn(sound, frame_rate)
+        sound = effect_fn(sound, sound_info)
     for overtone_spec in timbre_spec.overtones_specs:
         envelope = overtone_spec.volume_envelope_fn(duration, frame_rate)
         overtone_frequency = overtone_spec.frequency_ratio * frequency
@@ -65,6 +66,6 @@ def synthesize(
             int(round((frame_rate / overtone_frequency * overtone_spec.phase)))
         )
         for effect_fn in overtone_spec.effects:
-            overtone_sound = effect_fn(overtone_sound, frame_rate)
+            overtone_sound = effect_fn(overtone_sound, sound_info)
         sound += overtone_sound
     return sound

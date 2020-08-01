@@ -1,5 +1,5 @@
 """
-Test `sinethesizer.io.utils` module.
+Test `sinethesizer.utils.music_theory` module.
 
 Author: Nikolay Lysenko
 """
@@ -7,7 +7,7 @@ Author: Nikolay Lysenko
 
 import pytest
 
-from sinethesizer.io.utils import (
+from sinethesizer.utils.music_theory import (
     get_list_of_notes, convert_note_to_frequency
 )
 

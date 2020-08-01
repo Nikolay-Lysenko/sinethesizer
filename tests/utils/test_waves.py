@@ -1,5 +1,5 @@
 """
-Test `sinethesizer.synth.waves` module.
+Test `sinethesizer.utils.waves` module.
 
 Author: Nikolay Lysenko
 """
@@ -10,7 +10,7 @@ from math import sqrt
 import pytest
 import numpy as np
 
-from sinethesizer.synth.waves import generate_wave
+from sinethesizer.utils.waves import generate_wave
 
 
 @pytest.mark.parametrize(

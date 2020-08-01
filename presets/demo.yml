@@ -52,8 +52,10 @@
     name: trapezoid
   fundamental_effects:
     - name: filter
-      min_frequency: 800
-      max_frequency: 2000
+      kind: relative
+      min_frequency_ratio: 2.5
+      max_frequency_ratio: 4.5
+      invert: true
     - name: vibrato
       frequency: 2
       width: 0.1

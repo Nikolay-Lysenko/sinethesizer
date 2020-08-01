@@ -6,7 +6,7 @@ Author: Nikolay Lysenko
 
 
 from sinethesizer.synth.timbre import TimbreSpec
-from sinethesizer.synth.waves import NAME_TO_WAVEFORM
+from sinethesizer.utils.waves import NAME_TO_WAVEFORM
 
 
 def calculate_overtones_share(timbre_spec: TimbreSpec) -> float:

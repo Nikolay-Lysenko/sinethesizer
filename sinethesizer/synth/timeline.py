@@ -11,7 +11,7 @@ from typing import Any, Dict, List
 
 import numpy as np
 
-from sinethesizer.synth.effects import get_effects_registry
+from sinethesizer.effects import get_effects_registry
 from sinethesizer.synth.synth import synthesize
 from sinethesizer.synth.timbre import TimbreSpec
 
@@ -45,15 +45,16 @@ def create_empty_timeline(
 
 
 def apply_effects(
-        sound: np.ndarray, frame_rate: int, effects_def: str
+        sound: np.ndarray, sound_info: Dict[str, Any], effects_def: str
 ) -> np.ndarray:
     """
     Apply sound effects.
 
     :param sound:
         sound to be modified
-    :param frame_rate:
-        number of frames per second
+    :param sound_info:
+        information about `sound` variable such as number of frames per second
+        and its fundamental frequency (if it exists)
     :param effects_def:
         JSON string with list of effects to be applied
     :return:
@@ -65,7 +66,7 @@ def apply_effects(
     effects = json.loads(effects_def)
     for effect in effects:
         effect_name = effect.pop('name')
-        sound = effects_registry[effect_name](sound, frame_rate, **effect)
+        sound = effects_registry[effect_name](sound, sound_info, **effect)
     return sound
 
 
@@ -100,7 +101,11 @@ def add_event_to_timeline(
         max_channel_delay,
         frame_rate
     )
-    sound = apply_effects(sound, frame_rate, event['effects'])
+    sound_info = {
+        'frame_rate': frame_rate,
+        'fundamental_frequency': event['frequency']
+    }
+    sound = apply_effects(sound, sound_info, event['effects'])
     n_frames_before = ceil(frame_rate * event['start_time'])
     timeline[:, n_frames_before:n_frames_before+sound.shape[1]] += sound
     return timeline
