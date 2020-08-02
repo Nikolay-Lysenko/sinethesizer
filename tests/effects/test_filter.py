@@ -39,8 +39,8 @@ from sinethesizer.utils.waves import generate_wave
             # `spectrogram_params`
             {'nperseg': 100},
             # `expected`
-            # In this test case, `expected` contains summed power for
-            # frequencies 0, 100, 200, ..., 900 respectively.
+            # In this test case, `expected` contains summed over time power
+            # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
                     0.0024158, 0.0056049, 0.0075644, 0.0097482, 0.5070437,
@@ -65,8 +65,8 @@ from sinethesizer.utils.waves import generate_wave
             # `spectrogram_params`
             {'nperseg': 100},
             # `expected`
-            # In this test case, `expected` contains summed power for
-            # frequencies 0, 100, 200, ..., 900 respectively.
+            # In this test case, `expected` contains summed over time power
+            # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
                     0.0080094, 0.0173524, 0.5157133, 0.0158572, 0.0154468,
@@ -117,8 +117,8 @@ def test_apply_frequency_filter(
             # `spectrogram_params`
             {'nperseg': 100},
             # `expected`
-            # In this test case, `expected` contains summed power for
-            # frequencies 0, 100, 200, ..., 900 respectively.
+            # In this test case, `expected` contains summed over time power
+            # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
                     0.0024158, 0.0056049, 0.0075644, 0.0097482, 0.5070437,
@@ -142,8 +142,8 @@ def test_apply_frequency_filter(
             # `spectrogram_params`
             {'nperseg': 100},
             # `expected`
-            # In this test case, `expected` contains summed power for
-            # frequencies 0, 100, 200, ..., 900 respectively.
+            # In this test case, `expected` contains summed over time power
+            # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
                     0.0080094, 0.0173524, 0.5157133, 0.0158572, 0.0154468,
@@ -167,8 +167,8 @@ def test_apply_frequency_filter(
             # `spectrogram_params`
             {'nperseg': 100},
             # `expected`
-            # In this test case, `expected` contains summed power for
-            # frequencies 0, 100, 200, ..., 900 respectively.
+            # In this test case, `expected` contains summed over time power
+            # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
                     0.0027162, 0.0067605, 0.0103526, 0.0146349, 0.5163752,
@@ -192,8 +192,8 @@ def test_apply_frequency_filter(
             # `spectrogram_params`
             {'nperseg': 100},
             # `expected`
-            # In this test case, `expected` contains summed power for
-            # frequencies 0, 100, 200, ..., 900 respectively.
+            # In this test case, `expected` contains summed over time power
+            # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
                     0.007438026, 0.01572727, 0.5129805, 0.0106836, 0.0093715,
@@ -246,8 +246,8 @@ def test_filter_absolute_frequencies(
             # `spectrogram_params`
             {'nperseg': 100},
             # `expected`
-            # In this test case, `expected` contains summed power for
-            # frequencies 0, 100, 200, ..., 900 respectively.
+            # In this test case, `expected` contains summed over time power
+            # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
                     0.0027162, 0.0067605, 0.0103526, 0.0146349, 0.5163752,
@@ -271,8 +271,8 @@ def test_filter_absolute_frequencies(
             # `spectrogram_params`
             {'nperseg': 100},
             # `expected`
-            # In this test case, `expected` contains summed power for
-            # frequencies 0, 100, 200, ..., 900 respectively.
+            # In this test case, `expected` contains summed over time power
+            # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
                     0.007438026, 0.01572727, 0.5129805, 0.0106836, 0.0093715,

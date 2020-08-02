@@ -16,7 +16,7 @@ from sinethesizer.utils.waves import generate_wave
 
 
 def oscillate_between_sounds(
-        sounds: np.ndarray, sound_info: Dict[str, Any], frequency: float,
+        sounds: np.ndarray, frame_rate: int, frequency: float,
         waveform: str = 'sine'
 ) -> np.ndarray:
     """
@@ -24,9 +24,8 @@ def oscillate_between_sounds(
 
     :param sounds:
         array of shape (n_sounds, n_channels, n_frames)
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param frame_rate:
+        number of frames per second
     :param frequency:
         frequency of oscillations between sound sources
     :param waveform:
@@ -41,7 +40,7 @@ def oscillate_between_sounds(
         waveform,
         frequency,
         np.ones(sounds.shape[2]),
-        sound_info['frame_rate']
+        frame_rate
     )
     wave = wave[0, :]
     weights = (
@@ -106,7 +105,7 @@ def apply_filter_sweep(
     ]
     filtered_sounds = np.concatenate(filtered_sounds)
     sound = oscillate_between_sounds(
-        filtered_sounds, sound_info, frequency, waveform
+        filtered_sounds, sound_info['frame_rate'], frequency, waveform
     )
     return sound
 
