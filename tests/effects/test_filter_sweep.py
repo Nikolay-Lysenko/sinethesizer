@@ -16,7 +16,7 @@ from sinethesizer.effects.filter_sweep import (
     apply_phaser,
     oscillate_between_sounds,
 )
-from sinethesizer.utils.waves import generate_wave
+from sinethesizer.utils.waves import generate_stereo_wave
 
 
 @pytest.mark.parametrize(
@@ -47,8 +47,8 @@ from sinethesizer.utils.waves import generate_wave
             # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
-                    0.0062106, 0.0158941, 0.3569285, 0.0214838, 0.3588611,
-                    0.0213496, 0.5185554, 0.013971, 0.0096646, 0.005742
+                    0.0031053, 0.0079471, 0.1784642, 0.0107419, 0.1794305,
+                    0.0106748, 0.2592777, 0.0069855, 0.0048323, 0.002871
                 ]
             )
         ),
@@ -76,8 +76,8 @@ from sinethesizer.utils.waves import generate_wave
             # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
-                    0.0059891, 0.0137329, 0.2025266, 0.0194084, 0.5194071,
-                    0.0212887, 0.5202222, 0.014996, 0.0102818, 0.0060186
+                    0.0029946, 0.0068664, 0.1012633, 0.0097042, 0.2597036,
+                    0.0106444, 0.2601111, 0.007498, 0.0051409, 0.0030093
                 ]
             )
         ),
@@ -105,8 +105,8 @@ from sinethesizer.utils.waves import generate_wave
             # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
-                    0.0013472, 0.0030189, 0.0034677, 0.0040487, 0.1909366,
-                    0.0037583, 0.0027628, 0.0018015, 0.0009691, 0.0004051
+                    0.0006736, 0.0015094, 0.0017339, 0.0020243, 0.0954683,
+                    0.0018791, 0.0013814, 0.0009007, 0.0004846, 0.0002025
                 ]
             )
         ),
@@ -134,8 +134,8 @@ from sinethesizer.utils.waves import generate_wave
             # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
-                    0.0025234, 0.0057885, 0.0075087, 0.0092877, 0.4853304,
-                    0.0091845, 0.0071357, 0.004656, 0.0024747, 0.0010161
+                    0.0012617, 0.0028942, 0.0037543, 0.0046438, 0.2426652,
+                    0.0045922, 0.0035679, 0.002328, 0.0012373, 0.000508
                 ]
             )
         ),
@@ -149,7 +149,9 @@ def test_apply_filter_sweep(
 ) -> None:
     """Test `apply_filter_sweep` function."""
     waves = [
-        generate_wave('sine', frequency, np.ones(frame_rate), frame_rate)
+        generate_stereo_wave(
+            'sine', frequency, np.ones(frame_rate), frame_rate
+        )
         for frequency in frequencies
     ]
     sound = sum(waves)
@@ -174,7 +176,9 @@ def test_apply_filter_sweep(
 )
 def test_apply_phaser(frequency: float, frame_rate: int, kind: str) -> None:
     """Test that `apply_phaser` function runs without failures."""
-    sound = generate_wave('sine', frequency, np.ones(frame_rate), frame_rate)
+    sound = generate_stereo_wave(
+        'sine', frequency, np.ones(frame_rate), frame_rate
+    )
     sound_info = {'frame_rate': frame_rate, 'fundamental_frequency': frequency}
     result = apply_phaser(sound, sound_info, kind)
     assert np.all(np.isfinite(result))

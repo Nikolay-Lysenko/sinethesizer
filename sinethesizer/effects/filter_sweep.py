@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 
 from sinethesizer.effects.filter import apply_frequency_filter
-from sinethesizer.utils.waves import generate_wave
+from sinethesizer.utils.waves import generate_mono_wave
 
 
 def oscillate_between_sounds(
@@ -36,13 +36,12 @@ def oscillate_between_sounds(
     step = 2 / (sounds.shape[0] - 1)
     thresholds = np.arange(-1, 1 + 1e-7, step)
     weights = np.tile(thresholds.reshape((-1, 1)), (1, sounds.shape[2]))
-    wave = generate_wave(
+    wave = generate_mono_wave(
         waveform,
         frequency,
         np.ones(sounds.shape[2]),
         frame_rate
     )
-    wave = wave[0, :]
     weights = (
         (1 - np.abs(weights - wave) / step) * (np.abs(weights - wave) < step)
     )

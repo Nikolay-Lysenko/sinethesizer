@@ -11,7 +11,7 @@ from typing import Any, Dict
 
 import numpy as np
 
-from sinethesizer.utils.waves import generate_wave
+from sinethesizer.utils.waves import generate_mono_wave
 
 
 def apply_absolute_tremolo(
@@ -40,7 +40,9 @@ def apply_absolute_tremolo(
         raise ValueError("Amplitude for tremolo must be between 0 and 1.")
     amplitudes = amplitude * np.ones(sound.shape[1])
     frame_rate = sound_info['frame_rate']
-    volume_wave = generate_wave(waveform, frequency, amplitudes, frame_rate)
+    volume_wave = generate_mono_wave(
+        waveform, frequency, amplitudes, frame_rate
+    )
     volume_wave += 1
     sound *= volume_wave
     return sound

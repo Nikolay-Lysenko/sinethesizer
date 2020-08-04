@@ -11,7 +11,7 @@ from typing import Any, Dict
 
 import numpy as np
 
-from sinethesizer.utils.waves import generate_wave
+from sinethesizer.utils.waves import generate_mono_wave
 
 
 def apply_absolute_vibrato(
@@ -50,8 +50,10 @@ def apply_absolute_vibrato(
 
     frame_rate = sound_info['frame_rate']
     amplitudes = max_delay * frame_rate * np.ones(sound.shape[1])
-    frequency_wave = generate_wave(waveform, frequency, amplitudes, frame_rate)
-    time_indices = np.ones(sound.shape[1]).cumsum() - 1 + frequency_wave[0, :]
+    frequency_wave = generate_mono_wave(
+        waveform, frequency, amplitudes, frame_rate
+    )
+    time_indices = np.ones(sound.shape[1]).cumsum() - 1 + frequency_wave
 
     upper_indices = np.ceil(time_indices).astype(int)
     upper_indices = np.clip(upper_indices, 0, sound.shape[1] - 1)

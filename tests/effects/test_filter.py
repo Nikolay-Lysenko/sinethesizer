@@ -16,7 +16,7 @@ from sinethesizer.effects.filter import (
     filter_absolute_frequencies,
     filter_relative_frequencies,
 )
-from sinethesizer.utils.waves import generate_wave
+from sinethesizer.utils.waves import generate_stereo_wave
 
 
 @pytest.mark.parametrize(
@@ -43,8 +43,8 @@ from sinethesizer.utils.waves import generate_wave
             # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
-                    0.0024158, 0.0056049, 0.0075644, 0.0097482, 0.5070437,
-                    0.0096938, 0.0075109, 0.0048818, 0.0025853, 0.0010571
+                    0.0012079, 0.0028025, 0.0037822, 0.0048741, 0.2535218,
+                    0.0048469, 0.0037555, 0.0024409, 0.0012927, 0.0005285
                 ]
             )
         ),
@@ -69,8 +69,8 @@ from sinethesizer.utils.waves import generate_wave
             # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
-                    0.0080094, 0.0173524, 0.5157133, 0.0158572, 0.0154468,
-                    0.014754, 0.5136481, 0.0109237, 0.007874, 0.0049527
+                    0.0040047, 0.0086762, 0.2578567, 0.0079286, 0.0077234,
+                    0.007377, 0.256824, 0.0054619, 0.003937, 0.0024764
                 ]
             )
         ),
@@ -83,7 +83,9 @@ def test_apply_frequency_filter(
 ) -> None:
     """Test `apply_frequency_filter` function."""
     waves = [
-        generate_wave('sine', frequency, np.ones(frame_rate), frame_rate)
+        generate_stereo_wave(
+            'sine', frequency, np.ones(frame_rate), frame_rate
+        )
         for frequency in frequencies
     ]
     sound = sum(waves)
@@ -121,8 +123,8 @@ def test_apply_frequency_filter(
             # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
-                    0.0024158, 0.0056049, 0.0075644, 0.0097482, 0.5070437,
-                    0.0096938, 0.0075109, 0.0048818, 0.0025853, 0.0010571
+                    0.0012079, 0.0028025, 0.0037822, 0.0048741, 0.2535218,
+                    0.0048469, 0.0037555, 0.0024409, 0.0012927, 0.0005285
                 ]
             )
         ),
@@ -146,8 +148,8 @@ def test_apply_frequency_filter(
             # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
-                    0.0080094, 0.0173524, 0.5157133, 0.0158572, 0.0154468,
-                    0.014754, 0.5136481, 0.0109237, 0.007874, 0.0049527
+                    0.0040047, 0.0086762, 0.2578567, 0.0079286, 0.0077234,
+                    0.007377, 0.256824, 0.0054619, 0.003937, 0.0024764
                 ]
             )
         ),
@@ -171,8 +173,8 @@ def test_apply_frequency_filter(
             # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
-                    0.0027162, 0.0067605, 0.0103526, 0.0146349, 0.5163752,
-                    0.0197767, 0.5190597, 0.0146632, 0.0101723, 0.0059893
+                    0.0013581, 0.0033803, 0.0051763, 0.0073174, 0.2581876,
+                    0.0098884, 0.2595298, 0.0073316, 0.0050862, 0.0029946
                 ]
             )
         ),
@@ -196,8 +198,8 @@ def test_apply_frequency_filter(
             # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
-                    0.007438026, 0.01572727, 0.5129805, 0.0106836, 0.0093715,
-                    0.00494968, 0.002616551, 0.00108557, 0.00031414, 0.00004582
+                    0.003719, 0.007863635, 0.25649025, 0.0053418, 0.0046857499,
+                    0.002474844, 0.00130828, 0.0005427843, 0.0001571, 0.0000229
                 ]
             )
         ),
@@ -210,7 +212,9 @@ def test_filter_absolute_frequencies(
 ) -> None:
     """Test `filter_absolute_frequencies` function."""
     waves = [
-        generate_wave('sine', frequency, np.ones(frame_rate), frame_rate)
+        generate_stereo_wave(
+            'sine', frequency, np.ones(frame_rate), frame_rate
+        )
         for frequency in frequencies
     ]
     sound = sum(waves)
@@ -250,8 +254,8 @@ def test_filter_absolute_frequencies(
             # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
-                    0.0027162, 0.0067605, 0.0103526, 0.0146349, 0.5163752,
-                    0.0197767, 0.5190597, 0.0146632, 0.0101723, 0.0059893
+                    0.0013581, 0.0033803, 0.0051763, 0.0073174, 0.2581876,
+                    0.0098884, 0.2595298, 0.0073316, 0.0050862, 0.0029946
                 ]
             )
         ),
@@ -275,8 +279,8 @@ def test_filter_absolute_frequencies(
             # for frequencies 0, 100, 200, ..., 900 respectively.
             np.array(
                 [
-                    0.007438026, 0.01572727, 0.5129805, 0.0106836, 0.0093715,
-                    0.00494968, 0.002616551, 0.00108557, 0.00031414, 0.00004582
+                    0.003719, 0.007863635, 0.25649025, 0.0053418, 0.0046857499,
+                    0.002474844, 0.00130828, 0.0005427843, 0.0001571, 0.0000229
                 ]
             )
         ),
@@ -290,7 +294,9 @@ def test_filter_relative_frequencies(
 ) -> None:
     """Test `filter_relative_frequencies` function."""
     waves = [
-        generate_wave('sine', frequency, np.ones(frame_rate), frame_rate)
+        generate_stereo_wave(
+            'sine', frequency, np.ones(frame_rate), frame_rate
+        )
         for frequency in frequencies
     ]
     sound = sum(waves)

@@ -9,7 +9,7 @@ import numpy as np
 
 from sinethesizer.synth.timbre import TimbreSpec
 from sinethesizer.synth.utils import calculate_overtones_share
-from sinethesizer.utils.waves import generate_wave
+from sinethesizer.utils.waves import generate_stereo_wave
 
 
 def synthesize(
@@ -28,11 +28,12 @@ def synthesize(
         volume of the sound fragment
     :param duration:
         duration of fragment to be generated in seconds
+        (without delays between channels and prolongations caused by effects)
     :param location:
         location of sound source;
         -1 stands for extremely left and 1 stands for extremely right
     :param max_channel_delay:
-        maximum possible delay between channels in seconds;
+        maximum possible delay between channels in seconds (for Haas effect);
         it is a measure of potential size of space occupied by sound sources
     :param frame_rate:
         number of frames per second
@@ -42,7 +43,7 @@ def synthesize(
     envelope = timbre_spec.fundamental_volume_envelope_fn(duration, frame_rate)
     overtones_share = calculate_overtones_share(timbre_spec)
     fundamental_share = 1 - overtones_share
-    sound = generate_wave(
+    sound = generate_stereo_wave(
         timbre_spec.fundamental_waveform,
         frequency,
         volume * fundamental_share * envelope,
@@ -56,7 +57,7 @@ def synthesize(
     for overtone_spec in timbre_spec.overtones_specs:
         envelope = overtone_spec.volume_envelope_fn(duration, frame_rate)
         overtone_frequency = overtone_spec.frequency_ratio * frequency
-        overtone_sound = generate_wave(
+        overtone_sound = generate_stereo_wave(
             overtone_spec.waveform,
             overtone_frequency,
             volume * overtone_spec.volume_share * envelope,
