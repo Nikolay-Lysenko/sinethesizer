@@ -85,7 +85,7 @@ def add_event_to_timeline(
     :param timbres_registry:
         mapping from timbre name to its specification
     :param max_channel_delay:
-        maximum possible delay between channels in seconds;
+        maximum possible delay between channels in seconds (for Haas effect);
         it is a measure of size of imaginary space occupied by sound sources
     :param frame_rate:
         number of frames per second
@@ -106,6 +106,11 @@ def add_event_to_timeline(
         'fundamental_frequency': event['frequency']
     }
     sound = apply_effects(sound, sound_info, event['effects'])
-    n_frames_before = ceil(frame_rate * event['start_time'])
-    timeline[:, n_frames_before:n_frames_before+sound.shape[1]] += sound
+    start_frame = ceil(frame_rate * event['start_time'])
+    end_frame = start_frame + sound.shape[1]
+    if end_frame > timeline.shape[1]:  # Effects like reverb may prolong event.
+        n_extra_frames = end_frame - timeline.shape[1]
+        padding = np.zeros((timeline.shape[0], n_extra_frames))
+        timeline = np.hstack((timeline, padding))
+    timeline[:, start_frame:end_frame] += sound
     return timeline

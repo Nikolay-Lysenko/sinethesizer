@@ -164,22 +164,22 @@ def relative_adsr(
     """
     duration_in_frames = ceil(duration * frame_rate)
 
-    if attack_share > 0:
-        n_frames_with_attack = floor(attack_share * duration_in_frames)
+    n_frames_with_attack = floor(attack_share * duration_in_frames)
+    if n_frames_with_attack > 0:
         step = 1 / n_frames_with_attack
         attack = np.arange(0, 1, step)
     else:
         attack = np.array([])
 
-    if decay_share > 0:
-        n_frames_with_decay = floor(decay_share * duration_in_frames)
+    n_frames_with_decay = floor(decay_share * duration_in_frames)
+    if n_frames_with_decay > 0:
         step = (1 - sustain_level) / n_frames_with_decay
         decay = np.arange(1, sustain_level, -step)
     else:
         decay = np.array([])
 
-    if release_share > 0:
-        n_frames_with_release = floor(release_share * duration_in_frames)
+    n_frames_with_release = floor(release_share * duration_in_frames)
+    if n_frames_with_release > 0:
         step = sustain_level / n_frames_with_release
         release = np.arange(sustain_level, 0, -step)
     else:
