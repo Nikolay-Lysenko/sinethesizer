@@ -74,7 +74,7 @@ def apply_relative_vibrato(
         waveform: str = 'sine'
 ) -> np.ndarray:
     """
-    Make sound frequency (i.e., pitch) vibrating with frequency defined in Hz.
+    Make sound frequency vibrating with frequency depending on sound's pitch.
 
     :param sound:
         sound to be modified

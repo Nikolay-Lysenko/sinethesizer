@@ -58,7 +58,7 @@ def apply_filter_sweep(
         frequency: float = 6, waveform: str = 'sine'
 ) -> np.ndarray:
     """
-    Filter some frequencies with oscillating cutoffs (defined in Hz).
+    Filter some frequencies with oscillating cutoffs.
 
     :param sound:
         sound to be modified
