@@ -14,6 +14,7 @@ from sinethesizer.effects.filter_sweep import (
     apply_filter_sweep, apply_phaser
 )
 from sinethesizer.effects.overdrive import apply_overdrive
+from sinethesizer.effects.reverb import apply_reverb
 from sinethesizer.effects.tremolo import apply_tremolo
 from sinethesizer.effects.vibrato import apply_vibrato
 
@@ -33,6 +34,7 @@ def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
         'filter_sweep': apply_filter_sweep,
         'overdrive': apply_overdrive,
         'phaser': apply_phaser,
+        'reverb': apply_reverb,
         'tremolo': apply_tremolo,
         'vibrato': apply_vibrato,
     }
