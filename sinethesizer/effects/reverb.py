@@ -70,9 +70,12 @@ def apply_reverb(
     late_reflections_duration = decay_duration - early_span
     if late_reflections_duration < 0:
         raise ValueError("Early reflections last more than all reflections.")
+    if diffusion_delay_factor < 0:
+        raise ValueError("Diffusion delay factor can not be negative.")
     max_late_reflections_duration = (
         # Right multiplier is sum of geometric progression: a + a^2 + a^3 + ...
         early_reflections_delay * (1 / (1 - diffusion_delay_factor) - 1)
+        if diffusion_delay_factor < 1 else np.inf
     )
     padding = 0.01
     if max_late_reflections_duration < late_reflections_duration + padding:
