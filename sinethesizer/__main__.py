@@ -16,7 +16,7 @@ from sinethesizer.io import (
     create_timbres_registry,
     write_timeline_to_wav,
 )
-from sinethesizer.synth.utils import validate_timbre_spec
+from sinethesizer.synth.validation import validate_timbre_spec
 
 
 def parse_cli_args() -> argparse.Namespace:

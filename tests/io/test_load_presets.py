@@ -48,7 +48,7 @@ from sinethesizer.synth.envelopes import trapezoid
                 "  overtones_specs:",
                 "  - waveform: sine",
                 "    frequency_ratio: 1.5",
-                "    volume_share: 0.4",
+                "    volume_ratio: 0.7",
                 "    volume_envelope:",
                 "      name: trapezoid",
                 "    effects:",
@@ -65,7 +65,7 @@ from sinethesizer.synth.envelopes import trapezoid
                         OvertoneSpec(
                             waveform='sine',
                             frequency_ratio=1.5,
-                            volume_share=0.4,
+                            volume_ratio=0.7,
                             volume_envelope_fn=trapezoid,
                             phase=0,
                             effects=[
@@ -92,7 +92,7 @@ from sinethesizer.synth.envelopes import trapezoid
                 "  overtones_specs:",
                 "  - waveform: sine",
                 "    frequency_ratio: 1.5",
-                "    volume_share: 0.4",
+                "    volume_ratio: 0.7",
                 "    volume_envelope:",
                 "      name: trapezoid"
             ],
@@ -107,7 +107,7 @@ from sinethesizer.synth.envelopes import trapezoid
                         OvertoneSpec(
                             waveform='sine',
                             frequency_ratio=1.5,
-                            volume_share=0.4,
+                            volume_ratio=0.7,
                             volume_envelope_fn=trapezoid,
                             phase=0,
                             effects=[]

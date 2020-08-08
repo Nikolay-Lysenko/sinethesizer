@@ -117,7 +117,7 @@ def generate_stereo_wave(
     mono_wave = generate_mono_wave(
         form, frequency, amplitudes, frame_rate, phase
     )
-    # Total power of left and right channels must be equal to original power:
+    # Set total power of left and right channels to original power:
     # left_amplitude ** 2 + right_amplitude ** 2 = 1.
     # Also assume that:
     # right_amplitude / left_amplitude = k ** tan(math.pi / 2 * location),

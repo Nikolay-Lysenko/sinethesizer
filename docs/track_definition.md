@@ -8,7 +8,7 @@ Column | Description
 :-----: | :---------:
 timbre | Name of timbre
 start_time | Time when event starts (in seconds)
-duration | Duration of event (in seconds) including release stage
+duration | Duration of event (in seconds) including release stage, but not including any prolongations caused by sound effects (such as reverb)
 frequency | Frequency of sound (in Hz) or note (like A4, A#4, or Ab4); some timbres may ignore it
 volume | Relative volume of the most loud piece of event where 1 is the maximum value (all that is higher will be clipped by your device when played)
 location | Position of sound source; a float between -1 and 1 where -1 stands for left channel only and 1 stands for right channel only

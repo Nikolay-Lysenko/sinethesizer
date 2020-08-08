@@ -113,7 +113,7 @@ def apply_reverb(
         diffusion_delay_random_range: float = 0.1,
         original_sound_gain: float = 0.8,
         reverberations_gain: float = 0.6,
-        keep_peak_volume: bool = True,
+        keep_peak_volume: bool = False,
         random_seed: Optional[int] = None
 ) -> np.ndarray:
     """

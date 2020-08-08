@@ -44,8 +44,8 @@ from sinethesizer.synth.timeline import add_event_to_timeline
             4,
             # `expected`
             np.array([
-                [1, 2, 3, 4, 5, 6, 7, 8, 9, 1 / sqrt(2), 0, -1 / sqrt(2)],
-                [1, 2, 3, -4, -5, -6, -7, -8, -9, 1 / sqrt(2), 0, -1 / sqrt(2)]
+                [1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 0, -1],
+                [1, 2, 3, -4, -5, -6, -7, -8, -9, 1, 0, -1]
             ])
         ),
     ]

@@ -8,7 +8,6 @@ Author: Nikolay Lysenko
 import numpy as np
 
 from sinethesizer.synth.timbre import TimbreSpec
-from sinethesizer.synth.utils import calculate_overtones_share
 from sinethesizer.utils.waves import generate_stereo_wave
 
 
@@ -41,12 +40,10 @@ def synthesize(
         sound wave represented as timeline of pressure deviations
     """
     envelope = timbre_spec.fundamental_volume_envelope_fn(duration, frame_rate)
-    overtones_share = calculate_overtones_share(timbre_spec)
-    fundamental_share = 1 - overtones_share
     sound = generate_stereo_wave(
         timbre_spec.fundamental_waveform,
         frequency,
-        volume * fundamental_share * envelope,
+        envelope,
         frame_rate,
         location,
         max_channel_delay
@@ -60,7 +57,7 @@ def synthesize(
         overtone_sound = generate_stereo_wave(
             overtone_spec.waveform,
             overtone_frequency,
-            volume * overtone_spec.volume_share * envelope,
+            overtone_spec.volume_ratio * envelope,
             frame_rate,
             location,
             max_channel_delay,
@@ -69,4 +66,5 @@ def synthesize(
         for effect_fn in overtone_spec.effects:
             overtone_sound = effect_fn(overtone_sound, sound_info)
         sound += overtone_sound
+    sound *= volume / np.max(np.abs(sound))
     return sound

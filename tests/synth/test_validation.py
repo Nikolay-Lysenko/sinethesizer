@@ -1,5 +1,5 @@
 """
-Test `sinethesizer.synth.utils` module.
+Test `sinethesizer.synth.validation` module.
 
 Author: Nikolay Lysenko
 """
@@ -9,7 +9,7 @@ import pytest
 
 from sinethesizer.synth.envelopes import trapezoid
 from sinethesizer.synth.timbre import OvertoneSpec, TimbreSpec
-from sinethesizer.synth.utils import validate_timbre_spec
+from sinethesizer.synth.validation import validate_timbre_spec
 
 
 @pytest.mark.parametrize(
@@ -33,7 +33,7 @@ from sinethesizer.synth.utils import validate_timbre_spec
                     OvertoneSpec(
                         waveform='sine',
                         frequency_ratio=1.5,
-                        volume_share=0.4,
+                        volume_ratio=0.7,
                         volume_envelope_fn=trapezoid,
                         phase=0,
                         effects=[]
@@ -60,7 +60,7 @@ from sinethesizer.synth.utils import validate_timbre_spec
                     OvertoneSpec(
                         waveform='unknown',
                         frequency_ratio=1.5,
-                        volume_share=0.4,
+                        volume_ratio=0.7,
                         volume_envelope_fn=trapezoid,
                         phase=0,
                         effects=[]
@@ -78,25 +78,7 @@ from sinethesizer.synth.utils import validate_timbre_spec
                     OvertoneSpec(
                         waveform='sine',
                         frequency_ratio=0.5,
-                        volume_share=0.4,
-                        volume_envelope_fn=trapezoid,
-                        phase=0,
-                        effects=[]
-                    )
-                ]
-            ),
-            False
-        ),
-        (
-            TimbreSpec(
-                fundamental_waveform='sine',
-                fundamental_volume_envelope_fn=trapezoid,
-                fundamental_effects=[],
-                overtones_specs=[
-                    OvertoneSpec(
-                        waveform='sine',
-                        frequency_ratio=1.5,
-                        volume_share=2,
+                        volume_ratio=0.7,
                         volume_envelope_fn=trapezoid,
                         phase=0,
                         effects=[]

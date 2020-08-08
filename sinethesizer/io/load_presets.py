@@ -73,7 +73,7 @@ def create_overtones_specs(
         overtone_spec = OvertoneSpec(
             waveform=overtone_data['waveform'],
             frequency_ratio=overtone_data['frequency_ratio'],
-            volume_share=overtone_data['volume_share'],
+            volume_ratio=overtone_data['volume_ratio'],
             volume_envelope_fn=create_volume_envelope_fn(
                 overtone_data['volume_envelope']
             ),
