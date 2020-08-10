@@ -11,6 +11,30 @@ from sinethesizer.synth.timbre import TimbreSpec
 from sinethesizer.utils.waves import generate_stereo_wave
 
 
+def sum_two_sounds(
+        first_sound: np.ndarray, second_sound: np.ndarray
+) -> np.ndarray:
+    """
+    Sum two sound of probably unequal durations.
+
+    :param first_sound:
+        first sound as array of shape (n_channels, n_frames)
+    :param second_sound:
+        second sound as array of shape (n_channels, n_frames)
+    :return:
+        sum of the sounds
+    """
+    first_n_frames = first_sound.shape[1]
+    second_n_frames = second_sound.shape[1]
+    n_extra_frames = abs(first_n_frames - second_n_frames)
+    padding = np.zeros((first_sound.shape[0], n_extra_frames))
+    if first_n_frames > second_n_frames:
+        second_sound = np.hstack((second_sound, padding))
+    elif first_n_frames < second_n_frames:
+        first_sound = np.hstack((first_sound, padding))
+    return first_sound + second_sound
+
+
 def synthesize(
         timbre_spec: TimbreSpec, frequency: float, volume: float,
         duration: float, location: float, max_channel_delay: float,
@@ -65,6 +89,6 @@ def synthesize(
         )
         for effect_fn in overtone_spec.effects:
             overtone_sound = effect_fn(overtone_sound, sound_info)
-        sound += overtone_sound
+        sound = sum_two_sounds(sound, overtone_sound)
     sound *= volume / np.max(np.abs(sound))
     return sound
