@@ -20,7 +20,7 @@ with open(os.path.join(current_dir, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='sinethesizer',
-    version='0.2.10',
+    version='0.3.0',
     description=description,
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -28,7 +28,7 @@ setup(
     author='Nikolay Lysenko',
     author_email='nikolay-lysenco@yandex.ru',
     license='MIT',
-    keywords='synthesizer analog_synthesizer additive_synthesis music timbre',
+    keywords='synthesizer additive_synthesis music timbre sound_effects',
     packages=find_packages(),
     package_data={'sinethesizer': ['default_config.yml']},
     include_package_data=True,

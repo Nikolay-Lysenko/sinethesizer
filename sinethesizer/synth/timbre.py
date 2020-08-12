@@ -7,7 +7,7 @@ Author: Nikolay Lysenko
 
 from typing import List, NamedTuple
 
-from sinethesizer.synth.effects import EFFECT_FN_TYPE
+from sinethesizer.effects import EFFECT_FN_TYPE
 from sinethesizer.synth.envelopes import ENVELOPE_FN_TYPE
 
 
@@ -20,12 +20,8 @@ class OvertoneSpec(NamedTuple):
         it can be one of 'sine', 'square', 'triangle', and 'sawtooth'
     :param frequency_ratio:
         ratio of frequency of the overtone to frequency of its fundamental
-    :param volume_share:
-        share of total volume (volume of all partials
-        including the fundamental) that is taken by the overtone
-        if all partials have unit volume on their envelopes;
-        in other words, it is peak volume of this overtone
-        divided by sum of peak volumes of all overtones and fundamental
+    :param volume_ratio:
+        ratio of peak volume of this overtone to peak volume of the fundamental
     :param volume_envelope_fn:
         function that maps duration in seconds and frame rate to
         volume envelope for this overtone
@@ -37,7 +33,7 @@ class OvertoneSpec(NamedTuple):
 
     waveform: str
     frequency_ratio: float
-    volume_share: float
+    volume_ratio: float
     volume_envelope_fn: ENVELOPE_FN_TYPE
     phase: float
     effects: List[EFFECT_FN_TYPE]

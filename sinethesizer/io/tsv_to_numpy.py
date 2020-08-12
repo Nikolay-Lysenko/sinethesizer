@@ -10,7 +10,7 @@ from typing import Any, Dict
 
 import numpy as np
 
-from sinethesizer.io.utils import convert_note_to_frequency
+from sinethesizer.utils.music_theory import convert_note_to_frequency
 from sinethesizer.synth.timeline import (
     EVENTS_TYPE, add_event_to_timeline, create_empty_timeline
 )

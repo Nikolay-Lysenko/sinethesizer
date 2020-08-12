@@ -10,8 +10,8 @@ from typing import List, Dict, Any
 
 import yaml
 
-from sinethesizer.synth import get_effects_registry, get_envelopes_registry
-from sinethesizer.synth.effects import EFFECT_FN_TYPE
+from sinethesizer.effects import EFFECT_FN_TYPE, get_effects_registry
+from sinethesizer.synth import get_envelopes_registry
 from sinethesizer.synth.envelopes import ENVELOPE_FN_TYPE
 from sinethesizer.synth.timbre import OvertoneSpec, TimbreSpec
 
@@ -73,7 +73,7 @@ def create_overtones_specs(
         overtone_spec = OvertoneSpec(
             waveform=overtone_data['waveform'],
             frequency_ratio=overtone_data['frequency_ratio'],
-            volume_share=overtone_data['volume_share'],
+            volume_ratio=overtone_data['volume_ratio'],
             volume_envelope_fn=create_volume_envelope_fn(
                 overtone_data['volume_envelope']
             ),

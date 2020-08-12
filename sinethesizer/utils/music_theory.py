@@ -1,5 +1,5 @@
 """
-Do auxiliary tasks.
+Help to work with note names and other notions from music theory.
 
 Author: Nikolay Lysenko
 """

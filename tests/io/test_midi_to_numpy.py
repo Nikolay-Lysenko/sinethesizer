@@ -6,6 +6,7 @@ Author: Nikolay Lysenko
 
 
 from functools import partial
+from math import sqrt
 from typing import Any, Dict, List
 
 import numpy as np
@@ -51,16 +52,16 @@ from sinethesizer.synth.timbre import TimbreSpec
             np.array([
                 [
                     0, 0, 0, 0,
-                    0, -0.707106781, -1, -0.707106781,
-                    0, -0.85085328, 0.89408235, -0.08865447,
+                    0, -1 / sqrt(2), -1, -1 / sqrt(2),
+                    0, -0.9516498, 1, -0.0991569,
                     0, 0, 0, 0
                 ],
                 [
                     0, 0, 0, 0,
-                    0, -0.707106781, -1, -0.707106781,
-                    0, -0.85085328, 0.89408235, -0.08865447,
+                    0, -1 / sqrt(2), -1, -1 / sqrt(2),
+                    0, -0.9516498, 1, -0.0991569,
                     0, 0, 0, 0
-                ]
+                ],
             ])
         ),
     ]

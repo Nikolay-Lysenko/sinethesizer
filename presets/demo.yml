@@ -19,7 +19,7 @@
   overtones_specs:
   - waveform: sine
     frequency_ratio: 2
-    volume_share: 0.2
+    volume_ratio: 0.3
     volume_envelope:
       name: relative_adsr
       attack_share: 0.15
@@ -28,7 +28,7 @@
       release_share: 0.3
   - waveform: sine
     frequency_ratio: 3
-    volume_share: 0.1
+    volume_ratio: 0.15
     volume_envelope:
       name: relative_adsr
       attack_share: 0.15
@@ -37,7 +37,7 @@
       release_share: 0.4
   - waveform: sine
     frequency_ratio: 4
-    volume_share: 0.05
+    volume_ratio: 0.075
     volume_envelope:
       name: relative_adsr
       attack_share: 0.15
@@ -52,8 +52,10 @@
     name: trapezoid
   fundamental_effects:
     - name: filter
-      min_frequency: 800
-      max_frequency: 2000
+      kind: relative
+      min_frequency_ratio: 2.5
+      max_frequency_ratio: 4.5
+      invert: true
     - name: vibrato
       frequency: 2
       width: 0.1

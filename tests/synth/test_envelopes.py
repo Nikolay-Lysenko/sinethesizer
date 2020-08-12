@@ -137,7 +137,6 @@ def test_generic_adsr(
         sustain_level, max_sustain_duration,
         release_to_sr_approx_ratio, max_release_duration, release_degree
     )
-    print(result)
     np.testing.assert_almost_equal(result, expected)
 
 

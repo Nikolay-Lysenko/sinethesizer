@@ -11,10 +11,10 @@ from typing import List, Dict
 import numpy as np
 import pytest
 
+from sinethesizer.effects.tremolo import apply_tremolo
 from sinethesizer.io.load_presets import create_timbres_registry
 from sinethesizer.synth import synthesize
 from sinethesizer.synth.timbre import TimbreSpec, OvertoneSpec
-from sinethesizer.synth.effects import tremolo
 from sinethesizer.synth.envelopes import trapezoid
 
 
@@ -48,7 +48,7 @@ from sinethesizer.synth.envelopes import trapezoid
                 "  overtones_specs:",
                 "  - waveform: sine",
                 "    frequency_ratio: 1.5",
-                "    volume_share: 0.4",
+                "    volume_ratio: 0.7",
                 "    volume_envelope:",
                 "      name: trapezoid",
                 "    effects:",
@@ -65,11 +65,13 @@ from sinethesizer.synth.envelopes import trapezoid
                         OvertoneSpec(
                             waveform='sine',
                             frequency_ratio=1.5,
-                            volume_share=0.4,
+                            volume_ratio=0.7,
                             volume_envelope_fn=trapezoid,
                             phase=0,
                             effects=[
-                                partial(tremolo, frequency=3, amplitude=0.25)
+                                partial(
+                                    apply_tremolo, frequency=3, amplitude=0.25
+                                )
                             ]
                         )
                     ]
@@ -90,7 +92,7 @@ from sinethesizer.synth.envelopes import trapezoid
                 "  overtones_specs:",
                 "  - waveform: sine",
                 "    frequency_ratio: 1.5",
-                "    volume_share: 0.4",
+                "    volume_ratio: 0.7",
                 "    volume_envelope:",
                 "      name: trapezoid"
             ],
@@ -99,13 +101,13 @@ from sinethesizer.synth.envelopes import trapezoid
                     fundamental_waveform='sine',
                     fundamental_volume_envelope_fn=trapezoid,
                     fundamental_effects=[
-                        partial(tremolo, frequency=3, amplitude=0.25)
+                        partial(apply_tremolo, frequency=3, amplitude=0.25)
                     ],
                     overtones_specs=[
                         OvertoneSpec(
                             waveform='sine',
                             frequency_ratio=1.5,
-                            volume_share=0.4,
+                            volume_ratio=0.7,
                             volume_envelope_fn=trapezoid,
                             phase=0,
                             effects=[]

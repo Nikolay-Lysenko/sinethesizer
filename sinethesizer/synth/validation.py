@@ -1,27 +1,12 @@
 """
-Do some auxiliary tasks.
+Validate specifications of timbres.
 
 Author: Nikolay Lysenko
 """
 
 
 from sinethesizer.synth.timbre import TimbreSpec
-from sinethesizer.synth.waves import NAME_TO_WAVEFORM
-
-
-def calculate_overtones_share(timbre_spec: TimbreSpec) -> float:
-    """
-    Calculate volume share of all overtones.
-
-    :param timbre_spec:
-        specification of a timbre
-    :return:
-        total volume share of all overtones if all partials have unit volume
-        on their envelopes
-    """
-    overtones_share = sum(x.volume_share for x in timbre_spec.overtones_specs)
-    overtones_share = overtones_share or 0
-    return overtones_share
+from sinethesizer.utils.waves import NAME_TO_WAVEFORM
 
 
 def validate_timbre_spec(timbre_spec: TimbreSpec) -> None:
@@ -52,11 +37,4 @@ def validate_timbre_spec(timbre_spec: TimbreSpec) -> None:
     if min_ratio <= 1:
         raise ValueError(
             "All overtones must have higher frequencies than the fundamental."
-        )
-
-    overtones_share = calculate_overtones_share(timbre_spec)
-    if not (0 <= overtones_share < 1):
-        raise ValueError(
-            "Volume share of overtones must be inside [0, 1), "
-            f"found: {overtones_share}."
         )
