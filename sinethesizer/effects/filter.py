@@ -42,10 +42,10 @@ def filter_absolute_frequencies(
     invert = invert and min_frequency is not None and max_frequency is not None
     filter_type = 'bandstop' if invert else 'bandpass'
     nyquist_frequency = 0.5 * sound_info['frame_rate']
-    min_frequency = min_frequency or 1e-2  # Arbitrary small positive number.
-    max_frequency = max_frequency or nyquist_frequency - 1e-2
-    min_threshold = min_frequency / nyquist_frequency
-    max_threshold = max_frequency / nyquist_frequency
+    min_frequency = min_frequency or 1e-8  # Arbitrary small positive number.
+    max_frequency = max_frequency or nyquist_frequency - 1e-8
+    min_threshold = max(min_frequency / nyquist_frequency, 1e-8)
+    max_threshold = min(max_frequency / nyquist_frequency, 1 - 1e-8)
     second_order_sections = butter(
         order, [min_threshold, max_threshold], btype=filter_type, output='sos'
     )  # 'ba' is not used, because sometimes it lacks numerical stability.
