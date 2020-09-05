@@ -5,14 +5,14 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict, Optional
+from typing import Optional
 
 import numpy as np
 from scipy.signal import butter, sosfilt
 
 
 def filter_absolute_frequencies(
-        sound: np.ndarray, context: Dict[str, Any],
+        sound: np.ndarray, task: 'sinethesizer.synth.core.Task',
         min_frequency: Optional[float] = None,
         max_frequency: Optional[float] = None,
         invert: bool = False, order: int = 10
@@ -22,9 +22,8 @@ def filter_absolute_frequencies(
 
     :param sound:
         sound to be modified
-    :param context:
-        supplementary information about `sound`; it can contain number of
-        frames per second and fundamental frequency (in Hz) of related event
+    :param task:
+        parameters of sound synthesis task that triggered this effect
     :param min_frequency:
         cutoff frequency for high-pass filtering (in Hz);
         there is no high-pass filtering by default
@@ -41,7 +40,7 @@ def filter_absolute_frequencies(
     """
     invert = invert and min_frequency is not None and max_frequency is not None
     filter_type = 'bandstop' if invert else 'bandpass'
-    nyquist_frequency = 0.5 * context['frame_rate']
+    nyquist_frequency = 0.5 * task.frame_rate
     min_frequency = min_frequency or 1e-8  # Arbitrary small positive number.
     max_frequency = max_frequency or nyquist_frequency - 1e-8
     min_threshold = max(min_frequency / nyquist_frequency, 1e-8)
@@ -54,7 +53,7 @@ def filter_absolute_frequencies(
 
 
 def filter_relative_frequencies(
-        sound: np.ndarray, context: Dict[str, Any],
+        sound: np.ndarray, task: 'sinethesizer.synth.core.Task',
         min_frequency_ratio: Optional[float] = None,
         max_frequency_ratio: Optional[float] = None,
         invert: bool = False, order: int = 10
@@ -64,9 +63,8 @@ def filter_relative_frequencies(
 
     :param sound:
         sound to be modified
-    :param context:
-        supplementary information about `sound`; it can contain number of
-        frames per second and fundamental frequency (in Hz) of related event
+    :param task:
+        parameters of sound synthesis task that triggered this effect
     :param min_frequency_ratio:
         ratio of cutoff frequency for high-pass filtering to fundamental
         frequency of the sound; there is no high-pass filtering by default
@@ -82,7 +80,7 @@ def filter_relative_frequencies(
     :return:
         sound with some frequencies muted
     """
-    fundamental_frequency = context['fundamental_frequency']
+    fundamental_frequency = task.frequency
     min_frequency = None
     if min_frequency_ratio is not None:
         min_frequency = min_frequency_ratio * fundamental_frequency
@@ -90,32 +88,34 @@ def filter_relative_frequencies(
     if max_frequency_ratio is not None:
         max_frequency = max_frequency_ratio * fundamental_frequency
     sound = filter_absolute_frequencies(
-        sound, context, min_frequency, max_frequency, invert, order
+        sound, task, min_frequency, max_frequency, invert, order
     )
     return sound
 
 
+# TODO: Velocity-aware low-pass filter.
+
+
 def apply_frequency_filter(
-        sound: np.ndarray, context: Dict[str, Any], kind: str = 'absolute',
-        *args, **kwargs
+        sound: np.ndarray, task: 'sinethesizer.synth.core.Task',
+        kind: str = 'absolute', *args, **kwargs
 ) -> np.ndarray:
     """
     Filter some frequencies from original sound.
 
     :param sound:
         sound to be modified
-    :param context:
-        supplementary information about `sound`; it can contain number of
-        frames per second and fundamental frequency (in Hz) of related event
+    :param task:
+        parameters of sound synthesis task that triggered this effect
     :param kind:
         kind of filter; supported values are 'absolute' and 'relative'
     :return:
         sound with some frequencies muted
     """
     if kind == 'absolute':
-        sound = filter_absolute_frequencies(sound, context, *args, **kwargs)
+        sound = filter_absolute_frequencies(sound, task, *args, **kwargs)
     elif kind == 'relative':
-        sound = filter_relative_frequencies(sound, context, *args, **kwargs)
+        sound = filter_relative_frequencies(sound, task, *args, **kwargs)
     else:
         raise ValueError(
             f"Kind must be either 'absolute' or 'relative', but found: {kind}"

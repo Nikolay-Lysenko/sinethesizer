@@ -7,15 +7,13 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict
-
 import numpy as np
 
 from sinethesizer.utils.waves import generate_mono_wave
 
 
 def apply_absolute_vibrato(
-        sound: np.ndarray, context: Dict[str, Any],
+        sound: np.ndarray, task: 'sinethesizer.synth.core.Task',
         frequency: float = 4, width: float = 0.2,
         waveform: str = 'sine'
 ) -> np.ndarray:
@@ -24,9 +22,8 @@ def apply_absolute_vibrato(
 
     :param sound:
         sound to be modified
-    :param context:
-        supplementary information about `sound`; it can contain number of
-        frames per second and fundamental frequency (in Hz) of related event
+    :param task:
+        parameters of sound synthesis task that triggered this effect
     :param frequency:
         frequency of sound's frequency oscillations (in Hz)
     :param width:
@@ -48,10 +45,9 @@ def apply_absolute_vibrato(
         / ((highest_to_lowest_ratio + 1) * 2 * np.pi * frequency)
     )
 
-    frame_rate = context['frame_rate']
-    amplitudes = max_delay * frame_rate * np.ones(sound.shape[1])
+    amplitudes = max_delay * task.frame_rate * np.ones(sound.shape[1])
     frequency_wave = generate_mono_wave(
-        waveform, frequency, amplitudes, frame_rate
+        waveform, frequency, amplitudes, task.frame_rate
     )
     time_indices = np.ones(sound.shape[1]).cumsum() - 1 + frequency_wave
 
@@ -69,7 +65,7 @@ def apply_absolute_vibrato(
 
 
 def apply_relative_vibrato(
-        sound: np.ndarray, context: Dict[str, Any],
+        sound: np.ndarray, task: 'sinethesizer.synth.core.Task',
         frequency_ratio: float = 0.05, width: float = 0.2,
         waveform: str = 'sine'
 ) -> np.ndarray:
@@ -78,9 +74,8 @@ def apply_relative_vibrato(
 
     :param sound:
         sound to be modified
-    :param context:
-        supplementary information about `sound`; it can contain number of
-        frames per second and fundamental frequency (in Hz) of related event
+    :param task:
+        parameters of sound synthesis task that triggered this effect
     :param frequency_ratio:
         frequency of sound's frequency oscillations as ratio
         to fundamental frequency
@@ -92,34 +87,31 @@ def apply_relative_vibrato(
     :return:
         sound with vibrating frequency
     """
-    frequency = frequency_ratio * context['fundamental_frequency']
-    sound = apply_absolute_vibrato(
-        sound, context, frequency, width, waveform
-    )
+    frequency = frequency_ratio * task.frequency
+    sound = apply_absolute_vibrato(sound, task, frequency, width, waveform)
     return sound
 
 
 def apply_vibrato(
-        sound: np.ndarray, context: Dict[str, Any], kind: str = 'absolute',
-        *args, **kwargs
+        sound: np.ndarray, task: 'sinethesizer.synth.core.Task',
+        kind: str = 'absolute', *args, **kwargs
 ) -> np.ndarray:
     """
     Make sound frequency (i.e., pitch) vibrating.
 
     :param sound:
         sound to be modified
-    :param context:
-        supplementary information about `sound`; it can contain number of
-        frames per second and fundamental frequency (in Hz) of related event
+    :param task:
+        parameters of sound synthesis task that triggered this effect
     :param kind:
         kind of filter; supported values are 'absolute' and 'relative'
     :return:
         sound with vibrating pitch
     """
     if kind == 'absolute':
-        sound = apply_absolute_vibrato(sound, context, *args, **kwargs)
+        sound = apply_absolute_vibrato(sound, task, *args, **kwargs)
     elif kind == 'relative':
-        sound = apply_relative_vibrato(sound, context, *args, **kwargs)
+        sound = apply_relative_vibrato(sound, task, *args, **kwargs)
     else:
         raise ValueError(
             f"Kind must be either 'absolute' or 'relative', but found: {kind}"

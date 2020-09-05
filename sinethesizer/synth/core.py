@@ -5,12 +5,42 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Callable, Dict, List, NamedTuple
+from typing import Callable, Dict, List, NamedTuple
 
 import numpy as np
 
 from sinethesizer.effects import EFFECT_FN_TYPE
+from sinethesizer.envelopes import ENVELOPE_FN_TYPE
 from sinethesizer.utils.waves import NAME_TO_WAVEFORM
+
+
+class Task(NamedTuple):
+    """
+    Specifications of basic sound synthesis task.
+
+    :param duration:
+        duration of an event (in seconds) not including its release;
+        in terms of MIDI, it is time between 'NOTE ON' and 'NOTE OFF' events
+    :param frequency:
+        fundamental frequency of a sound to be synthesized
+    :param volume:
+        ratio of the highest amplitude of the resulting sound to maximum
+        amplitude that is not clipped by playing devices; it is a float
+        between 0 and 1
+    :param velocity:
+        force of sound generation; it can be likened to force of piano key
+        pressing; it is a float between 0 and 1
+    :param frame_rate:
+        number of frames per second
+    :param effects:
+        list of effects that are applied to resulting sound
+    """
+    duration: float
+    frequency: float
+    volume: float
+    velocity: float
+    frame_rate: int
+    effects: List[EFFECT_FN_TYPE]
 
 
 class ModulatedWave(NamedTuple):
@@ -18,17 +48,17 @@ class ModulatedWave(NamedTuple):
     Specifications of a wave with modulated frequency.
 
     :param amplitude_envelope_fn:
-        function that takes duration (in seconds), velocity, and frame rate
-        as inputs and returns amplitude envelope of a resulting wave
+        function that takes parameters such as duration and frame rate
+        as inputs and returns amplitude envelope of output wave
     :param carrier_waveform:
         form of a modulated wave (so called carrier)
     :param carrier_phase:
         phase shift of a carrier as a fraction of its period;
         a float between 0 and 1
     :param modulation_index_envelope_fn:
-        function that takes duration (in seconds), velocity, and frame rate
-        as inputs and returns amplitude envelope of a modulating wave
-        (this envelope is known as modulation index envelope)
+        function that takes parameters such as duration, velocity, and
+        frame rate as inputs and returns amplitude envelope of a modulating
+        wave (this envelope is known as modulation index envelope)
     :param modulator_waveform:
         form of a modulating wave (so called modulator)
     :param modulator_frequency_ratio:
@@ -37,18 +67,17 @@ class ModulatedWave(NamedTuple):
         phase shift of a modulator as a fraction of its period;
         a float between 0 and 1
     """
-    amplitude_envelope_fn: Callable[[float, float, int], np.ndarray]
+    amplitude_envelope_fn: ENVELOPE_FN_TYPE
     carrier_waveform: str
     carrier_phase: float
-    modulation_index_envelope_fn: Callable[[float, float, int], np.ndarray]
+    modulation_index_envelope_fn: ENVELOPE_FN_TYPE
     modulator_waveform: str
     modulator_frequency_ratio: float
     modulator_phase: float
 
 
 def generate_modulated_wave(
-        wave: ModulatedWave, carrier_frequency: float,
-        duration_in_seconds: float, velocity: float, frame_rate: int
+        wave: ModulatedWave, carrier_frequency: float, task: Task
 ) -> np.ndarray:
     """
     Generate wave with modulated frequency.
@@ -58,21 +87,15 @@ def generate_modulated_wave(
     :param carrier_frequency:
         frequency of a carrier wave (in Hz); loosely speaking,
         it is a base frequency of a wave to be generated
-    :param duration_in_seconds:
-        duration of a wave (in seconds) not including its release;
-        in terms of MIDI, it is time between 'NOTE ON' and 'NOTE OFF' events
-    :param velocity:
-        force of sound generation; it can be likened to force of piano key
-        pressing; it is a float between 0 and 1
-    :param frame_rate:
-        number of frames per second
+    :param task:
+        parameters of sound synthesis task that triggered generation
+        of the wave
     :return:
         wave with modulated frequency
     """
-    amplitude_envelope = wave.amplitude_envelope_fn(
-        duration_in_seconds, velocity, frame_rate
-    )
+    amplitude_envelope = wave.amplitude_envelope_fn(task)
     duration_in_frames = len(amplitude_envelope)
+    frame_rate = task.frame_rate
 
     mod_frequency = wave.modulator_frequency_ratio * carrier_frequency
     mod_period_in_frames = frame_rate / mod_frequency
@@ -82,9 +105,7 @@ def generate_modulated_wave(
 
     mod_wave_fn = NAME_TO_WAVEFORM[wave.modulator_waveform]
     modulator = mod_wave_fn(2 * np.pi * mod_frequency / frame_rate * mod_xs)
-    modulation_index_envelope = wave.modulation_index_envelope_fn(
-        duration_in_seconds, velocity, frame_rate
-    )
+    modulation_index_envelope = wave.modulation_index_envelope_fn(task)
     modulator *= modulation_index_envelope
 
     carr_period_in_frames = frame_rate / carrier_frequency
@@ -144,8 +165,7 @@ def sum_two_sounds(
 
 
 def generate_partial(
-        partial: Partial, frequency: float, duration: float,
-        velocity: float, frame_rate: int, context: Dict[str, Any]
+        partial: Partial, frequency: float, task: Task
 ) -> np.ndarray:
     """
     Generate partial (fundamental or overtone).
@@ -154,30 +174,20 @@ def generate_partial(
         specifications of a partial
     :param frequency:
         frequency of the partial (in Hz)
-    :param duration:
-        duration of a partial (in seconds) not including its release;
-        in terms of MIDI, it is time between 'NOTE ON' and 'NOTE OFF' events
-    :param velocity:
-        force of sound generation; it can be likened to force of piano key
-        pressing; it is a float between 0 and 1
-    :param frame_rate:
-        number of frames per second
-    :param context:
-        information to be used by sound effects; it can contain number of
-        frames per second and fundamental frequency in Hz (if it exists)
+    :param task:
+        parameters of sound synthesis task that triggered generation
+        of the partial
     :return:
         partial
     """
     sound = np.array([[], []], dtype=np.float64)
     for frequency_ratio, volume_ratio in partial.detune_to_volume.items():
         detuned_frequency = frequency_ratio * frequency
-        wave = generate_modulated_wave(
-            partial.wave, detuned_frequency, duration, velocity, frame_rate
-        )
+        wave = generate_modulated_wave(partial.wave, detuned_frequency, task)
         wave *= volume_ratio
         sound = sum_two_sounds(sound, wave)
     for effect_fn in partial.effects:
-        sound = effect_fn(sound, context)
+        sound = effect_fn(sound, task)
     return sound
 
 
@@ -205,49 +215,31 @@ class Instrument(NamedTuple):
     effects: List[EFFECT_FN_TYPE]
 
 
-def synthesize(
-        instrument: Instrument, frequency: float, duration: float,
-        volume: float, velocity: float, frame_rate: int
-) -> np.ndarray:
+def synthesize(instrument: Instrument, task: Task) -> np.ndarray:
     """
-    Synthesize one sound event.
+    Synthesize one sound event (loosely speaking, a played note).
 
     :param instrument:
         specifications of a virtual musical instrument
-    :param frequency:
-        fundamental frequency of a sound to be synthesized
-    :param duration:
-        duration of an event (in seconds) not including its release;
-        in terms of MIDI, it is time between 'NOTE ON' and 'NOTE OFF' events
-    :param volume:
-        ratio of the highest amplitude of the resulting sound to maximum
-        amplitude that is not clipped by playing devices;
-        a float between 0 and 1
-    :param velocity:
-        force of sound generation; it can be likened to force of piano key
-        pressing; it is a float between 0 and 1
-    :param frame_rate:
-        number of frames per second
+    :param task:
+        specification of sound event to be synthesized
     :return:
-        synthesized sound
+        synthesized sound as pressure deviation timeline
     """
     sound = np.array([[], []], dtype=np.float64)
-    context = {
-        'frame_rate': frame_rate,
-        'fundamental_frequency': frequency
-    }
     zipped = zip(instrument.partials, instrument.frequency_ratios)
     for partial_id, (partial, frequency_ratio) in enumerate(zipped):
-        partial_frequency = frequency_ratio * frequency
-        partial_sound = generate_partial(
-            partial, partial_frequency, duration, velocity, frame_rate, context
-        )
-        partial_sound *= instrument.partials_volume_fn(partial_id, velocity)
+        partial_frequency = frequency_ratio * task.frequency
+        partial_sound = generate_partial(partial, partial_frequency, task)
+        volume_ratio = instrument.partials_volume_fn(partial_id, task.velocity)
+        partial_sound *= volume_ratio
         sound = sum_two_sounds(sound, partial_sound)
 
     sound = instrument.resonance_filter_fn(sound)
     for effect_fn in instrument.effects:
-        sound = effect_fn(sound, context)
+        sound = effect_fn(sound, task)
+    sound *= task.volume / np.max(np.abs(sound))
+    for effect_fn in task.effects:
+        sound = effect_fn(sound, task)
 
-    sound *= volume / np.max(np.abs(sound))
     return sound

@@ -6,13 +6,12 @@ Author: Nikolay Lysenko
 
 
 from math import ceil
-from typing import Any, Dict
 
 import numpy as np
 
 
 def decrease_channel_volume(
-        sound: np.ndarray, context: Dict[str, Any],
+        sound: np.ndarray, task: 'sinethesizer.synth.core.Task',
         channel: str, volume_ratio: float
 ) -> np.ndarray:
     """
@@ -20,7 +19,7 @@ def decrease_channel_volume(
 
     :param sound:
         sound to be modified
-    :param context:
+    :param task:
         an argument that is not used by this function;
         it is added, because all effect functions must have it
     :param channel:
@@ -30,7 +29,7 @@ def decrease_channel_volume(
     :return:
         sound with changed volume
     """
-    _ = context  # This argument is ignored.
+    _ = task  # This argument is ignored.
     if channel == 'left':
         ratios = np.array([[volume_ratio], [1]])
     elif channel == 'right':
@@ -42,7 +41,7 @@ def decrease_channel_volume(
 
 
 def apply_haas_effect(
-        sound: np.ndarray, context: Dict[str, Any],
+        sound: np.ndarray, task: 'sinethesizer.synth.core.Task',
         location: float, max_channel_delay: float
 ) -> np.ndarray:
     """
@@ -50,9 +49,8 @@ def apply_haas_effect(
 
     :param sound:
         sound to be modified
-    :param context:
-        supplementary information about `sound`; it can contain number of
-        frames per second and fundamental frequency (in Hz) of related event
+    :param task:
+        parameters of sound synthesis task that triggered this effect
     :param location:
         location of sound source;
         -1 stands for extremely left and 1 stands for extremely right
@@ -63,7 +61,7 @@ def apply_haas_effect(
         sound with delay between channels
     """
     delay = max_channel_delay * abs(location)
-    silence = np.zeros(ceil(delay * context['frame_rate']))
+    silence = np.zeros(ceil(delay * task.frame_rate))
     if location >= 0:
         result = np.vstack((
             np.hstack((silence, sound[0])),

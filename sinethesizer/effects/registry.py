@@ -5,7 +5,7 @@ Author: Nikolay Lysenko.
 """
 
 
-from typing import Any, Callable, Dict
+from typing import Callable, Dict
 
 import numpy as np
 
@@ -22,7 +22,10 @@ from sinethesizer.effects.tremolo import apply_tremolo
 from sinethesizer.effects.vibrato import apply_vibrato
 
 
-EFFECT_FN_TYPE = Callable[[np.ndarray, Dict[str, Any]], np.ndarray]
+EFFECT_FN_TYPE = Callable[
+    [np.ndarray, 'sinethesizer.synth.core.Task'],
+    np.ndarray
+]
 
 
 def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
