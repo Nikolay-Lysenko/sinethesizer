@@ -1,5 +1,5 @@
 """
-Generate basic sound waves.
+Generate basic periodic waves.
 
 Author: Nikolay Lysenko
 """
