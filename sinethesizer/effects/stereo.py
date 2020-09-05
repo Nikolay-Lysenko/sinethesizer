@@ -10,36 +10,6 @@ from math import ceil
 import numpy as np
 
 
-def decrease_channel_volume(
-        sound: np.ndarray, task: 'sinethesizer.synth.core.Task',
-        channel: str, volume_ratio: float
-) -> np.ndarray:
-    """
-    Decrease volume of one channel.
-
-    :param sound:
-        sound to be modified
-    :param task:
-        an argument that is not used by this function;
-        it is added, because all effect functions must have it
-    :param channel:
-        channel to be decreased
-    :param volume_ratio:
-        ratio of new volume of channel to its initial volume
-    :return:
-        sound with changed volume
-    """
-    _ = task  # This argument is ignored.
-    if channel == 'left':
-        ratios = np.array([[volume_ratio], [1]])
-    elif channel == 'right':
-        ratios = np.array([[1], [volume_ratio]])
-    else:
-        raise ValueError(f"Unknown channel: {channel}.")
-    sound *= ratios
-    return sound
-
-
 def apply_haas_effect(
         sound: np.ndarray, task: 'sinethesizer.synth.core.Task',
         location: float, max_channel_delay: float
@@ -73,3 +43,27 @@ def apply_haas_effect(
             np.hstack((silence, sound[1]))
         ))
     return result
+
+
+def apply_panning(
+        sound: np.ndarray, task: 'sinethesizer.synth.core.Task',
+        left_volume_ratio: float, right_volume_ratio: float
+) -> np.ndarray:
+    """
+    Modify volumes of two channels independently.
+
+    :param sound:
+        sound to be modified
+    :param task:
+        an argument that is not used by this function;
+        it is added, because all effect functions must have it
+    :param left_volume_ratio:
+        ratio of new volume of left channel to its initial volume
+    :param right_volume_ratio:
+        ratio of new volume of right channel to its initial volume
+    :return:
+        sound with changed volume
+    """
+    _ = task  # This argument is ignored.
+    sound *= np.array([[left_volume_ratio], [right_volume_ratio]])
+    return sound
