@@ -15,6 +15,9 @@ from sinethesizer.effects.filter_sweep import (
 )
 from sinethesizer.effects.overdrive import apply_overdrive
 from sinethesizer.effects.reverb import apply_reverb
+from sinethesizer.effects.stereo import (
+    apply_haas_effect, decrease_channel_volume
+)
 from sinethesizer.effects.tremolo import apply_tremolo
 from sinethesizer.effects.vibrato import apply_vibrato
 
@@ -30,8 +33,10 @@ def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
         registry of effects
     """
     registry = {
+        'decrease_channel_volume': decrease_channel_volume,
         'filter': apply_frequency_filter,
         'filter_sweep': apply_filter_sweep,
+        'haas': apply_haas_effect,
         'overdrive': apply_overdrive,
         'phaser': apply_phaser,
         'reverb': apply_reverb,
