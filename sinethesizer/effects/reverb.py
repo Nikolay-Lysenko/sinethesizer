@@ -103,7 +103,7 @@ def find_reflection_times(
 
 
 def apply_reverb(
-        sound: np.ndarray, sound_info: Dict[str, Any],
+        sound: np.ndarray, context: Dict[str, Any],
         first_reflection_delay: float = 0.01,
         decay_duration: float = 0.09,
         amplitude_random_range: float = 0.1,
@@ -121,9 +121,9 @@ def apply_reverb(
 
     :param sound:
         sound to be modified
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param context:
+        supplementary information about `sound`; it can contain number of
+        frames per second and fundamental frequency (in Hz) of related event
     :param first_reflection_delay:
         time (in seconds) between original sound and its first reflection
     :param decay_duration:
@@ -159,7 +159,7 @@ def apply_reverb(
     )
     random.seed(random_seed)
 
-    frame_rate = sound_info['frame_rate']
+    frame_rate = context['frame_rate']
     ir_duration_in_seconds = first_reflection_delay + decay_duration
     ir_duration_in_frames = ceil(frame_rate * ir_duration_in_seconds)
     impulse_response = np.zeros(ir_duration_in_frames)

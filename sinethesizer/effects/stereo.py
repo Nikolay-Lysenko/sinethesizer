@@ -12,7 +12,7 @@ import numpy as np
 
 
 def decrease_channel_volume(
-        sound: np.ndarray, sound_info: Dict[str, Any],
+        sound: np.ndarray, context: Dict[str, Any],
         channel: str, volume_ratio: float
 ) -> np.ndarray:
     """
@@ -20,9 +20,9 @@ def decrease_channel_volume(
 
     :param sound:
         sound to be modified
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param context:
+        an argument that is not used by this function;
+        it is added, because all effect functions must have it
     :param channel:
         channel to be decreased
     :param volume_ratio:
@@ -30,6 +30,7 @@ def decrease_channel_volume(
     :return:
         sound with changed volume
     """
+    _ = context  # This argument is ignored.
     if channel == 'left':
         ratios = np.array([[volume_ratio], [1]])
     elif channel == 'right':
@@ -41,7 +42,7 @@ def decrease_channel_volume(
 
 
 def apply_haas_effect(
-        sound: np.ndarray, sound_info: Dict[str, Any],
+        sound: np.ndarray, context: Dict[str, Any],
         location: float, max_channel_delay: float
 ) -> np.ndarray:
     """
@@ -49,9 +50,9 @@ def apply_haas_effect(
 
     :param sound:
         sound to be modified
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param context:
+        supplementary information about `sound`; it can contain number of
+        frames per second and fundamental frequency (in Hz) of related event
     :param location:
         location of sound source;
         -1 stands for extremely left and 1 stands for extremely right
@@ -62,7 +63,7 @@ def apply_haas_effect(
         sound with delay between channels
     """
     delay = max_channel_delay * abs(location)
-    silence = np.zeros(ceil(delay * sound_info['frame_rate']))
+    silence = np.zeros(ceil(delay * context['frame_rate']))
     if location >= 0:
         result = np.vstack((
             np.hstack((silence, sound[0])),

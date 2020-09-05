@@ -33,7 +33,7 @@ def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
         registry of effects
     """
     registry = {
-        'decrease_channel_volume': decrease_channel_volume,
+        'channel_volume_decrease': decrease_channel_volume,
         'filter': apply_frequency_filter,
         'filter_sweep': apply_filter_sweep,
         'haas': apply_haas_effect,

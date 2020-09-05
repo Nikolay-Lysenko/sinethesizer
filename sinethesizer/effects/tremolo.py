@@ -15,7 +15,7 @@ from sinethesizer.utils.waves import generate_mono_wave
 
 
 def apply_absolute_tremolo(
-        sound: np.ndarray, sound_info: Dict[str, Any],
+        sound: np.ndarray, context: Dict[str, Any],
         frequency: float = 6, amplitude: float = 0.5,
         waveform: str = 'sine'
 ) -> np.ndarray:
@@ -24,9 +24,9 @@ def apply_absolute_tremolo(
 
     :param sound:
         sound to be modified
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param context:
+        supplementary information about `sound`; it can contain number of
+        frames per second and fundamental frequency (in Hz) of related event
     :param frequency:
         frequency of volume oscillations (in Hz)
     :param amplitude:
@@ -39,7 +39,7 @@ def apply_absolute_tremolo(
     if not (0 < amplitude <= 1):
         raise ValueError("Amplitude for tremolo must be between 0 and 1.")
     amplitudes = amplitude * np.ones(sound.shape[1])
-    frame_rate = sound_info['frame_rate']
+    frame_rate = context['frame_rate']
     volume_wave = generate_mono_wave(
         waveform, frequency, amplitudes, frame_rate
     )
@@ -49,7 +49,7 @@ def apply_absolute_tremolo(
 
 
 def apply_relative_tremolo(
-        sound: np.ndarray, sound_info: Dict[str, Any],
+        sound: np.ndarray, context: Dict[str, Any],
         frequency_ratio: float = 0.02, amplitude: float = 0.5,
         waveform: str = 'sine'
 ) -> np.ndarray:
@@ -58,9 +58,9 @@ def apply_relative_tremolo(
 
     :param sound:
         sound to be modified
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param context:
+        supplementary information about `sound`; it can contain number of
+        frames per second and fundamental frequency (in Hz) of related event
     :param frequency_ratio:
         frequency of volume oscillations as ratio to fundamental frequency
         of the sound
@@ -71,15 +71,15 @@ def apply_relative_tremolo(
     :return:
         sound with vibrating volume
     """
-    frequency = frequency_ratio * sound_info['fundamental_frequency']
+    frequency = frequency_ratio * context['fundamental_frequency']
     sound = apply_absolute_tremolo(
-        sound, sound_info, frequency, amplitude, waveform
+        sound, context, frequency, amplitude, waveform
     )
     return sound
 
 
 def apply_tremolo(
-        sound: np.ndarray, sound_info: Dict[str, Any], kind: str = 'absolute',
+        sound: np.ndarray, context: Dict[str, Any], kind: str = 'absolute',
         *args, **kwargs
 ) -> np.ndarray:
     """
@@ -87,18 +87,18 @@ def apply_tremolo(
 
     :param sound:
         sound to be modified
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param context:
+        supplementary information about `sound`; it can contain number of
+        frames per second and fundamental frequency (in Hz) of related event
     :param kind:
         kind of filter; supported values are 'absolute' and 'relative'
     :return:
         sound with vibrating volume
     """
     if kind == 'absolute':
-        sound = apply_absolute_tremolo(sound, sound_info, *args, **kwargs)
+        sound = apply_absolute_tremolo(sound, context, *args, **kwargs)
     elif kind == 'relative':
-        sound = apply_relative_tremolo(sound, sound_info, *args, **kwargs)
+        sound = apply_relative_tremolo(sound, context, *args, **kwargs)
     else:
         raise ValueError(
             f"Kind must be either 'absolute' or 'relative', but found: {kind}"
