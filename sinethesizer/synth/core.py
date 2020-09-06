@@ -33,7 +33,7 @@ class Task(NamedTuple):
     :param frame_rate:
         number of frames per second
     :param effects:
-        list of effects that are applied to resulting sound
+        list of effects that should be applied to resulting sound
     """
     duration: float
     frequency: float
@@ -48,8 +48,8 @@ class ModulatedWave(NamedTuple):
     Specifications of a wave with modulated frequency.
 
     :param amplitude_envelope_fn:
-        function that takes parameters such as duration and frame rate
-        as inputs and returns amplitude envelope of output wave
+        function that takes parameters such as duration, velocity, and
+        frame rate as inputs and returns amplitude envelope of output wave
     :param carrier_waveform:
         form of a modulated wave (so called carrier)
     :param carrier_phase:
@@ -62,7 +62,7 @@ class ModulatedWave(NamedTuple):
     :param modulator_waveform:
         form of a modulating wave (so called modulator)
     :param modulator_frequency_ratio:
-        ratio of modulator frequency to that of carrier
+        ratio of modulator frequency to that of a carrier
     :param modulator_phase:
         phase shift of a modulator as a fraction of its period;
         a float between 0 and 1
@@ -83,10 +83,10 @@ def generate_modulated_wave(
     Generate wave with modulated frequency.
 
     :param wave:
-        specifications of a wave to be generated
+        specifications of the wave to be generated
     :param carrier_frequency:
         frequency of a carrier wave (in Hz); loosely speaking,
-        it is a base frequency of a wave to be generated
+        it is a base frequency of the wave to be generated
     :param task:
         parameters of sound synthesis task that triggered generation
         of the wave
@@ -128,15 +128,18 @@ class Partial(NamedTuple):
 
     :param wave:
         specifications of a wave that forms the partial
-    :param detune_to_volume:
-        mapping from a detuning ratio to relative volume of the corresponding
-        detuned frequency; sum of slightly detuned waves sounds less artificial
-        than one pure wave
+    :param frequency_ratio:
+        ratio of this partial's frequency to fundamental frequency
+    :param detune_to_amplitude:
+        mapping from a detuning ratio to relative amplitude of a wave with the
+        corresponding detuned frequency; sum of slightly detuned waves sounds
+        less artificial than one pure wave
     :param effects:
-        sound effects that are always applied to this partial
+        sound effects that should be applied to this partial
     """
     wave: ModulatedWave
-    detune_to_volume: Dict[float, float]
+    frequency_ratio: float
+    detune_to_amplitude: Dict[float, float]
     effects: List[EFFECT_FN_TYPE]
 
 
@@ -164,16 +167,12 @@ def sum_two_sounds(
     return first_sound + second_sound
 
 
-def generate_partial(
-        partial: Partial, frequency: float, task: Task
-) -> np.ndarray:
+def generate_partial(partial: Partial, task: Task) -> np.ndarray:
     """
     Generate partial (fundamental or overtone).
 
     :param partial:
-        specifications of a partial
-    :param frequency:
-        frequency of the partial (in Hz)
+        specifications of the partial
     :param task:
         parameters of sound synthesis task that triggered generation
         of the partial
@@ -181,10 +180,12 @@ def generate_partial(
         partial
     """
     sound = np.array([[], []], dtype=np.float64)
-    for frequency_ratio, volume_ratio in partial.detune_to_volume.items():
-        detuned_frequency = frequency_ratio * frequency
+    partial_frequency = partial.frequency_ratio * task.frequency
+    ratios = partial.detune_to_amplitude.items()
+    for frequency_ratio, amplitude_ratio in ratios:
+        detuned_frequency = frequency_ratio * partial_frequency
         wave = generate_modulated_wave(partial.wave, detuned_frequency, task)
-        wave *= volume_ratio
+        wave *= amplitude_ratio
         sound = sum_two_sounds(sound, wave)
     for effect_fn in partial.effects:
         sound = effect_fn(sound, task)
@@ -197,21 +198,14 @@ class Instrument(NamedTuple):
 
     :param partials:
         specifications of partials
-    :param frequency_ratios:
-        ratios of partial frequencies to the fundamental frequency
-    :param partials_volume_fn:
+    :param partials_amplitude_fn:
         function that takes position of a partial and velocity as inputs
-        and returns ratio of the partial's volume to volume of the fundamental
-    :param resonance_filter_fn:
-        function that takes sound of resulting series of partials and somehow
-        mutes frequencies that are not resonance frequencies of the instrument
+        and returns ratio of the partial's amplitude to that of the fundamental
     :param effects:
-        sound effects that are always applied to outputs of the instrument
+        sound effects that should be applied to outputs of the instrument
     """
     partials: List[Partial]
-    frequency_ratios: List[float]
-    partials_volume_fn: Callable[[int, float], float]
-    resonance_filter_fn: Callable[[np.ndarray], np.ndarray]
+    partials_amplitude_fn: Callable[[int, float], float]
     effects: List[EFFECT_FN_TYPE]
 
 
@@ -227,15 +221,12 @@ def synthesize(instrument: Instrument, task: Task) -> np.ndarray:
         synthesized sound as pressure deviation timeline
     """
     sound = np.array([[], []], dtype=np.float64)
-    zipped = zip(instrument.partials, instrument.frequency_ratios)
-    for partial_id, (partial, frequency_ratio) in enumerate(zipped):
-        partial_frequency = frequency_ratio * task.frequency
-        partial_sound = generate_partial(partial, partial_frequency, task)
-        volume_ratio = instrument.partials_volume_fn(partial_id, task.velocity)
-        partial_sound *= volume_ratio
+    partials_amplitude_fn = instrument.partials_amplitude_fn
+    for partial_id, partial in enumerate(instrument.partials):
+        partial_sound = generate_partial(partial, task)
+        partial_sound *= partials_amplitude_fn(partial_id, task.velocity)
         sound = sum_two_sounds(sound, partial_sound)
 
-    sound = instrument.resonance_filter_fn(sound)
     for effect_fn in instrument.effects:
         sound = effect_fn(sound, task)
     sound *= task.volume / np.max(np.abs(sound))
