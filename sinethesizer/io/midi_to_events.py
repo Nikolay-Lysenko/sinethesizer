@@ -12,6 +12,9 @@ import pretty_midi
 from sinethesizer.synth.core import Event
 
 
+MAX_MIDI_VALUE = 127
+
+
 def convert_midi_to_events(
         midi_path: str, settings: Dict[str, Any]
 ) -> List[Event]:
@@ -36,7 +39,7 @@ def convert_midi_to_events(
                 start_time=note.start,
                 duration=note.end - note.start,
                 frequency=pretty_midi.note_number_to_hz(note.pitch),
-                velocity=note.velocity / 100,
+                velocity=note.velocity / MAX_MIDI_VALUE,
                 effects='',
                 frame_rate=settings['frame_rate']
             )
