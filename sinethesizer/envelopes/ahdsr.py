@@ -24,7 +24,8 @@ def generic_ahdsr(
         max_sustain_duration: float = 10.0,
         max_release_duration: float = 0.5,
         release_sensitivity_to_velocity: float = 0.0,
-        release_degree: float = 1.0
+        release_degree: float = 1.0,
+        scaling_coef: float = 1.0
 ) -> np.ndarray:
     """
     Create AHDSR envelope of shape that depends on numerous parameters.
@@ -71,6 +72,9 @@ def generic_ahdsr(
         degree of release dynamic; if it is 1, release is linear; if it is
         greater than 1, release is concave; if it is less than 1,
         release is convex
+    :param scaling_coef:
+        constant factor for the whole envelope; it can be needed if output
+        envelope is used as modulation index envelope
     :return:
         envelope
     """
@@ -127,4 +131,5 @@ def generic_ahdsr(
         release = np.array([])
 
     envelope = np.concatenate((attack, hold, decay, sustain, release))
+    envelope *= scaling_coef
     return envelope
