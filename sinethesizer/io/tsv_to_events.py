@@ -1,5 +1,5 @@
 """
-Read TSV file of special schema and convert it to pressure timeline.
+Read TSV file of special schema and convert it to sound synthesis tasks.
 
 Author: Nikolay Lysenko
 """
@@ -11,9 +11,6 @@ from typing import Any, Dict
 import numpy as np
 
 from sinethesizer.utils.music_theory import convert_note_to_frequency
-from sinethesizer.synth.timeline import (
-    EVENTS_TYPE, add_event_to_timeline, create_empty_timeline
-)
 
 
 def set_types(events: EVENTS_TYPE) -> EVENTS_TYPE:
@@ -38,13 +35,16 @@ def set_types(events: EVENTS_TYPE) -> EVENTS_TYPE:
         'duration': float,
         'frequency': parse_frequency,
         'volume': float,
-        'location': float
+        'velocity': float
     }
     events = [
         {k: field_to_caster.get(k, lambda x: x)(v) for k, v in event.items()}
         for event in events
     ]
     return events
+
+
+
 
 
 def convert_tsv_to_timeline(

@@ -11,7 +11,7 @@ import numpy as np
 
 
 def generic_ahdsr(
-        task: 'sinethesizer.synth.core.Task',
+        event: 'sinethesizer.synth.core.Event',
         attack_to_ahds_max_ratio: float = 0.2,
         max_attack_duration: float = 0.2,
         attack_degree: float = 1.0,
@@ -30,9 +30,9 @@ def generic_ahdsr(
     """
     Create AHDSR envelope of shape that depends on numerous parameters.
 
-    :param task:
-        parameters of sound synthesis task that triggered generation
-        of this envelope; it provides information about duration, frame rate,
+    :param event:
+        parameters of sound event for which this function is called;
+        this argument provides information about duration, frame rate,
         and velocity
     :param attack_to_ahds_max_ratio:
         maximum fraction of frames with attack amongst frames with attack,
@@ -78,8 +78,8 @@ def generic_ahdsr(
     :return:
         envelope
     """
-    frame_rate = task.frame_rate
-    remaining_duration_in_frames = ceil(task.duration * frame_rate)
+    frame_rate = event.frame_rate
+    remaining_duration_in_frames = ceil(event.duration * frame_rate)
 
     n_frames_with_attack = min(
         floor(attack_to_ahds_max_ratio * remaining_duration_in_frames),
@@ -119,7 +119,7 @@ def generic_ahdsr(
     )
     sustain = sustain_level * np.ones(n_frames_with_sustain)
 
-    release_duration_ratio = task.velocity ** release_sensitivity_to_velocity
+    release_duration_ratio = event.velocity ** release_sensitivity_to_velocity
     release_duration = release_duration_ratio * max_release_duration
     n_frames_with_release = floor(release_duration * frame_rate)
     if n_frames_with_release > 0:

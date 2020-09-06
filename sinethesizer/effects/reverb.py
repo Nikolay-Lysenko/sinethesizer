@@ -103,7 +103,7 @@ def find_reflection_times(
 
 
 def apply_reverb(
-        sound: np.ndarray, task: 'sinethesizer.synth.core.Task',
+        sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         first_reflection_delay: float = 0.01,
         decay_duration: float = 0.09,
         amplitude_random_range: float = 0.1,
@@ -121,8 +121,8 @@ def apply_reverb(
 
     :param sound:
         sound to be modified
-    :param task:
-        parameters of sound synthesis task that triggered this effect
+    :param event:
+        parameters of sound event for which this function is called
     :param first_reflection_delay:
         time (in seconds) between original sound and its first reflection
     :param decay_duration:
@@ -159,7 +159,7 @@ def apply_reverb(
     random.seed(random_seed)
 
     ir_duration_in_seconds = first_reflection_delay + decay_duration
-    ir_duration_in_frames = ceil(task.frame_rate * ir_duration_in_seconds)
+    ir_duration_in_frames = ceil(event.frame_rate * ir_duration_in_seconds)
     impulse_response = np.zeros(ir_duration_in_frames)
     impulse_response[0] = original_sound_gain
 
@@ -170,7 +170,7 @@ def apply_reverb(
     )
     for reflection_time in reflection_times:
         index = min(
-            int(round(task.frame_rate * reflection_time)),
+            int(round(event.frame_rate * reflection_time)),
             ir_duration_in_frames - 1
         )
         amplitude = (ir_duration_in_seconds - reflection_time) / decay_duration

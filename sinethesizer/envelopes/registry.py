@@ -1,5 +1,5 @@
 """
-Map names of envelopes to functions applying them.
+Map names of envelopes to functions creating them.
 
 Author: Nikolay Lysenko
 """
@@ -13,7 +13,7 @@ from sinethesizer.envelopes.ahdsr import generic_ahdsr
 from sinethesizer.envelopes.user_defined import user_defined_envelope
 
 
-ENVELOPE_FN_TYPE = Callable[['sinethesizer.synth.core.Task'], np.ndarray]
+ENVELOPE_FN_TYPE = Callable[['sinethesizer.synth.core.Event'], np.ndarray]
 
 
 def get_envelopes_registry() -> Dict[str, ENVELOPE_FN_TYPE]:

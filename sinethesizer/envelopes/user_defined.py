@@ -1,5 +1,5 @@
 """
-Create envelopes from user-defined successions of points.
+Create envelopes from user-defined sequences of points.
 
 Author: Nikolay Lysenko
 """
@@ -12,15 +12,15 @@ import numpy as np
 
 
 def user_defined_envelope(
-        task: 'sinethesizer.synth.core.Task', parts: List[Dict[str, Any]],
+        event: 'sinethesizer.synth.core.Event', parts: List[Dict[str, Any]],
         velocity_sensitivity: float = 0
 ) -> np.ndarray:
     """
     Create envelope that is an upsampled version of a user-defined envelope.
 
-    :param task:
-        parameters of sound synthesis task that triggered generation
-        of this envelope; it provides information about duration, frame rate,
+    :param event:
+        parameters of sound event for which this function is called;
+        this argument provides information about duration, frame rate,
         and velocity
     :param parts:
         list of dictionaries representing successive parts of an envelope;
@@ -34,8 +34,8 @@ def user_defined_envelope(
     :return:
         envelope
     """
-    frame_rate = task.frame_rate
-    remaining_duration_in_frames = ceil(task.duration * frame_rate)
+    frame_rate = event.frame_rate
+    remaining_duration_in_frames = ceil(event.duration * frame_rate)
     # 1 is subtracted, because there are N - 1 intervals between N points.
     remaining_length = sum(len(part['values']) - 1 for part in parts)
     results = []
@@ -61,5 +61,5 @@ def user_defined_envelope(
         remaining_duration_in_frames -= len(current_result)
 
     envelope = np.concatenate(results)
-    envelope *= task.velocity ** velocity_sensitivity
+    envelope *= event.velocity ** velocity_sensitivity
     return envelope

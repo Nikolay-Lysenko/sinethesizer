@@ -20,7 +20,7 @@ from sinethesizer.synth.partials_amplitude import (
 
 def create_envelope_fn(envelope_data: Dict[str, Any]) -> ENVELOPE_FN_TYPE:
     """
-    Create function that maps task specifications to envelope.
+    Create function that maps a sound event to envelope.
 
     :param envelope_data:
         envelope parameters
@@ -57,7 +57,7 @@ def create_list_of_effect_fns(
     return effects_fns
 
 
-def create_partials_amplitude_function(
+def create_partials_amplitude_fn(
         partial_amplitude_fn_data: Dict[str, Any]
 ) -> PARTIALS_AMPLITUDE_FN_TYPE:
     """
@@ -76,9 +76,9 @@ def create_partials_amplitude_function(
     return partial_amplitude_fn
 
 
-def create_modulated_wave_specs(wave_data: Dict[str, Any]) -> ModulatedWave:
+def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
     """
-    Convert specifications of modulated wave  to internal data structure.
+    Convert representation of modulated wave to internal data structure.
 
     :param wave_data:
         parameters of modulated wave as dictionary
@@ -101,11 +101,9 @@ def create_modulated_wave_specs(wave_data: Dict[str, Any]) -> ModulatedWave:
     return modulated_wave_specs
 
 
-def create_partials_specs(
-        partials_data: List[Dict[str, Any]]
-) -> List[Partial]:
+def convert_partials(partials_data: List[Dict[str, Any]]) -> List[Partial]:
     """
-    Convert specifications of partials to internal data structures.
+    Convert representations of partials to internal data structures.
 
     :param partials_data:
         parameters of partials as dictionaries
@@ -115,7 +113,7 @@ def create_partials_specs(
     partials_specs = []
     for partial_data in partials_data:
         partial_specs = Partial(
-            wave=create_modulated_wave_specs(partial_data['wave']),
+            wave=convert_modulated_wave(partial_data['wave']),
             frequency_ratio=partial_data['frequency_ratio'],
             detuning_to_amplitude=partial_data['detuning_to_amplitude'],
             random_detuning_range=partial_data['random_detuning_range'],
@@ -127,7 +125,7 @@ def create_partials_specs(
 
 def create_instruments_registry(input_path: str) -> Dict[str, Any]:
     """
-    Create mapping from instrument names to their specifications.
+    Create mapping from instrument names to their representations.
 
     :param input_path:
         path to YAML file with definitions of instruments
@@ -139,8 +137,8 @@ def create_instruments_registry(input_path: str) -> Dict[str, Any]:
     instruments_registry = {}
     for instrument_data in input_data:
         instruments_registry[instrument_data['name']] = Instrument(
-            partials=create_partials_specs(instrument_data['partials']),
-            partials_amplitude_fn=create_partials_amplitude_function(
+            partials=convert_partials(instrument_data['partials']),
+            partials_amplitude_fn=create_partials_amplitude_fn(
                 instrument_data['partials_amplitude_fn']
             ),
             effects=create_list_of_effect_fns(

@@ -16,12 +16,16 @@ from sinethesizer.synth.partials_amplitude import PARTIALS_AMPLITUDE_FN_TYPE
 from sinethesizer.utils.waves import NAME_TO_WAVEFORM
 
 
-class Task(NamedTuple):
+class Event(NamedTuple):
     """
-    Specifications of basic sound synthesis task.
+    Parameters of a basic audio event (loosely speaking, a played note).
 
+    :param instrument:
+        name of instrument that is used for synthesis
+    :param start_time:
+        start time (in seconds) of sound from beginning of its track
     :param duration:
-        duration of an event (in seconds) not including its release;
+        duration of a sound (in seconds) not including its release;
         in terms of MIDI, it is time between 'NOTE ON' and 'NOTE OFF' events
     :param frequency:
         fundamental frequency of a sound to be synthesized
@@ -32,22 +36,24 @@ class Task(NamedTuple):
     :param velocity:
         force of sound generation; it can be likened to force of piano key
         pressing; it is a float between 0 and 1
-    :param frame_rate:
-        number of frames per second
     :param effects:
         list of effects that should be applied to resulting sound
+    :param frame_rate:
+        number of frames per second
     """
+    instrument: str
+    start_time: float
     duration: float
     frequency: float
     volume: float
     velocity: float
-    frame_rate: int
     effects: List[EFFECT_FN_TYPE]
+    frame_rate: int
 
 
 class ModulatedWave(NamedTuple):
     """
-    Specifications of a wave with modulated frequency.
+    Parameters of a wave with modulated frequency.
 
     :param amplitude_envelope_fn:
         function that takes parameters such as duration, velocity, and
@@ -79,25 +85,25 @@ class ModulatedWave(NamedTuple):
 
 
 def generate_modulated_wave(
-        wave: ModulatedWave, carrier_frequency: float, task: Task
+        wave: ModulatedWave, carrier_frequency: float, event: Event
 ) -> np.ndarray:
     """
     Generate wave with modulated frequency.
 
     :param wave:
-        specifications of the wave to be generated
+        parameters of the wave to be generated
     :param carrier_frequency:
         frequency of a carrier wave (in Hz); loosely speaking,
         it is a base frequency of the wave to be generated
-    :param task:
+    :param event:
         parameters of sound synthesis task that triggered generation
         of the wave
     :return:
         wave with modulated frequency
     """
-    amplitude_envelope = wave.amplitude_envelope_fn(task)
+    amplitude_envelope = wave.amplitude_envelope_fn(event)
     duration_in_frames = len(amplitude_envelope)
-    frame_rate = task.frame_rate
+    frame_rate = event.frame_rate
 
     mod_frequency = wave.modulator_frequency_ratio * carrier_frequency
     mod_period_in_frames = frame_rate / mod_frequency
@@ -107,7 +113,7 @@ def generate_modulated_wave(
 
     mod_wave_fn = NAME_TO_WAVEFORM[wave.modulator_waveform]
     modulator = mod_wave_fn(2 * np.pi * mod_frequency / frame_rate * mod_xs)
-    modulation_index_envelope = wave.modulation_index_envelope_fn(task)
+    modulation_index_envelope = wave.modulation_index_envelope_fn(event)
     modulator *= modulation_index_envelope
 
     carr_period_in_frames = frame_rate / carrier_frequency
@@ -126,10 +132,10 @@ def generate_modulated_wave(
 
 class Partial(NamedTuple):
     """
-    Specifications of a partial (fundamental or overtone).
+    Parameters of a partial (fundamental or overtone).
 
     :param wave:
-        specifications of a wave that forms the partial
+        parameters of a wave that forms the partial
     :param frequency_ratio:
         ratio of this partial's frequency to fundamental frequency
     :param detuning_to_amplitude:
@@ -172,12 +178,12 @@ def sum_two_sounds(
     return first_sound + second_sound
 
 
-def generate_partial(partial: Partial, task: Task) -> np.ndarray:
+def generate_partial(partial: Partial, task: Event) -> np.ndarray:
     """
     Generate partial (fundamental or overtone).
 
     :param partial:
-        specifications of the partial
+        parameters of the partial
     :param task:
         parameters of sound synthesis task that triggered generation
         of the partial
@@ -205,10 +211,10 @@ def generate_partial(partial: Partial, task: Task) -> np.ndarray:
 
 class Instrument(NamedTuple):
     """
-    Specifications of a virtual musical instrument.
+    Parameters of a virtual musical instrument.
 
     :param partials:
-        specifications of partials
+        parameters of partials
     :param partials_amplitude_fn:
         function that takes parameters such as position of a partial and
         velocity as inputs and returns ratio of the partial's amplitude to
@@ -221,28 +227,31 @@ class Instrument(NamedTuple):
     effects: List[EFFECT_FN_TYPE]
 
 
-def synthesize(instrument: Instrument, task: Task) -> np.ndarray:
+def synthesize(
+        event: Event, instruments_registry: Dict[str, Instrument]
+) -> np.ndarray:
     """
     Synthesize one sound event (loosely speaking, a played note).
 
-    :param instrument:
-        specifications of a virtual musical instrument
-    :param task:
-        specification of sound event to be synthesized
+    :param event:
+        parameters of sound event to be synthesized
+    :param instruments_registry:
+        mapping from instrument names to their representations
     :return:
         synthesized sound as pressure deviation timeline
     """
     sound = np.array([[], []], dtype=np.float64)
+    instrument = instruments_registry[event.instrument]
     partials_amplitude_fn = instrument.partials_amplitude_fn
     for partial_id, partial in enumerate(instrument.partials):
-        partial_sound = generate_partial(partial, task)
-        partial_sound *= partials_amplitude_fn(partial_id, task)
+        partial_sound = generate_partial(partial, event)
+        partial_sound *= partials_amplitude_fn(partial_id, event)
         sound = sum_two_sounds(sound, partial_sound)
 
     for effect_fn in instrument.effects:
-        sound = effect_fn(sound, task)
-    sound *= task.volume / np.max(np.abs(sound))
-    for effect_fn in task.effects:
-        sound = effect_fn(sound, task)
+        sound = effect_fn(sound, event)
+    sound *= event.volume / np.max(np.abs(sound))
+    for effect_fn in event.effects:
+        sound = effect_fn(sound, event)
 
     return sound
