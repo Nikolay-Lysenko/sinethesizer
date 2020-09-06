@@ -1,19 +1,20 @@
 """
-Read TSV file of special schema and convert it to sound synthesis tasks.
+Read TSV file of special schema and convert it to sound events.
 
 Author: Nikolay Lysenko
 """
 
 
 import os
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import numpy as np
 
+from sinethesizer.synth.core import Event
 from sinethesizer.utils.music_theory import convert_note_to_frequency
 
 
-def set_types(events: EVENTS_TYPE) -> EVENTS_TYPE:
+def set_types(events: List[Dict[str, str]]) -> List[Dict[str, Any]]:
     """
     Set types of parsed from TSV file fields.
 
@@ -44,10 +45,7 @@ def set_types(events: EVENTS_TYPE) -> EVENTS_TYPE:
     return events
 
 
-
-
-
-def convert_tsv_to_timeline(
+def convert_tsv_to_events(
         input_path: str, settings: Dict[str, Any]
 ) -> np.ndarray:
     """
@@ -60,21 +58,17 @@ def convert_tsv_to_timeline(
     :return:
         sound represented as pressure timeline
     """
-    events = []
+    raw_events = []
     with open(input_path) as input_file:
         column_names = input_file.readline().rstrip(os.linesep).split('\t')
         for line in input_file.readlines():
-            events.append(
+            raw_events.append(
                 dict(zip(column_names, line.rstrip(os.linesep).split('\t')))
             )
-    events = set_types(events)
+    raw_events = set_types(raw_events)
 
-    timeline = create_empty_timeline(
-        events, settings['frame_rate'], settings['trailing_silence']
-    )
-    for event in events:
-        timeline = add_event_to_timeline(
-            timeline, event, settings['timbres_registry'],
-            settings['max_channel_delay'], settings['frame_rate']
-        )
-    return timeline
+    events = []
+    for raw_event in raw_events:
+        event = Event(frame_rate=settings['frame_rate'], **raw_event)
+        events.append(event)
+    return events

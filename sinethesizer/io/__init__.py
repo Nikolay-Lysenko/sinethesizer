@@ -5,13 +5,16 @@ Author: Nikolay Lysenko
 """
 
 
+from .events_to_wav import convert_events_to_timeline, write_timeline_to_wav
 from .load_presets import create_instruments_registry
-from .midi_to_numpy import convert_midi_to_timeline
-from .numpy_to_wav import write_timeline_to_wav
-from .tsv_to_numpy import convert_tsv_to_timeline
+from .midi_to_events import convert_midi_to_events
+from .tsv_to_events import convert_tsv_to_events
 
 
 __all__ = [
-    'convert_midi_to_timeline', 'convert_tsv_to_timeline',
-    'create_instruments_registry', 'write_timeline_to_wav'
+    'convert_events_to_timeline',
+    'convert_midi_to_events',
+    'convert_tsv_to_events',
+    'create_instruments_registry',
+    'write_timeline_to_wav',
 ]

@@ -5,12 +5,13 @@ Author: Nikolay Lysenko
 """
 
 
+import json
 import random
 from typing import Dict, List, NamedTuple
 
 import numpy as np
 
-from sinethesizer.effects import EFFECT_FN_TYPE
+from sinethesizer.effects import EFFECT_FN_TYPE, get_effects_registry
 from sinethesizer.envelopes import ENVELOPE_FN_TYPE
 from sinethesizer.synth.partials_amplitude import PARTIALS_AMPLITUDE_FN_TYPE
 from sinethesizer.utils.waves import NAME_TO_WAVEFORM
@@ -37,7 +38,8 @@ class Event(NamedTuple):
         force of sound generation; it can be likened to force of piano key
         pressing; it is a float between 0 and 1
     :param effects:
-        list of effects that should be applied to resulting sound
+        JSON string representing list of effects that should be applied to
+        resulting sound
     :param frame_rate:
         number of frames per second
     """
@@ -47,7 +49,7 @@ class Event(NamedTuple):
     frequency: float
     volume: float
     velocity: float
-    effects: List[EFFECT_FN_TYPE]
+    effects: str
     frame_rate: int
 
 
@@ -227,6 +229,27 @@ class Instrument(NamedTuple):
     effects: List[EFFECT_FN_TYPE]
 
 
+def apply_event_level_effects(sound: np.ndarray, event: Event) -> np.ndarray:
+    """
+    Apply sound effects that are specific to a particular event.
+
+    :param sound:
+        sound to be modified
+    :param event:
+        event for which `sound` has been produced
+    :return:
+        modified sound
+    """
+    if not event.effects:
+        return sound
+    effects_registry = get_effects_registry()
+    effects = json.loads(event.effects)
+    for effect in effects:
+        effect_name = effect.pop('name')
+        sound = effects_registry[effect_name](sound, event, **effect)
+    return sound
+
+
 def synthesize(
         event: Event, instruments_registry: Dict[str, Instrument]
 ) -> np.ndarray:
@@ -251,7 +274,5 @@ def synthesize(
     for effect_fn in instrument.effects:
         sound = effect_fn(sound, event)
     sound *= event.volume / np.max(np.abs(sound))
-    for effect_fn in event.effects:
-        sound = effect_fn(sound, event)
-
+    apply_event_level_effects(sound, event)
     return sound
