@@ -15,7 +15,7 @@ def filter_absolute_frequencies(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         min_frequency: Optional[float] = None,
         max_frequency: Optional[float] = None,
-        invert: bool = False, order: int = 10
+        invert: bool = False, order: int = 25
 ) -> np.ndarray:
     """
     Filter some frequency ranges (defined in Hz) from original sound.
@@ -56,7 +56,7 @@ def filter_relative_frequencies(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         min_frequency_ratio: Optional[float] = None,
         max_frequency_ratio: Optional[float] = None,
-        invert: bool = False, order: int = 10
+        invert: bool = False, order: int = 25
 ) -> np.ndarray:
     """
     Filter some frequency ranges (defined as ratios) from original sound.

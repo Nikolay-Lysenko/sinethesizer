@@ -54,7 +54,7 @@ def apply_filter_sweep(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         kind: str = 'absolute',
         bands: List[Tuple[Optional[float], Optional[float]]] = None,
-        invert: bool = False, order: int = 10,
+        invert: bool = False, order: int = 25,
         frequency: float = 6, waveform: str = 'sine'
 ) -> np.ndarray:
     """
@@ -111,7 +111,7 @@ def apply_filter_sweep(
 def apply_absolute_phaser(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         min_center: float = 220, max_center: float = 880,
-        band_width: float = 20, n_bands: int = 10, order: int = 10,
+        band_width: float = 20, n_bands: int = 10, order: int = 25,
         frequency: float = 5, waveform: str = 'sine',
         original_share: float = 0.75, wahwah: bool = False
 ) -> np.ndarray:
@@ -163,7 +163,7 @@ def apply_absolute_phaser(
 def apply_relative_phaser(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         min_center_ratio: float = 1.0, max_center_ratio: float = 4.0,
-        relative_band_width: float = 0.1, n_bands: int = 10, order: int = 10,
+        relative_band_width: float = 0.1, n_bands: int = 10, order: int = 25,
         frequency: float = 5, waveform: str = 'sine',
         original_share: float = 0.75, wahwah: bool = False
 ) -> np.ndarray:
