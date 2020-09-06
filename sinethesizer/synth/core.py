@@ -6,12 +6,13 @@ Author: Nikolay Lysenko
 
 
 import random
-from typing import Callable, Dict, List, NamedTuple
+from typing import Dict, List, NamedTuple
 
 import numpy as np
 
 from sinethesizer.effects import EFFECT_FN_TYPE
 from sinethesizer.envelopes import ENVELOPE_FN_TYPE
+from sinethesizer.synth.partials_amplitude import PARTIALS_AMPLITUDE_FN_TYPE
 from sinethesizer.utils.waves import NAME_TO_WAVEFORM
 
 
@@ -208,13 +209,14 @@ class Instrument(NamedTuple):
     :param partials:
         specifications of partials
     :param partials_amplitude_fn:
-        function that takes position of a partial and velocity as inputs
-        and returns ratio of the partial's amplitude to that of the fundamental
+        function that takes parameters such as position of a partial and
+        velocity as inputs and returns ratio of the partial's amplitude to
+        that of the fundamental
     :param effects:
         sound effects that should be applied to outputs of the instrument
     """
     partials: List[Partial]
-    partials_amplitude_fn: Callable[[int, float], float]
+    partials_amplitude_fn: PARTIALS_AMPLITUDE_FN_TYPE
     effects: List[EFFECT_FN_TYPE]
 
 
@@ -233,7 +235,7 @@ def synthesize(instrument: Instrument, task: Task) -> np.ndarray:
     partials_amplitude_fn = instrument.partials_amplitude_fn
     for partial_id, partial in enumerate(instrument.partials):
         partial_sound = generate_partial(partial, task)
-        partial_sound *= partials_amplitude_fn(partial_id, task.velocity)
+        partial_sound *= partials_amplitude_fn(partial_id, task)
         sound = sum_two_sounds(sound, partial_sound)
 
     for effect_fn in instrument.effects:
