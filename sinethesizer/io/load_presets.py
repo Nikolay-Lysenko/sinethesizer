@@ -1,45 +1,45 @@
 """
-Create timbres of virtual instruments based on YAML file.
+Create virtual instruments based on YAML file.
 
 Author: Nikolay Lysenko
 """
 
 
-from functools import partial
+import functools
 from typing import List, Dict, Any
 
 import yaml
 
 from sinethesizer.effects import EFFECT_FN_TYPE, get_effects_registry
-from sinethesizer.synth import get_envelopes_registry
-from sinethesizer.synth.envelopes import ENVELOPE_FN_TYPE
-from sinethesizer.synth.timbre import OvertoneSpec, TimbreSpec
+from sinethesizer.envelopes import ENVELOPE_FN_TYPE, get_envelopes_registry
+from sinethesizer.synth.core import Instrument, ModulatedWave, Partial
+from sinethesizer.synth.partials_amplitude import (
+    PARTIALS_AMPLITUDE_FN_TYPE, get_partials_amplitude_functions_registry
+)
 
 
-def create_volume_envelope_fn(
-        envelope_data: Dict[str, Any]
-) -> ENVELOPE_FN_TYPE:
+def create_envelope_fn(envelope_data: Dict[str, Any]) -> ENVELOPE_FN_TYPE:
     """
-    Create function that maps duration and frame rate to volume envelope.
+    Create function that maps task specifications to envelope.
 
     :param envelope_data:
         envelope parameters
     :return:
-        volume envelope function
+        envelope function
     """
     envelopes_registry = get_envelopes_registry()
-    volume_envelope_fn = partial(
+    envelope_fn = functools.partial(
         envelopes_registry[envelope_data['name']],
         **{k: v for k, v in envelope_data.items() if k != 'name'}
     )
-    return volume_envelope_fn
+    return envelope_fn
 
 
 def create_list_of_effect_fns(
         effects_data: List[Dict[str, Any]]
 ) -> List[EFFECT_FN_TYPE]:
     """
-    Create list of functions that apply sound effects to timeline.
+    Create list of functions that apply sound effects to timelines.
 
     :param effects_data:
         effects parameters
@@ -49,7 +49,7 @@ def create_list_of_effect_fns(
     effects_registry = get_effects_registry()
     effects_fns = []
     for effect_data in effects_data:
-        effect_fn = partial(
+        effect_fn = functools.partial(
             effects_registry[effect_data['name']],
             **{k: v for k, v in effect_data.items() if k != 'name'}
         )
@@ -57,58 +57,94 @@ def create_list_of_effect_fns(
     return effects_fns
 
 
-def create_overtones_specs(
-        overtones_data: List[Dict[str, Any]]
-) -> List[OvertoneSpec]:
+def create_partials_amplitude_function(
+        partial_amplitude_fn_data: Dict[str, Any]
+) -> PARTIALS_AMPLITUDE_FN_TYPE:
     """
-    Convert overtone specifications to internal data structure.
+    Create function that defines amplitudes of all partials depending on task.
 
-    :param overtones_data:
-        parameters of overtones
+    :param partial_amplitude_fn_data:
+        function parameters
     :return:
-        specifications of overtones
+        partials amplitude function
     """
-    overtones_specs = []
-    for overtone_data in overtones_data:
-        overtone_spec = OvertoneSpec(
-            waveform=overtone_data['waveform'],
-            frequency_ratio=overtone_data['frequency_ratio'],
-            volume_ratio=overtone_data['volume_ratio'],
-            volume_envelope_fn=create_volume_envelope_fn(
-                overtone_data['volume_envelope']
-            ),
-            phase=overtone_data.get('phase', 0),
-            effects=create_list_of_effect_fns(
-                overtone_data.get('effects', [])
-            )
+    partials_ampl_fn_registry = get_partials_amplitude_functions_registry()
+    partial_amplitude_fn = functools.partial(
+        partials_ampl_fn_registry[partial_amplitude_fn_data['name']],
+        **{k: v for k, v in partial_amplitude_fn_data.items() if k != 'name'}
+    )
+    return partial_amplitude_fn
+
+
+def create_modulated_wave_specs(wave_data: Dict[str, Any]) -> ModulatedWave:
+    """
+    Convert specifications of modulated wave  to internal data structure.
+
+    :param wave_data:
+        parameters of modulated wave as dictionary
+    :return:
+        parameters of modulated wave as internal data structure
+    """
+    modulated_wave_specs = ModulatedWave(
+        amplitude_envelope_fn=create_envelope_fn(
+            wave_data['amplitude_envelope_fn']
+        ),
+        carrier_waveform=wave_data['carrier_waveform'],
+        carrier_phase=wave_data['carrier_phase'],
+        modulation_index_envelope_fn=create_envelope_fn(
+            wave_data['modulation_index_envelope_fn']
+        ),
+        modulator_waveform=wave_data['modulator_waveform'],
+        modulator_frequency_ratio=wave_data['modulator_frequency_ratio'],
+        modulator_phase=wave_data['modulator_phase']
+    )
+    return modulated_wave_specs
+
+
+def create_partials_specs(
+        partials_data: List[Dict[str, Any]]
+) -> List[Partial]:
+    """
+    Convert specifications of partials to internal data structures.
+
+    :param partials_data:
+        parameters of partials as dictionaries
+    :return:
+        parameters of partials as internal data structures
+    """
+    partials_specs = []
+    for partial_data in partials_data:
+        partial_specs = Partial(
+            wave=create_modulated_wave_specs(partial_data['wave']),
+            frequency_ratio=partial_data['frequency_ratio'],
+            detuning_to_amplitude=partial_data['detuning_to_amplitude'],
+            random_detuning_range=partial_data['random_detuning_range'],
+            effects=create_list_of_effect_fns(partial_data.get('effects', []))
         )
-        overtones_specs.append(overtone_spec)
-    return overtones_specs
+        partials_specs.append(partial_specs)
+    return partials_specs
 
 
-def create_timbres_registry(input_path: str) -> Dict[str, Any]:
+def create_instruments_registry(input_path: str) -> Dict[str, Any]:
     """
-    Create mapping from timbre names to their specifications.
+    Create mapping from instrument names to their specifications.
 
     :param input_path:
-        path to YAML file with definitions of timbres
+        path to YAML file with definitions of instruments
     :return:
-        timbres registry
+        instruments registry
     """
     with open(input_path) as input_file:
         input_data = yaml.safe_load(input_file)
-    timbres_registry = {}
-    for timbre_data in input_data:
-        timbres_registry[timbre_data['name']] = TimbreSpec(
-            fundamental_waveform=timbre_data['fundamental_waveform'],
-            fundamental_volume_envelope_fn=create_volume_envelope_fn(
-                timbre_data['fundamental_volume_envelope']
+    instruments_registry = {}
+    for instrument_data in input_data:
+        instruments_registry[instrument_data['name']] = Instrument(
+            partials=create_partials_specs(instrument_data['partials']),
+            partials_amplitude_fn=create_partials_amplitude_function(
+                instrument_data['partials_amplitude_fn']
             ),
-            fundamental_effects=create_list_of_effect_fns(
-                timbre_data.get('fundamental_effects', [])
-            ),
-            overtones_specs=create_overtones_specs(
-                timbre_data.get('overtones_specs', [])
+            effects=create_list_of_effect_fns(
+                instrument_data.get('effects', [])
             )
         )
-    return timbres_registry
+    return instruments_registry
