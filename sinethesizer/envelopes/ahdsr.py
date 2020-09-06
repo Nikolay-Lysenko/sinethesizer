@@ -117,7 +117,10 @@ def generic_ahdsr(
         remaining_duration_in_frames,
         floor(max_sustain_duration * frame_rate)
     )
-    sustain = sustain_level * np.ones(n_frames_with_sustain)
+    if n_frames_with_sustain > 0:
+        sustain = sustain_level * np.ones(n_frames_with_sustain)
+    else:
+        sustain = np.array([])
 
     release_duration_ratio = event.velocity ** release_sensitivity_to_velocity
     release_duration = release_duration_ratio * max_release_duration
