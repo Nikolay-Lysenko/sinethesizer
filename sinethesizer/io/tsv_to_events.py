@@ -35,7 +35,6 @@ def set_types(events: List[Dict[str, str]]) -> List[Dict[str, Any]]:
         'start_time': float,
         'duration': float,
         'frequency': parse_frequency,
-        'volume': float,
         'velocity': float
     }
     events = [

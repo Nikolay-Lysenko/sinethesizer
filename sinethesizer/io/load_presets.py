@@ -76,6 +76,22 @@ def create_partials_amplitude_fn(
     return partial_amplitude_fn
 
 
+def norm_amplitudes_of_detuned_waves(
+        detuning_to_amplitude: Dict[float, float]
+) -> Dict[float, float]:
+    """
+    Norm amplitudes of detuned waves to sum up to 1.
+
+    :param detuning_to_amplitude:
+        mapping from a detuning size in semitones to relative amplitude
+        of a wave with the corresponding detuned frequency
+    :return:
+        input mapping modified to have unit sum of values
+    """
+    denominator = sum(v for k, v in detuning_to_amplitude.items())
+    return {k: v / denominator for k, v in detuning_to_amplitude.items()}
+
+
 def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
     """
     Convert representation of modulated wave to internal data structure.
@@ -115,7 +131,9 @@ def convert_partials(partials_data: List[Dict[str, Any]]) -> List[Partial]:
         partial_specs = Partial(
             wave=convert_modulated_wave(partial_data['wave']),
             frequency_ratio=partial_data['frequency_ratio'],
-            detuning_to_amplitude=partial_data['detuning_to_amplitude'],
+            detuning_to_amplitude=norm_amplitudes_of_detuned_waves(
+                partial_data['detuning_to_amplitude']
+            ),
             random_detuning_range=partial_data['random_detuning_range'],
             effects=create_list_of_effect_fns(partial_data.get('effects', []))
         )
@@ -141,6 +159,7 @@ def create_instruments_registry(input_path: str) -> Dict[str, Any]:
             partials_amplitude_fn=create_partials_amplitude_fn(
                 instrument_data['partials_amplitude_fn']
             ),
+            amplitude_factor=instrument_data['amplitude_factor'],
             effects=create_list_of_effect_fns(
                 instrument_data.get('effects', [])
             )

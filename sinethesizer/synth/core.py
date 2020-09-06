@@ -30,13 +30,10 @@ class Event(NamedTuple):
         in terms of MIDI, it is time between 'NOTE ON' and 'NOTE OFF' events
     :param frequency:
         fundamental frequency of a sound to be synthesized
-    :param volume:
-        ratio of the highest amplitude of the resulting sound to maximum
-        amplitude that is not clipped by playing devices; it is a float
-        between 0 and 1
     :param velocity:
         force of sound generation; it can be likened to force of piano key
-        pressing; it is a float between 0 and 1
+        pressing; it is a float between 0 and 1; it affects volume and,
+        maybe, frequency spectrum
     :param effects:
         JSON string representing list of effects that should be applied to
         resulting sound
@@ -47,7 +44,6 @@ class Event(NamedTuple):
     start_time: float
     duration: float
     frequency: float
-    volume: float
     velocity: float
     effects: str
     frame_rate: int
@@ -141,9 +137,9 @@ class Partial(NamedTuple):
     :param frequency_ratio:
         ratio of this partial's frequency to fundamental frequency
     :param detuning_to_amplitude:
-        mapping from a detuning size in semitones to relative amplitude of
-        a wave with the corresponding detuned frequency; sum of slightly
-        detuned waves sounds less artificial than one pure wave
+        mapping from a detuning size in semitones to amplitude of a wave
+        with the corresponding detuned frequency; sum of slightly detuned
+        waves sounds less artificial than one pure wave
     :param random_detuning_range:
         range of additional random detuning in semitones
     :param effects:
@@ -221,11 +217,14 @@ class Instrument(NamedTuple):
         function that takes parameters such as position of a partial and
         velocity as inputs and returns ratio of the partial's amplitude to
         that of the fundamental
+    :param amplitude_factor:
+        amplitude factor selected to prevent clipping by playing devices
     :param effects:
         sound effects that should be applied to outputs of the instrument
     """
     partials: List[Partial]
     partials_amplitude_fn: PARTIALS_AMPLITUDE_FN_TYPE
+    amplitude_factor: float
     effects: List[EFFECT_FN_TYPE]
 
 
@@ -273,6 +272,6 @@ def synthesize(
 
     for effect_fn in instrument.effects:
         sound = effect_fn(sound, event)
-    sound *= event.volume / np.max(np.abs(sound))
     apply_event_level_effects(sound, event)
+    sound *= instrument.amplitude_factor
     return sound

@@ -36,7 +36,6 @@ def convert_midi_to_events(
                 start_time=note.start,
                 duration=note.end - note.start,
                 frequency=pretty_midi.note_number_to_hz(note.pitch),
-                volume=note.velocity / 100,
                 velocity=note.velocity / 100,
                 effects='',
                 frame_rate=settings['frame_rate']
