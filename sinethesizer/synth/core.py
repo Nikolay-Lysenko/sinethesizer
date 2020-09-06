@@ -5,6 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
+import random
 from typing import Callable, Dict, List, NamedTuple
 
 import numpy as np
@@ -134,12 +135,15 @@ class Partial(NamedTuple):
         mapping from a detuning ratio to relative amplitude of a wave with the
         corresponding detuned frequency; sum of slightly detuned waves sounds
         less artificial than one pure wave
+    :param random_detune_ratio:
+        ratio of bandwidth of additional random detune to detuned frequency
     :param effects:
         sound effects that should be applied to this partial
     """
     wave: ModulatedWave
     frequency_ratio: float
     detune_to_amplitude: Dict[float, float]
+    random_detune_ratio: float
     effects: List[EFFECT_FN_TYPE]
 
 
@@ -181,8 +185,13 @@ def generate_partial(partial: Partial, task: Task) -> np.ndarray:
     """
     sound = np.array([[], []], dtype=np.float64)
     partial_frequency = partial.frequency_ratio * task.frequency
+    random_detune_borders = (
+        -partial.random_detune_ratio / 2,
+        partial.random_detune_ratio / 2
+    )
     ratios = partial.detune_to_amplitude.items()
     for frequency_ratio, amplitude_ratio in ratios:
+        frequency_ratio *= (1 + random.uniform(*random_detune_borders))
         detuned_frequency = frequency_ratio * partial_frequency
         wave = generate_modulated_wave(partial.wave, detuned_frequency, task)
         wave *= amplitude_ratio
