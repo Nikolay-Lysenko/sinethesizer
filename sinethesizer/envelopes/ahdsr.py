@@ -25,7 +25,9 @@ def generic_ahdsr(
         max_release_duration: float = 0.5,
         release_sensitivity_to_velocity: float = 0.0,
         release_degree: float = 1.0,
-        scaling_coef: float = 1.0
+        peak_value: float = 1.0,
+        ratio_at_zero_velocity: float = 0.0,
+        velocity_sensitivity: float = 0.0
 ) -> np.ndarray:
     """
     Create AHDSR envelope of shape that depends on numerous parameters.
@@ -66,15 +68,26 @@ def generic_ahdsr(
         maximum duration of release in seconds
     :param release_sensitivity_to_velocity:
         coefficient that determines actual duration of release depending on
-        velocity; the higher it is, the shorter release is given non-maximum
-        velocity; if it is 0, velocity does not affect release duration
+        velocity; given non-maximum velocity, the higher it is, the shorter
+        release is ; if it is 0, velocity does not affect release duration
     :param release_degree:
         degree of release dynamic; if it is 1, release is linear; if it is
         greater than 1, release is concave; if it is less than 1,
         release is convex
-    :param scaling_coef:
-        constant factor for the whole envelope; it can be needed if output
+    :param peak_value:
+        peak envelope value given maximum velocity; usually, this argument
+        should be passed only if output envelope is used as modulation
+        index envelope
+    :param ratio_at_zero_velocity:
+        ratio of envelope values at zero velocity to envelope values at maximum
+        velocity; usually, this argument should be passed only if output
         envelope is used as modulation index envelope
+    :param velocity_sensitivity:
+        coefficient that determines dependence of envelope values on velocity;
+        given non-maximum positive velocity, the higher it is, the lower
+        envelope values are; if it is 0, velocity does not affect envelope;
+        usually, this argument should be passed only if output envelope is
+        used as modulation index envelope
     :return:
         envelope
     """
@@ -134,5 +147,7 @@ def generic_ahdsr(
         release = np.array([])
 
     envelope = np.concatenate((attack, hold, decay, sustain, release))
-    envelope *= scaling_coef
+    envelope *= peak_value
+    coef = event.velocity ** velocity_sensitivity
+    envelope *= ratio_at_zero_velocity + coef * (1 - ratio_at_zero_velocity)
     return envelope
