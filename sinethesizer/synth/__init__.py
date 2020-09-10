@@ -5,8 +5,8 @@ Author: Nikolay Lysenko
 """
 
 
-from . import core, partials_amplitude
+from . import core, event_to_amplitude_factor
 from .core import synthesize
 
 
-__all__ = ['core', 'partials_amplitude', 'synthesize']
+__all__ = ['core', 'event_to_amplitude_factor', 'synthesize']

@@ -13,7 +13,9 @@ import numpy as np
 
 from sinethesizer.effects import EFFECT_FN_TYPE, get_effects_registry
 from sinethesizer.envelopes import ENVELOPE_FN_TYPE
-from sinethesizer.synth.partials_amplitude import PARTIALS_AMPLITUDE_FN_TYPE
+from sinethesizer.synth.event_to_amplitude_factor import (
+    EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE
+)
 from sinethesizer.utils.waves import NAME_TO_WAVEFORM
 
 
@@ -94,8 +96,7 @@ def generate_modulated_wave(
         frequency of a carrier wave (in Hz); loosely speaking,
         it is a base frequency of the wave to be generated
     :param event:
-        parameters of sound synthesis task that triggered generation
-        of the wave
+        parameters of sound event for which this function is called
     :return:
         wave with modulated frequency
     """
@@ -136,6 +137,14 @@ class Partial(NamedTuple):
         parameters of a wave that forms the partial
     :param frequency_ratio:
         ratio of this partial's frequency to fundamental frequency
+    :param amplitude_ratio:
+        declared ratio of this partial's peak amplitude to peak amplitude
+        of the fundamental (both at maximum velocity); actual amplitude ratio
+        may be different if effects applied to the partial and to the
+        fundamental are not the same
+    :param event_to_amplitude_factor_fn:
+        function that maps event to its multiplicative contribution to
+        partial's amplitude
     :param detuning_to_amplitude:
         mapping from a detuning size in semitones to amplitude of a wave
         with the corresponding detuned frequency; sum of slightly detuned
@@ -147,6 +156,8 @@ class Partial(NamedTuple):
     """
     wave: ModulatedWave
     frequency_ratio: float
+    amplitude_ratio: float
+    event_to_amplitude_factor_fn: EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE
     detuning_to_amplitude: Dict[float, float]
     random_detuning_range: float
     effects: List[EFFECT_FN_TYPE]
@@ -176,20 +187,19 @@ def sum_two_sounds(
     return first_sound + second_sound
 
 
-def generate_partial(partial: Partial, task: Event) -> np.ndarray:
+def generate_partial(partial: Partial, event: Event) -> np.ndarray:
     """
     Generate partial (fundamental or overtone).
 
     :param partial:
         parameters of the partial
-    :param task:
-        parameters of sound synthesis task that triggered generation
-        of the partial
+    :param event:
+        parameters of sound event for which this function is called
     :return:
         partial
     """
     sound = np.array([[], []], dtype=np.float64)
-    partial_frequency = partial.frequency_ratio * task.frequency
+    partial_frequency = partial.frequency_ratio * event.frequency
     borders_of_random_detuning = (
         -partial.random_detuning_range / 2,
         partial.random_detuning_range / 2
@@ -199,11 +209,13 @@ def generate_partial(partial: Partial, task: Event) -> np.ndarray:
         freq_shift_in_semitones += random.uniform(*borders_of_random_detuning)
         frequency_ratio = 2 ** (freq_shift_in_semitones / 12)
         detuned_frequency = frequency_ratio * partial_frequency
-        wave = generate_modulated_wave(partial.wave, detuned_frequency, task)
+        wave = generate_modulated_wave(partial.wave, detuned_frequency, event)
         wave *= amplitude_ratio
         sound = sum_two_sounds(sound, wave)
+    sound *= partial.amplitude_ratio
+    sound *= partial.event_to_amplitude_factor_fn(event)
     for effect_fn in partial.effects:
-        sound = effect_fn(sound, task)
+        sound = effect_fn(sound, event)
     return sound
 
 
@@ -213,17 +225,15 @@ class Instrument(NamedTuple):
 
     :param partials:
         parameters of partials
-    :param partials_amplitude_fn:
-        function that takes parameters such as position of a partial and
-        velocity as inputs and returns ratio of the partial's amplitude to
-        that of the fundamental
     :param amplitude_factor:
-        amplitude factor selected to prevent clipping by playing devices
+        amplitude factor selected to prevent clipping by playing devices;
+        set it to be greater than sum of `amplitude_ratio` parameters of all
+        partials (and, if applicable, take into account an increase in
+        partials' amplitudes due to their effects)
     :param effects:
         sound effects that should be applied to outputs of the instrument
     """
     partials: List[Partial]
-    partials_amplitude_fn: PARTIALS_AMPLITUDE_FN_TYPE
     amplitude_factor: float
     effects: List[EFFECT_FN_TYPE]
 
@@ -264,14 +274,11 @@ def synthesize(
     """
     sound = np.array([[], []], dtype=np.float64)
     instrument = instruments_registry[event.instrument]
-    partials_amplitude_fn = instrument.partials_amplitude_fn
-    for partial_id, partial in enumerate(instrument.partials):
+    for partial in instrument.partials:
         partial_sound = generate_partial(partial, event)
-        partial_sound *= partials_amplitude_fn(partial_id, event)
         sound = sum_two_sounds(sound, partial_sound)
-
     for effect_fn in instrument.effects:
         sound = effect_fn(sound, event)
-    apply_event_level_effects(sound, event)
     sound *= instrument.amplitude_factor
+    apply_event_level_effects(sound, event)
     return sound
