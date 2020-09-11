@@ -6,13 +6,15 @@ Author: Nikolay Lysenko
 
 
 import functools
-from typing import List, Dict, Any
+from typing import Any, Dict, List, Optional
 
 import yaml
 
 from sinethesizer.effects import EFFECT_FN_TYPE, get_effects_registry
 from sinethesizer.envelopes import ENVELOPE_FN_TYPE, get_envelopes_registry
-from sinethesizer.synth.core import Instrument, ModulatedWave, Partial
+from sinethesizer.synth.core import (
+    Instrument, ModulatedWave, Modulator, Partial
+)
 from sinethesizer.synth.event_to_amplitude_factor import (
     EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE,
     get_event_to_amplitude_factor_functions_registry
@@ -77,6 +79,50 @@ def create_event_to_amplitude_factor_fn(
     return event_to_amplitude_factor_fn
 
 
+def convert_modulator(
+        modulator_data: Optional[Dict[str, Any]]
+) -> Optional[Modulator]:
+    """
+    Convert representation of modulating wave to internal data structure.
+
+    :param modulator_data:
+        parameters of modulating wave as dictionary
+    :return:
+        parameters of modulating wave as internal data structure
+    """
+    if modulator_data is None:
+        return None
+    modulator = Modulator(
+        waveform=modulator_data['waveform'],
+        frequency_ratio=modulator_data['frequency_ratio'],
+        phase=modulator_data.get('phase', 0),
+        modulation_index_envelope_fn=create_envelope_fn(
+            modulator_data['modulation_index_envelope_fn']
+        )
+    )
+    return modulator
+
+
+def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
+    """
+    Convert representation of modulated wave to internal data structure.
+
+    :param wave_data:
+        parameters of modulated wave as dictionary
+    :return:
+        parameters of modulated wave as internal data structure
+    """
+    modulated_wave = ModulatedWave(
+        waveform=wave_data['waveform'],
+        phase=wave_data.get('phase', 0),
+        amplitude_envelope_fn=create_envelope_fn(
+            wave_data['amplitude_envelope_fn']
+        ),
+        modulator=convert_modulator(wave_data.get('modulator'))
+    )
+    return modulated_wave
+
+
 def norm_amplitudes_of_detuned_waves(
         detuning_to_amplitude: Dict[float, float]
 ) -> Dict[float, float]:
@@ -91,31 +137,6 @@ def norm_amplitudes_of_detuned_waves(
     """
     denominator = sum(v for k, v in detuning_to_amplitude.items())
     return {k: v / denominator for k, v in detuning_to_amplitude.items()}
-
-
-def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
-    """
-    Convert representation of modulated wave to internal data structure.
-
-    :param wave_data:
-        parameters of modulated wave as dictionary
-    :return:
-        parameters of modulated wave as internal data structure
-    """
-    modulated_wave = ModulatedWave(
-        amplitude_envelope_fn=create_envelope_fn(
-            wave_data['amplitude_envelope_fn']
-        ),
-        carrier_waveform=wave_data['carrier_waveform'],
-        carrier_phase=wave_data.get('carrier_phase', 0),
-        modulation_index_envelope_fn=create_envelope_fn(
-            wave_data['modulation_index_envelope_fn']
-        ),
-        modulator_waveform=wave_data['modulator_waveform'],
-        modulator_frequency_ratio=wave_data['modulator_frequency_ratio'],
-        modulator_phase=wave_data.get('modulator_phase', 0)
-    )
-    return modulated_wave
 
 
 def convert_partials(partials_data: List[Dict[str, Any]]) -> List[Partial]:
@@ -161,7 +182,7 @@ def create_instruments_registry(input_path: str) -> Dict[str, Any]:
     for instrument_data in input_data:
         instruments_registry[instrument_data['name']] = Instrument(
             partials=convert_partials(instrument_data['partials']),
-            amplitude_factor=instrument_data['amplitude_factor'],
+            amplitude_scaling=instrument_data['amplitude_scaling'],
             effects=create_list_of_effect_fns(
                 instrument_data.get('effects', [])
             )

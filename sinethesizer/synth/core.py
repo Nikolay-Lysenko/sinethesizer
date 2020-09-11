@@ -7,7 +7,7 @@ Author: Nikolay Lysenko
 
 import json
 import random
-from typing import Dict, List, NamedTuple
+from typing import Dict, List, NamedTuple, Optional
 
 import numpy as np
 
@@ -34,8 +34,8 @@ class Event(NamedTuple):
         fundamental frequency of a sound to be synthesized
     :param velocity:
         force of sound generation; it can be likened to force of piano key
-        pressing; it is a float between 0 and 1; it affects volume and,
-        maybe, frequency spectrum
+        pressing; it is a float between 0 and 1; it can affect volume and
+        frequency spectrum
     :param effects:
         JSON string representing list of effects that should be applied to
         resulting sound
@@ -51,37 +51,46 @@ class Event(NamedTuple):
     frame_rate: int
 
 
-class ModulatedWave(NamedTuple):
+class Modulator(NamedTuple):
     """
-    Parameters of a wave with modulated frequency.
+    Parameters of a wave that modulates frequency of another wave.
 
-    :param amplitude_envelope_fn:
-        function that takes parameters such as duration, velocity, and
-        frame rate as inputs and returns amplitude envelope of output wave
-    :param carrier_waveform:
-        form of a modulated wave (so called carrier)
-    :param carrier_phase:
-        phase shift of a carrier as a fraction of its period;
-        a float between 0 and 1
+    :param waveform:
+        form of a modulating wave
+    :param frequency_ratio:
+        ratio of modulating wave frequency to that of a modulated wave
+    :param phase:
+        phase shift of a modulating wave (in radians)
     :param modulation_index_envelope_fn:
         function that takes parameters such as duration, velocity, and
         frame rate as inputs and returns amplitude envelope of a modulating
         wave (this envelope is known as modulation index envelope)
-    :param modulator_waveform:
-        form of a modulating wave (so called modulator)
-    :param modulator_frequency_ratio:
-        ratio of modulator frequency to that of a carrier
-    :param modulator_phase:
-        phase shift of a modulator as a fraction of its period;
-        a float between 0 and 1
     """
-    amplitude_envelope_fn: ENVELOPE_FN_TYPE
-    carrier_waveform: str
-    carrier_phase: float
+    waveform: str
+    frequency_ratio: float
+    phase: float
     modulation_index_envelope_fn: ENVELOPE_FN_TYPE
-    modulator_waveform: str
-    modulator_frequency_ratio: float
-    modulator_phase: float
+
+
+class ModulatedWave(NamedTuple):
+    """
+    Parameters of a wave with modulated frequency.
+
+    :param waveform:
+        form of a modulated wave (so called carrier)
+    :param phase:
+        phase shift of a carrier (in radians)
+    :param amplitude_envelope_fn:
+        function that takes parameters such as duration, velocity, and
+        frame rate as inputs and returns amplitude envelope of output wave
+    :param modulator:
+        parameters of a modulating wave; if it is `None`, frequency is not
+        modulated
+    """
+    waveform: str
+    phase: float
+    amplitude_envelope_fn: ENVELOPE_FN_TYPE
+    modulator: Optional[Modulator]
 
 
 def generate_modulated_wave(
@@ -102,27 +111,27 @@ def generate_modulated_wave(
     """
     amplitude_envelope = wave.amplitude_envelope_fn(event)
     duration_in_frames = len(amplitude_envelope)
-    frame_rate = event.frame_rate
+    time_moments_in_seconds = np.arange(duration_in_frames) / event.frame_rate
 
-    mod_frequency = wave.modulator_frequency_ratio * carrier_frequency
-    mod_period_in_frames = frame_rate / mod_frequency
-    mod_phase_in_frames = mod_period_in_frames * wave.modulator_phase
-    mod_phase_in_frames = int(round(mod_phase_in_frames))
-    mod_xs = np.arange(duration_in_frames) + mod_phase_in_frames
+    if wave.modulator is None:
+        modulator = np.zeros(duration_in_frames)
+    else:
+        mod_frequency = wave.modulator.frequency_ratio * carrier_frequency
+        mod_wave_fn = NAME_TO_WAVEFORM[wave.modulator.waveform]
+        modulator = mod_wave_fn(
+            2 * np.pi * mod_frequency * time_moments_in_seconds
+            + wave.modulator.phase
+        )
+        index_envelope_fn = wave.modulator.modulation_index_envelope_fn
+        modulation_index_envelope = index_envelope_fn(event)
+        modulator *= modulation_index_envelope
 
-    mod_wave_fn = NAME_TO_WAVEFORM[wave.modulator_waveform]
-    modulator = mod_wave_fn(2 * np.pi * mod_frequency / frame_rate * mod_xs)
-    modulation_index_envelope = wave.modulation_index_envelope_fn(event)
-    modulator *= modulation_index_envelope
-
-    carr_period_in_frames = frame_rate / carrier_frequency
-    carr_phase_in_frames = carr_period_in_frames * wave.carrier_phase
-    carr_phase_in_frames = int(round(carr_phase_in_frames))
-    carr_xs = np.arange(duration_in_frames) + carr_phase_in_frames
-    xs = carr_xs + modulator
-
-    carr_wave_fn = NAME_TO_WAVEFORM[wave.carrier_waveform]
-    result = carr_wave_fn(2 * np.pi * carrier_frequency / frame_rate * xs)
+    carr_wave_fn = NAME_TO_WAVEFORM[wave.waveform]
+    result = carr_wave_fn(
+        2 * np.pi * carrier_frequency * time_moments_in_seconds
+        + wave.phase
+        + modulator
+    )
     result *= amplitude_envelope
 
     result = np.vstack((result, result))  # Two channels for stereo sound.
@@ -225,7 +234,7 @@ class Instrument(NamedTuple):
 
     :param partials:
         parameters of partials
-    :param amplitude_factor:
+    :param amplitude_scaling:
         amplitude factor selected to prevent clipping by playing devices;
         set it to be greater than sum of `amplitude_ratio` parameters of all
         partials (and, if applicable, take into account an increase in
@@ -234,7 +243,7 @@ class Instrument(NamedTuple):
         sound effects that should be applied to outputs of the instrument
     """
     partials: List[Partial]
-    amplitude_factor: float
+    amplitude_scaling: float
     effects: List[EFFECT_FN_TYPE]
 
 
@@ -279,6 +288,6 @@ def synthesize(
         sound = sum_two_sounds(sound, partial_sound)
     for effect_fn in instrument.effects:
         sound = effect_fn(sound, event)
-    sound *= instrument.amplitude_factor
+    sound *= instrument.amplitude_scaling
     apply_event_level_effects(sound, event)
     return sound
