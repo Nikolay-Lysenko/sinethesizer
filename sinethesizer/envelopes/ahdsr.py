@@ -27,7 +27,7 @@ def generic_ahdsr(
         release_degree: float = 1.0,
         peak_value: float = 1.0,
         ratio_at_zero_velocity: float = 0.0,
-        velocity_sensitivity: float = 0.0
+        envelope_sensitivity_to_velocity: float = 0.0
 ) -> np.ndarray:
     """
     Create AHDSR envelope of shape that depends on numerous parameters.
@@ -68,8 +68,9 @@ def generic_ahdsr(
         maximum duration of release in seconds
     :param release_sensitivity_to_velocity:
         coefficient that determines actual duration of release depending on
-        velocity; given non-maximum velocity, the higher it is, the shorter
-        release is ; if it is 0, velocity does not affect release duration
+        velocity; given non-maximum positive velocity, the higher it is,
+        the shorter release is; if it is 0, velocity does not affect
+        release duration
     :param release_degree:
         degree of release dynamic; if it is 1, release is linear; if it is
         greater than 1, release is concave; if it is less than 1,
@@ -82,7 +83,7 @@ def generic_ahdsr(
         ratio of envelope values at zero velocity to envelope values at maximum
         velocity; usually, this argument should be passed only if output
         envelope is used as modulation index envelope
-    :param velocity_sensitivity:
+    :param envelope_sensitivity_to_velocity:
         coefficient that determines dependence of envelope values on velocity;
         given non-maximum positive velocity, the higher it is, the lower
         envelope values are; if it is 0, velocity does not affect envelope;
@@ -148,6 +149,6 @@ def generic_ahdsr(
 
     envelope = np.concatenate((attack, hold, decay, sustain, release))
     envelope *= peak_value
-    coef = event.velocity ** velocity_sensitivity
+    coef = event.velocity ** envelope_sensitivity_to_velocity
     envelope *= ratio_at_zero_velocity + coef * (1 - ratio_at_zero_velocity)
     return envelope
