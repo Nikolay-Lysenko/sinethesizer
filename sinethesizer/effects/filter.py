@@ -93,6 +93,146 @@ def filter_relative_frequencies(
     return sound
 
 
+def filter_absolute_frequencies_wrt_velocity(
+        sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
+        min_frequency_at_zero_velocity: Optional[float] = None,
+        min_frequency_at_max_velocity: Optional[float] = None,
+        min_frequency_sensitivity_to_velocity: Optional[float] = None,
+        max_frequency_at_zero_velocity: Optional[float] = None,
+        max_frequency_at_max_velocity: Optional[float] = None,
+        max_frequency_sensitivity_to_velocity: Optional[float] = None,
+        invert: bool = False, order: int = 25
+) -> np.ndarray:
+    """
+    Filter some frequencies (in Hz) depending on velocity.
+
+    :param sound:
+        sound to be modified
+    :param event:
+        parameters of sound event for which this function is called
+    :param min_frequency_at_zero_velocity:
+        cutoff frequency for high-pass filtering (in Hz) at zero velocity;
+        there is no high-pass filtering by default
+    :param min_frequency_at_max_velocity:
+        cutoff frequency for high-pass filtering (in Hz) at maximum velocity;
+        there is no high-pass filtering by default
+    :param min_frequency_sensitivity_to_velocity:
+        coefficient that defines dependence of cutoff frequency for high-pass
+        filtering on velocity
+    :param max_frequency_at_zero_velocity:
+        cutoff frequency for low-pass filtering (in Hz) at zero velocity;
+        there is no low-pass filtering by default
+    :param max_frequency_at_max_velocity:
+        cutoff frequency for low-pass filtering (in Hz) at maximum velocity;
+        there is no low-pass filtering by default
+    :param max_frequency_sensitivity_to_velocity:
+        coefficient that defines dependence of cutoff frequency for low-pass
+        filtering on velocity
+    :param invert:
+        if it is `True` and all preceding arguments are passed,
+        band-stop filter is applied instead of band-pass filter
+    :param order:
+        order of the filter; the higher it is, the steeper cutoff is
+    :return:
+        sound with some frequencies muted
+    """
+    min_frequency = None
+    if min_frequency_at_zero_velocity is not None:
+        coef = event.velocity ** min_frequency_sensitivity_to_velocity
+        min_frequency = (
+            min_frequency_at_zero_velocity
+            + coef * (
+                min_frequency_at_max_velocity - min_frequency_at_zero_velocity
+            )
+        )
+    max_frequency = None
+    if max_frequency_at_zero_velocity is not None:
+        coef = event.velocity ** max_frequency_sensitivity_to_velocity
+        max_frequency = (
+            max_frequency_at_zero_velocity
+            + coef * (
+                max_frequency_at_max_velocity - max_frequency_at_zero_velocity
+            )
+        )
+    sound = filter_absolute_frequencies(
+        sound, event, min_frequency, max_frequency, invert, order
+    )
+    return sound
+
+
+def filter_relative_frequencies_wrt_velocity(
+        sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
+        min_frequency_ratio_at_zero_velocity: Optional[float] = None,
+        min_frequency_ratio_at_max_velocity: Optional[float] = None,
+        min_frequency_ratio_sensitivity_to_velocity: Optional[float] = None,
+        max_frequency_ratio_at_zero_velocity: Optional[float] = None,
+        max_frequency_ratio_at_max_velocity: Optional[float] = None,
+        max_frequency_ratio_sensitivity_to_velocity: Optional[float] = None,
+        invert: bool = False, order: int = 25
+) -> np.ndarray:
+    """
+    Filter some frequencies (defined as ratios) depending on velocity.
+
+    :param sound:
+        sound to be modified
+    :param event:
+        parameters of sound event for which this function is called
+    :param min_frequency_ratio_at_zero_velocity:
+        ratio of cutoff frequency for high-pass filtering to fundamental
+        frequency of the sound at zero velocity;
+        there is no high-pass filtering by default
+    :param min_frequency_ratio_at_max_velocity:
+        ratio of cutoff frequency for high-pass filtering to fundamental
+        frequency of the sound at maximum velocity;
+        there is no high-pass filtering by default
+    :param min_frequency_ratio_sensitivity_to_velocity:
+        coefficient that defines dependence of cutoff frequency for high-pass
+        filtering on velocity
+    :param max_frequency_ratio_at_zero_velocity:
+        ratio of cutoff frequency for low-pass filtering to fundamental
+        frequency of the sound at zero velocity;
+        there is no low-pass filtering by default
+    :param max_frequency_ratio_at_max_velocity:
+        ratio of cutoff frequency for low-pass filtering to fundamental
+        frequency of the sound at maximum velocity;
+        there is no low-pass filtering by default
+    :param max_frequency_ratio_sensitivity_to_velocity:
+        coefficient that defines dependence of cutoff frequency for low-pass
+        filtering on velocity
+    :param invert:
+        if it is `True` and all preceding arguments are passed,
+        band-stop filter is applied instead of band-pass filter
+    :param order:
+        order of the filter; the higher it is, the steeper cutoff is
+    :return:
+        sound with some frequencies muted
+    """
+    min_frequency_ratio = None
+    if min_frequency_ratio_at_zero_velocity is not None:
+        coef = event.velocity ** min_frequency_ratio_sensitivity_to_velocity
+        min_frequency_ratio = (
+            min_frequency_ratio_at_zero_velocity
+            + coef * (
+                min_frequency_ratio_at_max_velocity
+                - min_frequency_ratio_at_zero_velocity
+            )
+        )
+    max_frequency_ratio = None
+    if max_frequency_ratio_at_zero_velocity is not None:
+        coef = event.velocity ** max_frequency_ratio_sensitivity_to_velocity
+        max_frequency_ratio = (
+            max_frequency_ratio_at_zero_velocity
+            + coef * (
+                max_frequency_ratio_at_max_velocity
+                - max_frequency_ratio_at_zero_velocity
+            )
+        )
+    sound = filter_relative_frequencies(
+        sound, event, min_frequency_ratio, max_frequency_ratio, invert, order
+    )
+    return sound
+
+
 def apply_frequency_filter(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         kind: str = 'absolute', *args, **kwargs
@@ -113,13 +253,18 @@ def apply_frequency_filter(
         sound = filter_absolute_frequencies(sound, event, *args, **kwargs)
     elif kind == 'relative':
         sound = filter_relative_frequencies(sound, event, *args, **kwargs)
+    elif kind == 'absolute_wrt_velocity':
+        sound = filter_absolute_frequencies_wrt_velocity(
+            sound, event, *args, **kwargs
+        )
+    elif kind == 'relative_wrt_velocity':
+        sound = filter_relative_frequencies_wrt_velocity(
+            sound, event, *args, **kwargs
+        )
     else:
         raise ValueError(
-            f"Kind must be either 'absolute' or 'relative', but found: {kind}"
+            "Supported kinds are 'absolute', 'relative', "
+            "'absolute_wrt_velocity', and 'relative_wrt_velocity', "
+            f"but found: {kind}"
         )
     return sound
-
-
-# TODO: Implement it.
-def apply_velocity_aware_low_pass_filter() -> np.ndarray:
-    pass
