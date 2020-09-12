@@ -13,7 +13,7 @@ import numpy as np
 
 def user_defined_envelope(
         event: 'sinethesizer.synth.core.Event', parts: List[Dict[str, Any]],
-        ratio_at_zero_velocity: float,
+        ratio_at_zero_velocity: float = 0,
         envelope_sensitivity_to_velocity: float = 0
 ) -> np.ndarray:
     """
