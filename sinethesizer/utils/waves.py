@@ -5,6 +5,8 @@ Author: Nikolay Lysenko
 """
 
 
+from typing import Optional
+
 from functools import partial
 
 import numpy as np
@@ -20,29 +22,39 @@ NAME_TO_WAVEFORM = {
 
 
 def generate_mono_wave(
-        form: str, frequency: float, amplitudes: np.ndarray, frame_rate: int,
-        phase: int = 0
+        waveform: str, frequency: float, amplitude_envelope: np.ndarray,
+        frame_rate: int, phase: float = 0,
+        modulator: Optional[np.ndarray] = None
 ) -> np.ndarray:
     """
     Generate wave with exactly one channel.
 
-    :param form:
+    :param waveform:
         form of wave;
         it can be one of 'sine', 'square', 'triangle', and 'sawtooth'
     :param frequency:
-        frequency of wave; it defines pitch of sound
-    :param amplitudes:
-        array of amplitudes for each time frame;
-        it defines duration of sound, its volume envelope and its max volume
+        frequency of wave (in Hz)
+    :param amplitude_envelope:
+        amplitude envelope; it also defines duration of sound
     :param frame_rate:
         number of frames per second
     :param phase:
-        phase shift in frames
+        phase shift (in radians)
+    :param modulator:
+        wave that modulates frequency
     :return:
-        sound wave as array of shape (1, len(amplitudes))
+        sound wave as array of shape (1, len(amplitude_envelope))
     """
-    duration_in_frames = len(amplitudes)
-    xs = np.arange(duration_in_frames) + phase
-    wave_fn = NAME_TO_WAVEFORM[form]
-    wave = amplitudes * wave_fn(2 * np.pi * frequency / frame_rate * xs)
+    duration_in_frames = len(amplitude_envelope)
+    time_moments_in_seconds = np.arange(duration_in_frames) / frame_rate
+    wave_fn = NAME_TO_WAVEFORM[waveform]
+    if modulator is None:
+        wave = wave_fn(
+            2 * np.pi * frequency * time_moments_in_seconds + phase
+        )
+    else:
+        wave = wave_fn(
+            2 * np.pi * frequency * time_moments_in_seconds + phase + modulator
+        )
+    wave *= amplitude_envelope
     return wave

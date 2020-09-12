@@ -45,9 +45,9 @@ def apply_absolute_vibrato(
         / ((highest_to_lowest_ratio + 1) * 2 * np.pi * frequency)
     )
 
-    amplitudes = max_delay * event.frame_rate * np.ones(sound.shape[1])
+    amplitude_envelope = max_delay * event.frame_rate * np.ones(sound.shape[1])
     frequency_wave = generate_mono_wave(
-        waveform, frequency, amplitudes, event.frame_rate
+        waveform, frequency, amplitude_envelope, event.frame_rate
     )
     time_indices = np.ones(sound.shape[1]).cumsum() - 1 + frequency_wave
 

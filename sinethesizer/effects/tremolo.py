@@ -35,9 +35,9 @@ def apply_absolute_tremolo(
     """
     if not (0 < amplitude <= 1):
         raise ValueError("Amplitude for tremolo must be between 0 and 1.")
-    amplitudes = amplitude * np.ones(sound.shape[1])
+    amplitude_envelope = amplitude * np.ones(sound.shape[1])
     volume_wave = generate_mono_wave(
-        waveform, frequency, amplitudes, event.frame_rate
+        waveform, frequency, amplitude_envelope, event.frame_rate
     )
     volume_wave += 1
     sound *= volume_wave

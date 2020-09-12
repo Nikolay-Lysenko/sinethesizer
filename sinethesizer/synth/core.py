@@ -16,7 +16,7 @@ from sinethesizer.envelopes import ENVELOPE_FN_TYPE
 from sinethesizer.synth.event_to_amplitude_factor import (
     EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE
 )
-from sinethesizer.utils.waves import NAME_TO_WAVEFORM
+from sinethesizer.utils.waves import generate_mono_wave
 
 
 class Event(NamedTuple):
@@ -109,30 +109,28 @@ def generate_modulated_wave(
     :return:
         wave with modulated frequency
     """
-    amplitude_envelope = wave.amplitude_envelope_fn(event)
-    duration_in_frames = len(amplitude_envelope)
-    time_moments_in_seconds = np.arange(duration_in_frames) / event.frame_rate
-
     if wave.modulator is None:
-        modulator = np.zeros(duration_in_frames)
+        modulator = None
     else:
         mod_frequency = wave.modulator.frequency_ratio * carrier_frequency
-        mod_wave_fn = NAME_TO_WAVEFORM[wave.modulator.waveform]
-        modulator = mod_wave_fn(
-            2 * np.pi * mod_frequency * time_moments_in_seconds
-            + wave.modulator.phase
+        mod_index_envelope = wave.modulator.modulation_index_envelope_fn(event)
+        modulator = generate_mono_wave(
+            wave.modulator.waveform,
+            mod_frequency,
+            mod_index_envelope,
+            event.frame_rate,
+            wave.modulator.phase
         )
-        index_envelope_fn = wave.modulator.modulation_index_envelope_fn
-        modulation_index_envelope = index_envelope_fn(event)
-        modulator *= modulation_index_envelope
 
-    carr_wave_fn = NAME_TO_WAVEFORM[wave.waveform]
-    result = carr_wave_fn(
-        2 * np.pi * carrier_frequency * time_moments_in_seconds
-        + wave.phase
-        + modulator
+    amplitude_envelope = wave.amplitude_envelope_fn(event)
+    result = generate_mono_wave(
+        wave.waveform,
+        carrier_frequency,
+        amplitude_envelope,
+        event.frame_rate,
+        wave.phase,
+        modulator
     )
-    result *= amplitude_envelope
 
     result = np.vstack((result, result))  # Two channels for stereo sound.
     return result
