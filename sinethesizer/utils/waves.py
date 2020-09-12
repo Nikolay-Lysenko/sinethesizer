@@ -21,6 +21,25 @@ NAME_TO_WAVEFORM = {
 }
 
 
+def align_modulator(modulator: np.ndarray, required_len: int) -> np.ndarray:
+    """
+    Change length of modulator to a required value.
+
+    :param modulator:
+        modulating wave
+    :param required_len:
+        length of modulated wave
+    :return:
+        zero-padded or clipped modulator
+    """
+    n_absent_frames = required_len - len(modulator)
+    if n_absent_frames <= 0:
+        return modulator[:required_len]
+    zero_padding = np.zeros(n_absent_frames)
+    modulator = np.hstack((modulator, zero_padding))
+    return modulator
+
+
 def generate_mono_wave(
         waveform: str, frequency: float, amplitude_envelope: np.ndarray,
         frame_rate: int, phase: float = 0,
@@ -53,6 +72,7 @@ def generate_mono_wave(
             2 * np.pi * frequency * time_moments_in_seconds + phase
         )
     else:
+        modulator = align_modulator(modulator, duration_in_frames)
         wave = wave_fn(
             2 * np.pi * frequency * time_moments_in_seconds + phase + modulator
         )
