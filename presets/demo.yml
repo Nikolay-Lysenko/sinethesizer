@@ -109,6 +109,12 @@
           invert: true
           order: 10
   amplitude_scaling: 1.0
+  effects:
+    # Avoid aliasing by removing frequencies that are near Nyquist frequency.
+    - name: filter
+      kind: absolute
+      max_frequency: 15000
+      order: 10
 
 # This is an example of FM synthesis.
 - name: fm_sine
