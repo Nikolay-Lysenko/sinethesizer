@@ -234,8 +234,8 @@ class Instrument(NamedTuple):
         parameters of partials
     :param amplitude_scaling:
         amplitude factor selected to prevent clipping by playing devices;
-        set it to be greater than sum of `amplitude_ratio` parameters of all
-        partials (and, if applicable, take into account an increase in
+        set it to be less than inverse of sum of `amplitude_ratio` parameters
+        over all partials (and, if applicable, take into account an increase in
         partials' amplitudes due to their effects)
     :param effects:
         sound effects that should be applied to outputs of the instrument
