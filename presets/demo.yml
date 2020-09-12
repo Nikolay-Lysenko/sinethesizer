@@ -1,91 +1,198 @@
-# This file contains examples of `sinethesizer` timbres.
+# This file illustrates how to create `sinethesizer` instruments.
 ---
 
-# This is a minimal example.
+# This is a minimal example. It is a pure sine wave.
 - name: sine
-  fundamental_waveform: sine
-  fundamental_volume_envelope:
-    name: trapezoid
+  partials:
+    - wave:
+        waveform: sine
+        amplitude_envelope_fn:
+          name: trapezoid
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.0
+      detuning_to_amplitude:
+        0.0: 1.0
+      random_detuning_range: 0.0
+  amplitude_scaling: 1.0
+
+# It is a richer sine wave.
+- name: detuned_sine
+  partials:
+    - wave:
+        waveform: sine
+        amplitude_envelope_fn:
+          name: trapezoid
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.0
+      detuning_to_amplitude:
+        -0.1: 0.1
+        -0.05: 0.2
+        0: 0.4
+        0.05: 0.2
+        0.1: 0.1
+      random_detuning_range: 0.005
+  amplitude_scaling: 1.0
 
 # This is an example of additive synthesis (overtones are added explicitly).
-- name: sine_with_3_harmonics
-  fundamental_waveform: sine
-  fundamental_volume_envelope:
-    name: relative_adsr
-    attack_share: 0.15
-    decay_share: 0.15
-    sustain_level: 0.6
-    release_share: 0.2
-  overtones_specs:
-  - waveform: sine
-    frequency_ratio: 2
-    volume_ratio: 0.3
-    volume_envelope:
-      name: relative_adsr
-      attack_share: 0.15
-      decay_share: 0.15
-      sustain_level: 0.6
-      release_share: 0.3
-  - waveform: sine
-    frequency_ratio: 3
-    volume_ratio: 0.15
-    volume_envelope:
-      name: relative_adsr
-      attack_share: 0.15
-      decay_share: 0.15
-      sustain_level: 0.6
-      release_share: 0.4
-  - waveform: sine
-    frequency_ratio: 4
-    volume_ratio: 0.075
-    volume_envelope:
-      name: relative_adsr
-      attack_share: 0.15
-      decay_share: 0.15
-      sustain_level: 0.6
-      release_share: 0.5
-
-# This is an example of subtractive synthesis (some frequencies are filtered out).
-- name: poor_violin
-  fundamental_waveform: sawtooth
-  fundamental_volume_envelope:
-    name: trapezoid
-  fundamental_effects:
+- name: sine_with_three_partials
+  partials:
+    - wave:
+        waveform: sine
+        amplitude_envelope_fn:
+          name: trapezoid
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.0
+      detuning_to_amplitude:
+        0.0: 1.0
+      random_detuning_range: 0.005
+    - wave:
+        waveform: sine
+        amplitude_envelope_fn:
+          name: trapezoid
+      frequency_ratio: 2.0
+      amplitude_ratio: 0.5
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.1  # The lower velocity is, the more quiet than fundamental this partial is.
+      detuning_to_amplitude:
+        0.0: 1.0
+      random_detuning_range: 0.005
+    - wave:
+        waveform: sine
+        amplitude_envelope_fn:
+          name: trapezoid
+      frequency_ratio: 3.0
+      amplitude_ratio: 0.25
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.15  # This partial depends on velocity even stronger than the previous one.
+      detuning_to_amplitude:
+        0.0: 1.0
+      random_detuning_range: 0.005
+  amplitude_scaling: 0.5714  # Inverse of sum of `amplitude_ratio` over all partials.
+  effects:
+    # Make sound more natural by muting higher frequencies.
     - name: filter
-      kind: relative
-      min_frequency_ratio: 2.5
-      max_frequency_ratio: 4.5
-      invert: true
-    - name: vibrato
-      frequency: 2
-      width: 0.1
+      kind: absolute
+      max_frequency: 3000
+      order: 3
 
-# This is an example of FM synthesis (ultra fast vibrato modifies timbre).
+## This is an example of subtractive synthesis (some frequencies are filtered out).
+- name: filtered_sawtooth
+  partials:
+    - wave:
+        waveform: sawtooth
+        amplitude_envelope_fn:
+          name: trapezoid
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.0
+      detuning_to_amplitude:
+        0.0: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 3.5
+          max_frequency_ratio: 7.5
+          invert: true
+          order: 10
+  amplitude_scaling: 1.0
+
+# This is an example of FM synthesis.
 - name: fm_sine
-  fundamental_waveform: sine
-  fundamental_volume_envelope:
-    name: relative_adsr
-  fundamental_effects:
-    - name: vibrato
-      frequency: 100
-      width: 0.5
+  partials:
+    - wave:
+        waveform: sine
+        amplitude_envelope_fn:
+          name: trapezoid
+        modulator:
+          waveform: sine
+          frequency_ratio: 3.0
+          modulation_index_envelope_fn:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.1
+            max_attack_duration: 0.05
+            attack_degree: 2.0
+            hold_to_hds_max_ratio: 0
+            max_hold_duration: 0
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 100
+            decay_degree: 0.5
+            sustain_level: 0.05
+            max_sustain_duration: 0
+            max_release_duration: 0.05
+            release_sensitivity_to_velocity: 0
+            release_degree: 1.5
+            peak_value: 5.0
+            ratio_at_zero_velocity: 0.5
+            envelope_sensitivity_to_velocity: 0.5
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.0
+      detuning_to_amplitude:
+        0.0: 1.0
+      random_detuning_range: 0.005
+  amplitude_scaling: 1.0
+  effects:
+    # Make sound more natural by muting higher frequencies.
+    - name: filter
+      kind: absolute
+      max_frequency: 5000
+      order: 2
 
-# This is an example of non-ADSR amplitude envelope.
+# This is an example of non-AHDSR amplitude envelope.
 - name: sine_with_user_defined_envelope
-  fundamental_waveform: sine
-  fundamental_volume_envelope:
-    name: user_defined
-    parts:
-      - values:
-          - 0.0
-          - 0.1
-          - 0.3
-          - 1.0
-          - 0.5
-          - 0.9
-          - 0.7
-          - 0.5
-          - 0.3
-          - 0.1
-          - 0.0
-        max_duration: null
+  partials:
+    - wave:
+        waveform: sine
+        amplitude_envelope_fn:
+          name: user_defined
+          parts:
+            - values:
+                - 0.0
+                - 0.1
+                - 0.3
+                - 1.0
+                - 0.5
+                - 0.9
+                - 0.7
+                - 0.5
+                - 0.3
+                - 0.1
+              max_duration: 0.2
+            - values:
+                - 0.1
+                - 0.2
+                - 0.5
+                - 0.7
+                - 1.0
+                - 1.0
+                - 0.8
+                - 0.6
+                - 0.4
+                - 0.2
+                - 0.0
+              max_duration: null
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.0
+      detuning_to_amplitude:
+        0.0: 1.0
+      random_detuning_range: 0.0
+  amplitude_scaling: 1.0
