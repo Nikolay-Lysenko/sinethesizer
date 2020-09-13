@@ -99,6 +99,27 @@ class ModulatedWave(NamedTuple):
     modulator: Optional[Modulator]
 
 
+def adjust_envelope_duration(
+        envelope: np.ndarray, required_len: int
+) -> np.ndarray:
+    """
+    Set duration of envelope to a required value.
+
+    :param envelope:
+        envelope to be trimmed or propagated
+    :param required_len:
+        required duration of envelope (in frames)
+    :return:
+        clipped envelope or envelope with propagated last value
+    """
+    n_absent_frames = required_len - len(envelope)
+    if n_absent_frames <= 0:
+        return envelope[:required_len]
+    padding = envelope[-1] * np.ones(n_absent_frames)
+    envelope = np.hstack((envelope, padding))
+    return envelope
+
+
 def generate_modulated_wave(
         wave: ModulatedWave, frequency: float, event: Event
 ) -> np.ndarray:
@@ -114,6 +135,7 @@ def generate_modulated_wave(
     :return:
         wave with modulated frequency
     """
+    amplitude_envelope = wave.amplitude_envelope_fn(event)
     if wave.modulator is None:
         modulator = None
         carrier_frequency = frequency
@@ -124,6 +146,9 @@ def generate_modulated_wave(
         carrier_frequency = (denominator / divisor) * frequency
         modulator_frequency = (numerator / divisor) * frequency
         index_envelope = wave.modulator.modulation_index_envelope_fn(event)
+        index_envelope = adjust_envelope_duration(
+            index_envelope, len(amplitude_envelope)
+        )
         modulator = generate_mono_wave(
             wave.modulator.waveform,
             modulator_frequency,
@@ -132,7 +157,6 @@ def generate_modulated_wave(
             wave.modulator.phase
         )
 
-    amplitude_envelope = wave.amplitude_envelope_fn(event)
     result = generate_mono_wave(
         wave.waveform,
         carrier_frequency,
