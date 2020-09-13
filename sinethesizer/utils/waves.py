@@ -30,13 +30,13 @@ def align_modulator(modulator: np.ndarray, required_len: int) -> np.ndarray:
     :param required_len:
         length of modulated wave
     :return:
-        zero-padded or clipped modulator
+        clipped modulator or modulator with propagated last value
     """
     n_absent_frames = required_len - len(modulator)
     if n_absent_frames <= 0:
         return modulator[:required_len]
-    zero_padding = np.zeros(n_absent_frames)
-    modulator = np.hstack((modulator, zero_padding))
+    padding = modulator[-1] * np.ones(n_absent_frames)
+    modulator = np.hstack((modulator, padding))
     return modulator
 
 
