@@ -94,7 +94,8 @@ def convert_modulator(
         return None
     modulator = Modulator(
         waveform=modulator_data['waveform'],
-        frequency_ratio=modulator_data['frequency_ratio'],
+        frequency_ratio_numerator=modulator_data['frequency_ratio_numerator'],
+        frequency_ratio_denominator=modulator_data['frequency_ratio_denominator'],
         phase=modulator_data.get('phase', 0),
         modulation_index_envelope_fn=create_envelope_fn(
             modulator_data['modulation_index_envelope_fn']

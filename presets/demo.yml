@@ -125,7 +125,8 @@
           name: trapezoid
         modulator:
           waveform: sine
-          frequency_ratio: 3.0
+          frequency_ratio_numerator: 3
+          frequency_ratio_denominator: 1
           modulation_index_envelope_fn:
             name: generic_ahdsr
             attack_to_ahds_max_ratio: 0.1

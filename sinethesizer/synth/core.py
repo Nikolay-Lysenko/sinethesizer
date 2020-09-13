@@ -7,6 +7,7 @@ Author: Nikolay Lysenko
 
 import json
 import random
+from math import gcd
 from typing import Dict, List, NamedTuple, Optional
 
 import numpy as np
@@ -57,8 +58,12 @@ class Modulator(NamedTuple):
 
     :param waveform:
         form of a modulating wave
-    :param frequency_ratio:
-        ratio of modulating wave frequency to that of a modulated wave
+    :param frequency_ratio_numerator:
+        numerator in ratio of modulating wave frequency to that of a
+        modulated wave
+    :param frequency_ratio_denominator:
+        denominator in ratio of modulating wave frequency to that of a
+        modulated wave
     :param phase:
         phase shift of a modulating wave (in radians)
     :param modulation_index_envelope_fn:
@@ -67,7 +72,8 @@ class Modulator(NamedTuple):
         wave (this envelope is known as modulation index envelope)
     """
     waveform: str
-    frequency_ratio: float
+    frequency_ratio_numerator: int
+    frequency_ratio_denominator: int
     phase: float
     modulation_index_envelope_fn: ENVELOPE_FN_TYPE
 
@@ -94,16 +100,15 @@ class ModulatedWave(NamedTuple):
 
 
 def generate_modulated_wave(
-        wave: ModulatedWave, carrier_frequency: float, event: Event
+        wave: ModulatedWave, frequency: float, event: Event
 ) -> np.ndarray:
     """
     Generate wave with modulated frequency.
 
     :param wave:
         parameters of the wave to be generated
-    :param carrier_frequency:
-        frequency of a carrier wave (in Hz); loosely speaking,
-        it is a base frequency of the wave to be generated
+    :param frequency:
+        fundamental frequency of a wave to be generated (in Hz)
     :param event:
         parameters of sound event for which this function is called
     :return:
@@ -111,13 +116,18 @@ def generate_modulated_wave(
     """
     if wave.modulator is None:
         modulator = None
+        carrier_frequency = frequency
     else:
-        mod_frequency = wave.modulator.frequency_ratio * carrier_frequency
-        mod_index_envelope = wave.modulator.modulation_index_envelope_fn(event)
+        numerator = wave.modulator.frequency_ratio_numerator
+        denominator = wave.modulator.frequency_ratio_denominator
+        divisor = gcd(numerator, denominator)
+        carrier_frequency = (denominator / divisor) * frequency
+        modulator_frequency = (numerator / divisor) * frequency
+        index_envelope = wave.modulator.modulation_index_envelope_fn(event)
         modulator = generate_mono_wave(
             wave.modulator.waveform,
-            mod_frequency,
-            mod_index_envelope,
+            modulator_frequency,
+            index_envelope,
             event.frame_rate,
             wave.modulator.phase
         )
