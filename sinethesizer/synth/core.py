@@ -187,11 +187,11 @@ class Partial(NamedTuple):
         function that maps event to its multiplicative contribution to
         partial's amplitude
     :param detuning_to_amplitude:
-        mapping from a detuning size in semitones to amplitude of a wave
-        with the corresponding detuned frequency; sum of slightly detuned
-        waves sounds less artificial than one pure wave
+        mapping from a detuning size (in semitones) to amplitude factor of
+        a wave with the corresponding detuned frequency; sum of slightly
+        detuned waves sounds less artificial than one pure wave
     :param random_detuning_range:
-        range of additional random detuning in semitones
+        range of additional random detuning (in semitones)
     :param effects:
         sound effects that should be applied to this partial
     """
