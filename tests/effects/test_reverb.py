@@ -11,10 +11,11 @@ import numpy as np
 import pytest
 
 from sinethesizer.effects.reverb import apply_reverb
+from sinethesizer.synth.core import Event
 
 
 @pytest.mark.parametrize(
-    "sound, sound_info, first_reflection_delay, decay_duration, "
+    "sound, event, first_reflection_delay, decay_duration, "
     "amplitude_random_range, n_early_reflections, early_reflections_delay, "
     "diffusion_delay_factor, diffusion_delay_random_range, "
     "original_sound_gain, reverberations_gain, keep_peak_volume, random_seed, "
@@ -26,8 +27,16 @@ from sinethesizer.effects.reverb import apply_reverb
                 [1, 2, 3, 4, 5, 10, 5, 1],
                 [1, 5, 10, 5, 4, 3, 2, 1]
             ]),
-            # `sound_info`
-            {'frame_rate': 4},
+            # `event`
+            Event(
+                instrument='any_instrument',
+                start_time=0,
+                duration=1,
+                frequency=440,
+                velocity=1,
+                effects='',
+                frame_rate=4
+            ),
             # `first_reflection_delay`
             2.0,
             # `decay_duration`
@@ -72,8 +81,16 @@ from sinethesizer.effects.reverb import apply_reverb
                 [1, 2, 3, 4, 5, 10, 5, 1],
                 [1, 5, 10, 5, 4, 3, 2, 1]
             ]),
-            # `sound_info`
-            {'frame_rate': 4},
+            # `event`
+            Event(
+                instrument='any_instrument',
+                start_time=0,
+                duration=1,
+                frequency=440,
+                velocity=1,
+                effects='',
+                frame_rate=4
+            ),
             # `first_reflection_delay`
             2.0,
             # `decay_duration`
@@ -117,7 +134,7 @@ from sinethesizer.effects.reverb import apply_reverb
     ]
 )
 def test_apply_reverb(
-        sound: np.ndarray, sound_info: Dict[str, Any],
+        sound: np.ndarray, event: Event,
         first_reflection_delay: float,
         decay_duration: float,
         amplitude_random_range: float,
@@ -133,7 +150,7 @@ def test_apply_reverb(
 ) -> None:
     """Test `apply_reverb` function."""
     result = apply_reverb(
-        sound, sound_info, first_reflection_delay, decay_duration,
+        sound, event, first_reflection_delay, decay_duration,
         amplitude_random_range, n_early_reflections, early_reflections_delay,
         diffusion_delay_factor, diffusion_delay_random_range,
         original_sound_gain, reverberations_gain, keep_peak_volume, random_seed

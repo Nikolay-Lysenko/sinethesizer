@@ -11,6 +11,7 @@ import numpy as np
 import pytest
 
 from sinethesizer.effects.tremolo import apply_tremolo
+from sinethesizer.synth.core import Event
 
 
 @pytest.mark.parametrize(
@@ -61,9 +62,14 @@ def test_apply_tremolo(
         kwargs: Dict[str, Any], expected: np.ndarray
 ) -> None:
     """Test `apply_tremolo` function."""
-    sound_info = {
-        'frame_rate': frame_rate,
-        'fundamental_frequency': sound_frequency
-    }
-    result = apply_tremolo(sound, sound_info, kind, **kwargs)
+    event = Event(
+        instrument='any_instrument',
+        start_time=0,
+        duration=1,
+        frequency=sound_frequency,
+        velocity=1,
+        effects='',
+        frame_rate=frame_rate
+    )
+    result = apply_tremolo(sound, event, kind, **kwargs)
     np.testing.assert_almost_equal(result, expected)

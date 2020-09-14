@@ -16,7 +16,8 @@ from sinethesizer.effects.filter import (
     filter_absolute_frequencies,
     filter_relative_frequencies,
 )
-from sinethesizer.utils.waves import generate_stereo_wave
+from sinethesizer.synth.core import Event
+from sinethesizer.utils.waves import generate_mono_wave
 
 
 @pytest.mark.parametrize(
@@ -83,17 +84,23 @@ def test_apply_frequency_filter(
 ) -> None:
     """Test `apply_frequency_filter` function."""
     waves = [
-        generate_stereo_wave(
+        generate_mono_wave(
             'sine', frequency, np.ones(frame_rate), frame_rate
         )
         for frequency in frequencies
     ]
     sound = sum(waves)
-    sound_info = {
-        'frame_rate': frame_rate,
-        'fundamental_frequency': min(frequencies)
-    }
-    sound = apply_frequency_filter(sound, sound_info, kind, **kwargs)
+    sound = np.vstack((sound, sound))
+    event = Event(
+        instrument='any_instrument',
+        start_time=0,
+        duration=1,
+        frequency=min(frequencies),
+        velocity=1,
+        effects='',
+        frame_rate=frame_rate
+    )
+    sound = apply_frequency_filter(sound, event, kind, **kwargs)
     spc = spectrogram(sound[0], frame_rate, **spectrogram_params)[2]
     result = spc.sum(axis=1)[:len(expected)]
     np.testing.assert_almost_equal(result, expected)
@@ -212,18 +219,24 @@ def test_filter_absolute_frequencies(
 ) -> None:
     """Test `filter_absolute_frequencies` function."""
     waves = [
-        generate_stereo_wave(
+        generate_mono_wave(
             'sine', frequency, np.ones(frame_rate), frame_rate
         )
         for frequency in frequencies
     ]
     sound = sum(waves)
-    sound_info = {
-        'frame_rate': frame_rate,
-        'fundamental_frequency': min(frequencies)
-    }
+    sound = np.vstack((sound, sound))
+    event = Event(
+        instrument='any_instrument',
+        start_time=0,
+        duration=1,
+        frequency=min(frequencies),
+        velocity=1,
+        effects='',
+        frame_rate=frame_rate
+    )
     sound = filter_absolute_frequencies(
-        sound, sound_info, min_frequency, max_frequency, invert, order
+        sound, event, min_frequency, max_frequency, invert, order
     )
     spc = spectrogram(sound[0], frame_rate, **spectrogram_params)[2]
     result = spc.sum(axis=1)[:len(expected)]
@@ -294,19 +307,24 @@ def test_filter_relative_frequencies(
 ) -> None:
     """Test `filter_relative_frequencies` function."""
     waves = [
-        generate_stereo_wave(
+        generate_mono_wave(
             'sine', frequency, np.ones(frame_rate), frame_rate
         )
         for frequency in frequencies
     ]
     sound = sum(waves)
-    sound_info = {
-        'frame_rate': frame_rate,
-        'fundamental_frequency': min(frequencies)
-    }
+    sound = np.vstack((sound, sound))
+    event = Event(
+        instrument='any_instrument',
+        start_time=0,
+        duration=1,
+        frequency=min(frequencies),
+        velocity=1,
+        effects='',
+        frame_rate=frame_rate
+    )
     sound = filter_relative_frequencies(
-        sound, sound_info,
-        min_frequency_ratio, max_frequency_ratio, invert, order
+        sound, event, min_frequency_ratio, max_frequency_ratio, invert, order
     )
     spc = spectrogram(sound[0], frame_rate, **spectrogram_params)[2]
     result = spc.sum(axis=1)[:len(expected)]
