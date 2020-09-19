@@ -81,4 +81,5 @@ def convert_note_to_frequency(note: str) -> float:
     a4_frequency = 440
     semitone = 2 ** (1 / 12)
     frequency = a4_frequency * semitone ** (position - a4_position)
+    frequency = round(frequency, 10)  # This is done only due to unit tests.
     return frequency
