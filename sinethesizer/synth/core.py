@@ -321,5 +321,5 @@ def synthesize(
     for effect_fn in instrument.effects:
         sound = effect_fn(sound, event)
     sound *= instrument.amplitude_scaling
-    apply_event_level_effects(sound, event)
+    sound = apply_event_level_effects(sound, event)
     return sound
