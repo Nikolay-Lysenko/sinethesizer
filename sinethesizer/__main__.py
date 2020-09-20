@@ -11,12 +11,12 @@ from pkg_resources import resource_filename
 import yaml
 
 from sinethesizer.io import (
-    convert_midi_to_timeline,
-    convert_tsv_to_timeline,
-    create_timbres_registry,
+    convert_events_to_timeline,
+    convert_midi_to_events,
+    convert_tsv_to_events,
+    create_instruments_registry,
     write_timeline_to_wav,
 )
-from sinethesizer.synth.validation import validate_timbre_spec
 
 
 def parse_cli_args() -> argparse.Namespace:
@@ -33,26 +33,20 @@ def parse_cli_args() -> argparse.Namespace:
     )
     parser.add_argument(
         '-p', '--presets_path', type=str, required=True,
-        help='path to YAML file with definitions of timbres to be used'
+        help='path to YAML file with definitions of instruments to be used'
     )
     parser.add_argument(
         '-o', '--output_path', type=str, required=True,
         help='path to output WAV file'
     )
     parser.add_argument(
-        '-m', '--timbre_mapping_path', type=str, default=None,
-        help='path to YAML file where MIDI instruments are mapped to timbres'
+        '-m', '--instruments_mapping_path', type=str, default=None,
+        help='path to YAML file with instruments mapping from MIDI to '
     )
     parser.add_argument(
         '-c', '--config_path', type=str, default=None,
         help='path to configuration file'
     )
-    parser.add_argument(
-        '-s', '--safe_mode', dest='safe', action='store_true',
-        help='validate parsed timbres before core tasks'
-    )
-    parser.set_defaults(safe=False)
-
     cli_args = parser.parse_args()
     return cli_args
 
@@ -61,30 +55,30 @@ def main():
     """Run all necessary code."""
     cli_args = parse_cli_args()
 
-    timbres_registry = create_timbres_registry(cli_args.presets_path)
-    if cli_args.safe:
-        for _, timbre_spec in timbres_registry.items():
-            validate_timbre_spec(timbre_spec)
-
     default_config_path = resource_filename(__name__, 'default_config.yml')
     config_path = cli_args.config_path or default_config_path
     with open(config_path) as config_file:
         settings = yaml.safe_load(config_file)
-    settings['timbres_registry'] = timbres_registry
+
+    instruments_registry = create_instruments_registry(cli_args.presets_path)
+    settings['instruments_registry'] = instruments_registry
+
+    if cli_args.instruments_mapping_path is not None:
+        with open(cli_args.instruments_mapping_path) as mapping_file:
+            settings['midi_mapping'] = yaml.safe_load(mapping_file)
 
     extension = cli_args.input_path.split('.')[-1].lower()
     if extension == 'tsv':
-        timeline = convert_tsv_to_timeline(cli_args.input_path, settings)
+        events = convert_tsv_to_events(cli_args.input_path, settings)
     elif extension in ['midi', 'mid']:
-        timeline = convert_midi_to_timeline(
-            cli_args.input_path, cli_args.timbre_mapping_path, settings
-        )
+        events = convert_midi_to_events(cli_args.input_path, settings)
     else:
         raise ValueError(
             "Only input file with extensions tsv, midi, and mid are "
             f"allowed, but found: {extension}."
         )
 
+    timeline = convert_events_to_timeline(events, settings)
     write_timeline_to_wav(
         cli_args.output_path,
         timeline,

@@ -5,12 +5,8 @@ Author: Nikolay Lysenko
 """
 
 
-from . import envelopes, timbre, timeline, validation
-from .envelopes import get_envelopes_registry
-from .synth import synthesize
+from . import core, event_to_amplitude_factor
+from .core import synthesize
 
 
-__all__ = [
-    'envelopes', 'timbre', 'timeline', 'validation',
-    'get_envelopes_registry', 'synthesize'
-]
+__all__ = ['core', 'event_to_amplitude_factor', 'synthesize']

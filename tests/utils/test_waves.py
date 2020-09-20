@@ -5,81 +5,140 @@ Author: Nikolay Lysenko
 """
 
 
-from math import pi, sqrt, tan
+from math import pi, sqrt
+from typing import Optional
 
 import pytest
 import numpy as np
 
-from sinethesizer.utils.waves import generate_mono_wave, generate_stereo_wave
+from sinethesizer.utils.waves import generate_mono_wave
 
 
 @pytest.mark.parametrize(
-    "form, frequency, amplitudes, frame_rate, expected",
+    "waveform, frequency, amplitude_envelope, frame_rate, phase, modulator, "
+    "expected",
     [
         (
-            'sine', 1, np.array([1, 1, 1, 1, 2, 2, 2]), 8,
+            # `waveform`
+            'sine',
+            # `frequency`
+            1.0,
+            # `amplitude_envelope`
+            np.array([1, 1, 1, 1, 2, 2, 2]),
+            # `frame_rate`
+            8,
+            # `phase`
+            0,
+            # `modulator`
+            None,
+            # `expected`
             np.array([0, 1 / sqrt(2), 1, 1 / sqrt(2), 0, -2 * 1 / sqrt(2), -2])
         ),
         (
-            'sine', 1, np.array([1, 1, 1, 1, 1, 1, 1, 1]), 12,
+            # `waveform`
+            'sine',
+            # `frequency`
+            1.0,
+            # `amplitude_envelope`
+            np.array([1, 1, 1, 1, 2, 2, 2]),
+            # `frame_rate`
+            8,
+            # `phase`
+            pi,
+            # `modulator`
+            None,
+            # `expected`
+            np.array([0, -1 / sqrt(2), -1, -1 / sqrt(2), 0, 2 * 1 / sqrt(2), 2])
+        ),
+        (
+            # `waveform`
+            'sine',
+            # `frequency`
+            1,
+            # `amplitude_envelope`
+            np.array([1, 1, 1, 1, 1, 1, 1, 1]),
+            # `frame_rate`
+            12,
+            # `phase`
+            0,
+            # `modulator`
+            None,
+            # `expected`
             np.array([0, 0.5, sqrt(3) / 2, 1, sqrt(3) / 2, 0.5, 0, -0.5])
         ),
         (
-            'square', 1, np.array([1, 2, 1, 2, 1, 2, 1, 2]), 8,
+            # `waveform`
+            'square',
+            # `frequency`
+            1,
+            # `amplitude_envelope`
+            np.array([1, 2, 1, 2, 1, 2, 1, 2]),
+            # `frame_rate`
+            8,
+            # `phase`
+            0,
+            # `modulator`
+            None,
+            # `expected`
             np.array([1.0, 2, 1, 2, -1, -2, -1, -2])
         ),
         (
-            'triangle', 1, np.array([1, 1, 1, 1, 1, 1, 1, 1]), 8,
+            # `waveform`
+            'triangle',
+            # `frequency`
+            1,
+            # `amplitude_envelope`
+            np.array([1, 1, 1, 1, 1, 1, 1, 1]),
+            # `frame_rate`
+            8,
+            # `phase`
+            0,
+            # `modulator`
+            None,
+            # `expected`
             np.array([-1, -0.5, 0, 0.5, 1, 0.5, 0, -0.5])
         ),
         (
-            'sawtooth', 1, np.array([1, 1, 1, 1, 1, 1, 1, 1]), 8,
+            # `waveform`
+            'sawtooth',
+            # `frequency`
+            1,
+            # `amplitude_envelope`
+            np.array([1, 1, 1, 1, 1, 1, 1, 1]),
+            # `frame_rate`
+            8,
+            # `phase`
+            0,
+            # `modulator`
+            None,
+            # `expected`
             np.array([-1, -0.75, -0.5, -0.25,  0,  0.25,  0.5,  0.75])
+        ),
+        (
+            # `waveform`
+            'sawtooth',
+            # `frequency`
+            1,
+            # `amplitude_envelope`
+            np.array([1, 1, 1, 1, 1, 1, 1, 1]),
+            # `frame_rate`
+            8,
+            # `phase`
+            0,
+            # `modulator`
+            np.array([0, 0, 0, 0, 0, 0, 1, 0]),
+            # `expected`
+            np.array([-1, -0.75, -0.5, -0.25, 0, 0.25, 0.8183099, 0.75])
         ),
     ]
 )
 def test_generate_mono_wave(
-        form: str, frequency: float, amplitudes: np.ndarray, frame_rate: int,
+        waveform: str, frequency: float, amplitude_envelope: np.ndarray,
+        frame_rate: int, phase: float, modulator: Optional[np.ndarray],
         expected: np.ndarray
 ) -> None:
     """Test `generate_mono_wave` function."""
-    result = generate_mono_wave(form, frequency, amplitudes, frame_rate)
-    np.testing.assert_almost_equal(result, expected)
-
-
-@pytest.mark.parametrize(
-    "form, frequency, amplitudes, frame_rate, location, max_channel_delay, "
-    "expected",
-    [
-        (
-            'sine', 1, np.array([1, 1, 1, 1, 2, 2, 2]), 8, -1, 0.125,
-            np.array([
-                [0, 1 / sqrt(2), 1, 1 / sqrt(2), 0, -2 * 1 / sqrt(2), -2, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-            ])
-        ),
-        (
-            'sine', 1, np.array([1, 1, 1, 1, 1, 1, 1, 1]), 12, 1, 0.25,
-            np.array([
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0.5, sqrt(3) / 2, 1, sqrt(3) / 2, 0.5, 0, -0.5, 0, 0, 0],
-            ])
-        ),
-        (
-            'sine', 1, np.array([1, 1, 1, 1]), 12, 0.5, 0.5,
-            np.array([
-                [0, 0, 0, 0, 0.25, sqrt(3) / 4, 0.5],
-                [0, 0.5, sqrt(3) / 2, 1, 0, 0, 0],
-            ])
-        ),
-    ]
-)
-def test_generate_stereo_wave(
-        form: str, frequency: float, amplitudes: np.ndarray, frame_rate: int,
-        location: float, max_channel_delay: float, expected: np.ndarray
-) -> None:
-    """Test `generate_stereo_wave` function."""
-    result = generate_stereo_wave(
-        form, frequency, amplitudes, frame_rate, location, max_channel_delay
+    result = generate_mono_wave(
+        waveform, frequency, amplitude_envelope, frame_rate, phase, modulator
     )
     np.testing.assert_almost_equal(result, expected)

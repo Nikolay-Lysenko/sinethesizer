@@ -7,14 +7,13 @@
 
 ## Overview
 
-It is a digital additive synthesizer that provides a flexible way to create new virtual instruments with their own timbres.
+It is a digital synthesizer that has no GUI and is controlled through text files instead. Thus, some things might be done much faster and some things might be completely automated.
 
 The list of implemented and planned features is as follows:
 - [x] Balance between freedom for user and simplicity of input formats
-- [x] Stereo sound
-- [x] Sound effects (e.g., vibrato, overdrive, reverb, etc)
-- [x] Partial support of subtractive synthesis and FM synthesis
-- [x] Custom amplitude envelopes
+- [x] Support of additive synthesis, subtractive synthesis, and FM synthesis
+- [x] Sound effects (e.g., tremolo, overdrive, reverb, etc) 
+- [x] Custom envelopes
 - [ ] Noises and drums
 - [ ] Rich collection of presets
 
@@ -51,7 +50,7 @@ Below table provides links to detailed information about input files that are re
 Option | Description | Example
 :----: | :---------: | :-----:
 -i path/to/track.tsv | [Track definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/track_definition.md) | [Scale](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/scale.tsv)
--p path/to/presets.yml | [Timbres definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/timbres_creation.md) | [Demo timbres](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/presets/demo.yml)
--m path/to/mapping.yml | Mapping from MIDI instrument IDs to timbres | [Demo mapping](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/mapping.yml)
+-p path/to/presets.yml | [Instruments definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/instruments_creation.md) | [Demo instruments](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/presets/demo.yml)
+-m path/to/mapping.yml | Mapping from MIDI instrument IDs to instruments from the presets | [Demo mapping](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/mapping.yml)
 
 If something is still unclear, you can read the source code — it is structured and has built-in documentation. Also your questions are welcome.
