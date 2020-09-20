@@ -12,15 +12,15 @@ from setuptools import setup, find_packages
 current_dir = os.path.abspath(os.path.dirname(__file__))
 
 description = (
-   'A digital additive synthesizer that provides a flexible way to create '
-   'new virtual instruments with their own timbres.'
+   'A standalone synthesizer that is controlled through text files '
+   'in an extendable way.'
 )
 with open(os.path.join(current_dir, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
     name='sinethesizer',
-    version='0.3.0',
+    version='0.4.0',
     description=description,
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -28,7 +28,7 @@ setup(
     author='Nikolay Lysenko',
     author_email='nikolay-lysenco@yandex.ru',
     license='MIT',
-    keywords='synthesizer additive_synthesis music timbre sound_effects',
+    keywords='synthesizer additive_synthesis fm_synthesis sound_effects',
     packages=find_packages(),
     package_data={'sinethesizer': ['default_config.yml']},
     include_package_data=True,
