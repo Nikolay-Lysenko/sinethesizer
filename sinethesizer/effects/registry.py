@@ -9,6 +9,7 @@ from typing import Callable, Dict
 
 import numpy as np
 
+from sinethesizer.effects.equalizer import apply_equalizer
 from sinethesizer.effects.filter import apply_frequency_filter
 from sinethesizer.effects.filter_sweep import apply_filter_sweep, apply_phaser
 from sinethesizer.effects.overdrive import apply_overdrive
@@ -32,6 +33,7 @@ def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
         registry of effects
     """
     registry = {
+        'equalizer': apply_equalizer,
         'filter': apply_frequency_filter,
         'filter_sweep': apply_filter_sweep,
         'haas': apply_haas_effect,
