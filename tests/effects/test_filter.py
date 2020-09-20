@@ -88,10 +88,10 @@ from sinethesizer.utils.waves import generate_mono_wave
             {
                 'min_frequency_at_zero_velocity': 300,
                 'min_frequency_at_max_velocity': 300,
-                'min_frequency_sensitivity_to_velocity': 1.0,
+                'min_frequency_on_velocity_order': 1.0,
                 'max_frequency_at_zero_velocity': 500,
                 'max_frequency_at_max_velocity': 500,
-                'max_frequency_sensitivity_to_velocity': 1.0,
+                'max_frequency_on_velocity_order': 1.0,
                 'invert': False,
                 'order': 10,
             },
@@ -118,10 +118,10 @@ from sinethesizer.utils.waves import generate_mono_wave
             {
                 'min_frequency_ratio_at_zero_velocity': 1.5,
                 'min_frequency_ratio_at_max_velocity': 1.5,
-                'min_frequency_ratio_sensitivity_to_velocity': 1.0,
+                'min_frequency_ratio_on_velocity_order': 1.0,
                 'max_frequency_ratio_at_zero_velocity': 2.5,
                 'max_frequency_ratio_at_max_velocity': 2.5,
-                'max_frequency_ratio_sensitivity_to_velocity': 1.0,
+                'max_frequency_ratio_on_velocity_order': 1.0,
                 'invert': True,
                 'order': 10,
             },
@@ -308,9 +308,9 @@ def test_filter_absolute_frequencies(
 @pytest.mark.parametrize(
     "frequencies, velocity, frame_rate, "
     "min_frequency_at_zero_velocity, min_frequency_at_max_velocity, "
-    "min_frequency_sensitivity_to_velocity, "
+    "min_frequency_on_velocity_order, "
     "max_frequency_at_zero_velocity, max_frequency_at_max_velocity, "
-    "max_frequency_sensitivity_to_velocity, "
+    "max_frequency_on_velocity_order, "
     "invert, order, "
     "spectrogram_params, expected",
     [
@@ -325,13 +325,13 @@ def test_filter_absolute_frequencies(
                 200,
                 # `min_frequency_at_max_velocity`
                 400,
-                # `min_frequency_sensitivity_to_velocity`
+                # `min_frequency_on_velocity_order`
                 1.0,
                 # `max_frequency_at_zero_velocity`
                 None,
                 # `max_frequency_at_max_velocity`
                 None,
-                # `max_frequency_sensitivity_to_velocity`
+                # `max_frequency_on_velocity_order`
                 1.0,
                 # `invert`
                 False,
@@ -360,13 +360,13 @@ def test_filter_absolute_frequencies(
             None,
             # `min_frequency_at_zero_velocity`
             None,
-            # `min_frequency_sensitivity_to_velocity`
+            # `min_frequency_on_velocity_order`
             1.0,
             # `max_frequency_at_zero_velocity`
             200,
             # `max_frequency_at_max_velocity`
             400,
-            # `max_frequency_sensitivity_to_velocity`
+            # `max_frequency_on_velocity_order`
             1.0,
             # `invert`
             False,
@@ -390,10 +390,10 @@ def test_filter_absolute_frequencies_wrt_velocity(
         frequencies: List[float], velocity: float, frame_rate: int,
         min_frequency_at_zero_velocity: Optional[float],
         min_frequency_at_max_velocity: Optional[float],
-        min_frequency_sensitivity_to_velocity: Optional[float],
+        min_frequency_on_velocity_order: Optional[float],
         max_frequency_at_zero_velocity: Optional[float],
         max_frequency_at_max_velocity: Optional[float],
-        max_frequency_sensitivity_to_velocity: Optional[float],
+        max_frequency_on_velocity_order: Optional[float],
         invert: bool, order: int, spectrogram_params: Dict[str, Any],
         expected: np.ndarray
 ) -> None:
@@ -418,9 +418,9 @@ def test_filter_absolute_frequencies_wrt_velocity(
     sound = filter_absolute_frequencies_wrt_velocity(
         sound, event,
         min_frequency_at_zero_velocity, min_frequency_at_max_velocity,
-        min_frequency_sensitivity_to_velocity,
+        min_frequency_on_velocity_order,
         max_frequency_at_zero_velocity, max_frequency_at_max_velocity,
-        max_frequency_sensitivity_to_velocity,
+        max_frequency_on_velocity_order,
         invert, order
     )
     spc = spectrogram(sound[0], frame_rate, **spectrogram_params)[2]
@@ -519,9 +519,9 @@ def test_filter_relative_frequencies(
 @pytest.mark.parametrize(
     "frequencies, velocity, frame_rate, "
     "min_frequency_ratio_at_zero_velocity, min_frequency_ratio_at_max_velocity, "
-    "min_frequency_ratio_sensitivity_to_velocity, "
+    "min_frequency_ratio_on_velocity_order, "
     "max_frequency_ratio_at_zero_velocity, max_frequency_ratio_at_max_velocity, "
-    "max_frequency_ratio_sensitivity_to_velocity, "
+    "max_frequency_ratio_on_velocity_order, "
     "invert, order, "
     "spectrogram_params, expected",
     [
@@ -536,13 +536,13 @@ def test_filter_relative_frequencies(
                 1.0,
                 # `min_frequency_ratio_at_max_velocity`
                 2.0,
-                # `min_frequency_ratio_sensitivity_to_velocity`
+                # `min_frequency_ratio_on_velocity_order`
                 1.0,
                 # `max_frequency_ratio_at_zero_velocity`
                 None,
                 # `max_frequency_ratio_at_max_velocity`
                 None,
-                # `max_frequency_ratio_sensitivity_to_velocity`
+                # `max_frequency_ratio_on_velocity_order`
                 1.0,
                 # `invert`
                 False,
@@ -571,13 +571,13 @@ def test_filter_relative_frequencies(
             None,
             # `min_frequency_ratio_at_zero_velocity`
             None,
-            # `min_frequency_ratio_sensitivity_to_velocity`
+            # `min_frequency_ratio_on_velocity_order`
             1.0,
             # `max_frequency_ratio_at_zero_velocity`
             1.0,
             # `max_frequency_ratio_at_max_velocity`
             2.0,
-            # `max_frequency_ratio_sensitivity_to_velocity`
+            # `max_frequency_ratio_on_velocity_order`
             1.0,
             # `invert`
             False,
@@ -601,10 +601,10 @@ def test_filter_relative_frequencies_wrt_velocity(
         frequencies: List[float], velocity: float, frame_rate: int,
         min_frequency_ratio_at_zero_velocity: Optional[float],
         min_frequency_ratio_at_max_velocity: Optional[float],
-        min_frequency_ratio_sensitivity_to_velocity: Optional[float],
+        min_frequency_ratio_on_velocity_order: Optional[float],
         max_frequency_ratio_at_zero_velocity: Optional[float],
         max_frequency_ratio_at_max_velocity: Optional[float],
-        max_frequency_ratio_sensitivity_to_velocity: Optional[float],
+        max_frequency_ratio_on_velocity_order: Optional[float],
         invert: bool, order: int, spectrogram_params: Dict[str, Any],
         expected: np.ndarray
 ) -> None:
@@ -630,10 +630,10 @@ def test_filter_relative_frequencies_wrt_velocity(
         sound, event,
         min_frequency_ratio_at_zero_velocity,
         min_frequency_ratio_at_max_velocity,
-        min_frequency_ratio_sensitivity_to_velocity,
+        min_frequency_ratio_on_velocity_order,
         max_frequency_ratio_at_zero_velocity,
         max_frequency_ratio_at_max_velocity,
-        max_frequency_ratio_sensitivity_to_velocity,
+        max_frequency_ratio_on_velocity_order,
         invert, order
     )
     spc = spectrogram(sound[0], frame_rate, **spectrogram_params)[2]

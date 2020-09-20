@@ -97,11 +97,11 @@ from sinethesizer.envelopes.ahdsr import generic_ahdsr, trapezoid
                 "            sustain_level: 0.05",
                 "            max_sustain_duration: 0",
                 "            max_release_duration: 0.05",
-                "            release_sensitivity_to_velocity: 0",
+                "            release_duration_on_velocity_order: 0",
                 "            release_degree: 1.5",
                 "            peak_value: 5.0",
                 "            ratio_at_zero_velocity: 0.5",
-                "            envelope_sensitivity_to_velocity: 0.5",
+                "            envelope_values_on_velocity_order: 0.5",
                 "      frequency_ratio: 1.0",
                 "      amplitude_ratio: 1.0",
                 "      event_to_amplitude_factor_fn:",
@@ -144,11 +144,11 @@ from sinethesizer.envelopes.ahdsr import generic_ahdsr, trapezoid
                                         sustain_level=0.05,
                                         max_sustain_duration=0,
                                         max_release_duration=0.05,
-                                        release_sensitivity_to_velocity=0,
+                                        release_duration_on_velocity_order=0,
                                         release_degree=1.5,
                                         peak_value=5.0,
                                         ratio_at_zero_velocity=0.5,
-                                        envelope_sensitivity_to_velocity=0.5
+                                        envelope_values_on_velocity_order=0.5
                                     )
                                 )
                             ),

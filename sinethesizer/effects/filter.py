@@ -97,10 +97,10 @@ def filter_absolute_frequencies_wrt_velocity(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         min_frequency_at_zero_velocity: Optional[float] = None,
         min_frequency_at_max_velocity: Optional[float] = None,
-        min_frequency_sensitivity_to_velocity: Optional[float] = None,
+        min_frequency_on_velocity_order: Optional[float] = None,
         max_frequency_at_zero_velocity: Optional[float] = None,
         max_frequency_at_max_velocity: Optional[float] = None,
-        max_frequency_sensitivity_to_velocity: Optional[float] = None,
+        max_frequency_on_velocity_order: Optional[float] = None,
         invert: bool = False, order: int = 25
 ) -> np.ndarray:
     """
@@ -116,7 +116,7 @@ def filter_absolute_frequencies_wrt_velocity(
     :param min_frequency_at_max_velocity:
         cutoff frequency for high-pass filtering (in Hz) at maximum velocity;
         there is no high-pass filtering by default
-    :param min_frequency_sensitivity_to_velocity:
+    :param min_frequency_on_velocity_order:
         coefficient that defines dependence of cutoff frequency for high-pass
         filtering on velocity
     :param max_frequency_at_zero_velocity:
@@ -125,7 +125,7 @@ def filter_absolute_frequencies_wrt_velocity(
     :param max_frequency_at_max_velocity:
         cutoff frequency for low-pass filtering (in Hz) at maximum velocity;
         there is no low-pass filtering by default
-    :param max_frequency_sensitivity_to_velocity:
+    :param max_frequency_on_velocity_order:
         coefficient that defines dependence of cutoff frequency for low-pass
         filtering on velocity
     :param invert:
@@ -138,7 +138,7 @@ def filter_absolute_frequencies_wrt_velocity(
     """
     min_frequency = None
     if min_frequency_at_zero_velocity is not None:
-        coef = event.velocity ** min_frequency_sensitivity_to_velocity
+        coef = event.velocity ** min_frequency_on_velocity_order
         min_frequency = (
             min_frequency_at_zero_velocity
             + coef * (
@@ -147,7 +147,7 @@ def filter_absolute_frequencies_wrt_velocity(
         )
     max_frequency = None
     if max_frequency_at_zero_velocity is not None:
-        coef = event.velocity ** max_frequency_sensitivity_to_velocity
+        coef = event.velocity ** max_frequency_on_velocity_order
         max_frequency = (
             max_frequency_at_zero_velocity
             + coef * (
@@ -164,10 +164,10 @@ def filter_relative_frequencies_wrt_velocity(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         min_frequency_ratio_at_zero_velocity: Optional[float] = None,
         min_frequency_ratio_at_max_velocity: Optional[float] = None,
-        min_frequency_ratio_sensitivity_to_velocity: Optional[float] = None,
+        min_frequency_ratio_on_velocity_order: Optional[float] = None,
         max_frequency_ratio_at_zero_velocity: Optional[float] = None,
         max_frequency_ratio_at_max_velocity: Optional[float] = None,
-        max_frequency_ratio_sensitivity_to_velocity: Optional[float] = None,
+        max_frequency_ratio_on_velocity_order: Optional[float] = None,
         invert: bool = False, order: int = 25
 ) -> np.ndarray:
     """
@@ -185,9 +185,9 @@ def filter_relative_frequencies_wrt_velocity(
         ratio of cutoff frequency for high-pass filtering to fundamental
         frequency of the sound at maximum velocity;
         there is no high-pass filtering by default
-    :param min_frequency_ratio_sensitivity_to_velocity:
-        coefficient that defines dependence of cutoff frequency for high-pass
-        filtering on velocity
+    :param min_frequency_ratio_on_velocity_order:
+        coefficient that defines dependence of cutoff frequency ratio
+        for high-pass filtering on velocity
     :param max_frequency_ratio_at_zero_velocity:
         ratio of cutoff frequency for low-pass filtering to fundamental
         frequency of the sound at zero velocity;
@@ -196,9 +196,9 @@ def filter_relative_frequencies_wrt_velocity(
         ratio of cutoff frequency for low-pass filtering to fundamental
         frequency of the sound at maximum velocity;
         there is no low-pass filtering by default
-    :param max_frequency_ratio_sensitivity_to_velocity:
-        coefficient that defines dependence of cutoff frequency for low-pass
-        filtering on velocity
+    :param max_frequency_ratio_on_velocity_order:
+        coefficient that defines dependence of cutoff frequency ratio
+        for low-pass filtering on velocity
     :param invert:
         if it is `True` and all preceding arguments are passed,
         band-stop filter is applied instead of band-pass filter
@@ -209,7 +209,7 @@ def filter_relative_frequencies_wrt_velocity(
     """
     min_frequency_ratio = None
     if min_frequency_ratio_at_zero_velocity is not None:
-        coef = event.velocity ** min_frequency_ratio_sensitivity_to_velocity
+        coef = event.velocity ** min_frequency_ratio_on_velocity_order
         min_frequency_ratio = (
             min_frequency_ratio_at_zero_velocity
             + coef * (
@@ -219,7 +219,7 @@ def filter_relative_frequencies_wrt_velocity(
         )
     max_frequency_ratio = None
     if max_frequency_ratio_at_zero_velocity is not None:
-        coef = event.velocity ** max_frequency_ratio_sensitivity_to_velocity
+        coef = event.velocity ** max_frequency_ratio_on_velocity_order
         max_frequency_ratio = (
             max_frequency_ratio_at_zero_velocity
             + coef * (

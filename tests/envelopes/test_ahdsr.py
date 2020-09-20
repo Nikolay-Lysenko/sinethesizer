@@ -20,8 +20,9 @@ from sinethesizer.synth.core import Event
     "hold_to_hds_max_ratio, max_hold_duration, "
     "decay_to_ds_max_ratio, max_decay_duration, decay_degree, "
     "sustain_level, max_sustain_duration, "
-    "max_release_duration, release_sensitivity_to_velocity, release_degree, "
-    "peak_value, ratio_at_zero_velocity, envelope_sensitivity_to_velocity, "
+    "max_release_duration, release_duration_on_velocity_order, "
+    "release_degree, "
+    "peak_value, ratio_at_zero_velocity, envelope_values_on_velocity_order, "
     "expected",
     [
         (
@@ -39,11 +40,11 @@ from sinethesizer.synth.core import Event
             0.6,  # `sustain_level`
             1.0,  # `max_sustain_duration`
             0.4,  # `max_release_duration`
-            0.5,  # `release_sensitivity_to_velocity`
+            0.5,  # `release_duration_on_velocity_order`
             1.0,  # `release_degree`
             1.0,  # `peak_value`
             0.3,  # `ratio_at_zero_velocity`
-            1.0,  # `envelope_sensitivity_to_velocity`
+            1.0,  # `envelope_values_on_velocity_order`
             np.array([
                 0, 0.25, 0.5, 0.75,
                 1.0,
@@ -67,11 +68,11 @@ from sinethesizer.synth.core import Event
             0.6,  # `sustain_level`
             1.0,  # `max_sustain_duration`
             0.4,  # `max_release_duration`
-            0.5,  # `release_sensitivity_to_velocity`
+            0.5,  # `release_duration_on_velocity_order`
             1.0,  # `release_degree`
             1.0,  # `peak_value`
             0.3,  # `ratio_at_zero_velocity`
-            1.0,  # `envelope_sensitivity_to_velocity`
+            1.0,  # `envelope_values_on_velocity_order`
             np.array([
                 0, 0.125, 0.25, 0.375,
                 0.5,
@@ -95,11 +96,11 @@ from sinethesizer.synth.core import Event
             0.6,  # `sustain_level`
             1.0,  # `max_sustain_duration`
             0.4,  # `max_release_duration`
-            0.0,  # `release_sensitivity_to_velocity`
+            0.0,  # `release_duration_on_velocity_order`
             1.0,  # `release_degree`
             1.0,  # `peak_value`
             0.3,  # `ratio_at_zero_velocity`
-            1.0,  # `envelope_sensitivity_to_velocity`
+            1.0,  # `envelope_values_on_velocity_order`
             np.array([
                 0, 0.125, 0.25, 0.375,
                 0.5,
@@ -123,11 +124,11 @@ from sinethesizer.synth.core import Event
             0.6,  # `sustain_level`
             1.0,  # `max_sustain_duration`
             0.4,  # `max_release_duration`
-            0.5,  # `release_sensitivity_to_velocity`
+            0.5,  # `release_duration_on_velocity_order`
             1.0,  # `release_degree`
             2.0,  # `peak_value`
             0.3,  # `ratio_at_zero_velocity`
-            1.0,  # `envelope_sensitivity_to_velocity`
+            1.0,  # `envelope_values_on_velocity_order`
             np.array([
                 0, 0.5, 1.0, 1.5,
                 2.0,
@@ -151,11 +152,11 @@ from sinethesizer.synth.core import Event
             0.6,  # `sustain_level`
             1.5,  # `max_sustain_duration`
             1.0,  # `max_release_duration`
-            0.6,  # `release_sensitivity_to_velocity`
+            0.6,  # `release_duration_on_velocity_order`
             1.0,  # `release_degree`
             1.0,  # `peak_value`
             0.3,  # `ratio_at_zero_velocity`
-            1.0,  # `envelope_sensitivity_to_velocity`
+            1.0,  # `envelope_values_on_velocity_order`
             np.array([
                 0, 0.2, 0.4, 0.6, 0.8,
                 1.0, 1.0 - 0.4 / 13, 1.0 - 2 * 0.4 / 13, 1.0 - 3 * 0.4 / 13,
@@ -184,11 +185,11 @@ from sinethesizer.synth.core import Event
             0.6,  # `sustain_level`
             1.0,  # `max_sustain_duration`
             0.3,  # `max_release_duration`
-            1.0,  # `release_sensitivity_to_velocity`
+            1.0,  # `release_duration_on_velocity_order`
             1.0,  # `release_degree`
             1.0,  # `peak_value`
             0.0,  # `ratio_at_zero_velocity`
-            1.0,  # `envelope_sensitivity_to_velocity`
+            1.0,  # `envelope_values_on_velocity_order`
             np.array([
                 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3,
                 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3,
@@ -210,11 +211,11 @@ from sinethesizer.synth.core import Event
             1.0,  # `sustain_level`
             1.0,  # `max_sustain_duration`
             0.3,  # `max_release_duration`
-            1.0,  # `release_sensitivity_to_velocity`
+            1.0,  # `release_duration_on_velocity_order`
             1.0,  # `release_degree`
             1.0,  # `peak_value`
             0.0,  # `ratio_at_zero_velocity`
-            1.0,  # `envelope_sensitivity_to_velocity`
+            1.0,  # `envelope_values_on_velocity_order`
             np.array([
                 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,
                 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1
@@ -235,11 +236,11 @@ def test_generic_ahdsr(
         sustain_level: float,
         max_sustain_duration: float,
         max_release_duration: float,
-        release_sensitivity_to_velocity: float,
+        release_duration_on_velocity_order: float,
         release_degree: float,
         peak_value: float,
         ratio_at_zero_velocity: float,
-        envelope_sensitivity_to_velocity: float,
+        envelope_values_on_velocity_order: float,
         expected: np.ndarray
 ) -> None:
     """Test `generic_ahdsr` function."""
@@ -258,8 +259,9 @@ def test_generic_ahdsr(
         hold_to_hds_max_ratio, max_hold_duration,
         decay_to_ds_max_ratio, max_decay_duration, decay_degree,
         sustain_level, max_sustain_duration,
-        max_release_duration, release_sensitivity_to_velocity, release_degree,
-        peak_value, ratio_at_zero_velocity, envelope_sensitivity_to_velocity
+        max_release_duration, release_duration_on_velocity_order,
+        release_degree,
+        peak_value, ratio_at_zero_velocity, envelope_values_on_velocity_order
     )
     np.testing.assert_almost_equal(result, expected)
 
@@ -268,8 +270,9 @@ def test_generic_ahdsr(
     "duration, velocity, frame_rate, "
     "attack_to_ahds_ratio, attack_degree, hold_to_ahds_ratio, "
     "decay_to_ahds_ratio, decay_degree, sustain_level, "
-    "max_release_duration, release_sensitivity_to_velocity, release_degree, "
-    "peak_value, ratio_at_zero_velocity, envelope_sensitivity_to_velocity, "
+    "max_release_duration, release_duration_on_velocity_order, "
+    "release_degree, "
+    "peak_value, ratio_at_zero_velocity, envelope_values_on_velocity_order, "
     "expected",
     [
         (
@@ -283,11 +286,11 @@ def test_generic_ahdsr(
             1.0,  # `decay_degree`
             0.6,  # `sustain_level`
             0.4,  # `max_release_duration`
-            1.0,  # `release_sensitivity_to_velocity`
+            1.0,  # `release_duration_on_velocity_order`
             1.0,  # `release_degree`
             1.0,  # `peak_value`
             0.0,  # `ratio_at_zero_velocity`
-            1.0,  # `envelope_sensitivity_to_velocity`
+            1.0,  # `envelope_values_on_velocity_order`
             np.array([
                 0, 0.5,
                 1.0, 1.0,
@@ -307,11 +310,11 @@ def test_generic_ahdsr(
             1.0,  # `decay_degree`
             0.6,  # `sustain_level`
             1.0,  # `max_release_duration`
-            1.0,  # `release_sensitivity_to_velocity`
+            1.0,  # `release_duration_on_velocity_order`
             1.0,  # `release_degree`
             1.0,  # `peak_value`
             0.0,  # `ratio_at_zero_velocity`
-            0.0,  # `envelope_sensitivity_to_velocity`
+            0.0,  # `envelope_values_on_velocity_order`
             np.array([
                 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
                 0.6, 0.48, 0.36, 0.24, 0.12
@@ -325,10 +328,10 @@ def test_relative_ahdsr(
         hold_to_ahds_ratio: float,
         decay_to_ahds_ratio: float, decay_degree: float,
         sustain_level: float,
-        max_release_duration: float, release_sensitivity_to_velocity: float,
+        max_release_duration: float, release_duration_on_velocity_order: float,
         release_degree: float,
         peak_value: float, ratio_at_zero_velocity: float,
-        envelope_sensitivity_to_velocity: float,
+        envelope_values_on_velocity_order: float,
         expected: np.ndarray
 ) -> None:
     """Test `relative_ahdsr` function."""
@@ -345,8 +348,9 @@ def test_relative_ahdsr(
         event,
         attack_to_ahds_ratio, attack_degree, hold_to_ahds_ratio,
         decay_to_ahds_ratio, decay_degree, sustain_level,
-        max_release_duration, release_sensitivity_to_velocity, release_degree,
-        peak_value, ratio_at_zero_velocity, envelope_sensitivity_to_velocity
+        max_release_duration, release_duration_on_velocity_order,
+        release_degree,
+        peak_value, ratio_at_zero_velocity, envelope_values_on_velocity_order
     )
     np.testing.assert_almost_equal(result, expected)
 
@@ -354,7 +358,7 @@ def test_relative_ahdsr(
 @pytest.mark.parametrize(
     "duration, velocity, frame_rate, "
     "attack_share, attack_degree, decay_share, decay_degree, "
-    "peak_value, ratio_at_zero_velocity, envelope_sensitivity_to_velocity, "
+    "peak_value, ratio_at_zero_velocity, envelope_values_on_velocity_order, "
     "expected",
     [
         (
@@ -367,7 +371,7 @@ def test_relative_ahdsr(
             1.0,  # `decay_degree`
             1.0,  # `peak_value`
             0.0,  # `ratio_at_zero_velocity`
-            0.0,  # `envelope_sensitivity_to_velocity`
+            0.0,  # `envelope_values_on_velocity_order`
             np.array([0, 0.5, 1, 1, 1, 1, 0.8, 0.6, 0.4, 0.2])
         ),
     ]
@@ -377,7 +381,7 @@ def test_trapezoid(
         attack_share: float, attack_degree: float,
         decay_share: float, decay_degree: float,
         peak_value: float, ratio_at_zero_velocity: float,
-        envelope_sensitivity_to_velocity: float,
+        envelope_values_on_velocity_order: float,
         expected: np.ndarray
 ) -> None:
     """Test `trapezoid` function."""
@@ -393,6 +397,6 @@ def test_trapezoid(
     result = trapezoid(
         event,
         attack_share, attack_degree, decay_share, decay_degree,
-        peak_value, ratio_at_zero_velocity, envelope_sensitivity_to_velocity
+        peak_value, ratio_at_zero_velocity, envelope_values_on_velocity_order
     )
     np.testing.assert_almost_equal(result, expected)

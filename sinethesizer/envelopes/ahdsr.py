@@ -23,11 +23,11 @@ def generic_ahdsr(
         sustain_level: float = 0.6,
         max_sustain_duration: float = 10.0,
         max_release_duration: float = 0.5,
-        release_sensitivity_to_velocity: float = 0.0,
+        release_duration_on_velocity_order: float = 0.0,
         release_degree: float = 1.0,
         peak_value: float = 1.0,
         ratio_at_zero_velocity: float = 0.0,
-        envelope_sensitivity_to_velocity: float = 0.0
+        envelope_values_on_velocity_order: float = 0.0
 ) -> np.ndarray:
     """
     Create AHDSR envelope of shape that depends on numerous parameters.
@@ -66,7 +66,7 @@ def generic_ahdsr(
         maximum duration of sustain in seconds
     :param max_release_duration:
         maximum duration of release in seconds
-    :param release_sensitivity_to_velocity:
+    :param release_duration_on_velocity_order:
         coefficient that determines actual duration of release depending on
         velocity; given non-maximum positive velocity, the higher it is,
         the shorter release is; if it is 0, velocity does not affect
@@ -83,7 +83,7 @@ def generic_ahdsr(
         ratio of envelope values at zero velocity to envelope values at maximum
         velocity; usually, this argument should be passed only if output
         envelope is used as modulation index envelope
-    :param envelope_sensitivity_to_velocity:
+    :param envelope_values_on_velocity_order:
         coefficient that determines dependence of envelope values on velocity;
         given non-maximum positive velocity, the higher it is, the lower
         envelope values are; if it is 0, velocity does not affect envelope;
@@ -136,8 +136,8 @@ def generic_ahdsr(
     else:
         sustain = np.array([])
 
-    release_duration_ratio = event.velocity ** release_sensitivity_to_velocity
-    release_duration = release_duration_ratio * max_release_duration
+    release_ratio = event.velocity ** release_duration_on_velocity_order
+    release_duration = release_ratio * max_release_duration
     n_frames_with_release = floor(release_duration * frame_rate)
     if n_frames_with_release > 0:
         step = 1 / n_frames_with_release
@@ -149,7 +149,7 @@ def generic_ahdsr(
 
     envelope = np.concatenate((attack, hold, decay, sustain, release))
     envelope *= peak_value
-    coef = event.velocity ** envelope_sensitivity_to_velocity
+    coef = event.velocity ** envelope_values_on_velocity_order
     envelope *= ratio_at_zero_velocity + coef * (1 - ratio_at_zero_velocity)
     return envelope
 
@@ -163,11 +163,11 @@ def relative_ahdsr(
         decay_degree: float = 1.0,
         sustain_level: float = 0.6,
         max_release_duration: float = 0.5,
-        release_sensitivity_to_velocity: float = 0.0,
+        release_duration_on_velocity_order: float = 0.0,
         release_degree: float = 1.0,
         peak_value: float = 1.0,
         ratio_at_zero_velocity: float = 0.0,
-        envelope_sensitivity_to_velocity: float = 0.0
+        envelope_values_on_velocity_order: float = 0.0
 ) -> np.ndarray:
     """
     Create AHDSR envelope with proportional durations of stages.
@@ -198,7 +198,7 @@ def relative_ahdsr(
         (i.e., level at the end of attack)
     :param max_release_duration:
         maximum duration of release in seconds
-    :param release_sensitivity_to_velocity:
+    :param release_duration_on_velocity_order:
         coefficient that determines actual duration of release depending on
         velocity; given non-maximum positive velocity, the higher it is,
         the shorter release is; if it is 0, velocity does not affect
@@ -215,7 +215,7 @@ def relative_ahdsr(
         ratio of envelope values at zero velocity to envelope values at maximum
         velocity; usually, this argument should be passed only if output
         envelope is used as modulation index envelope
-    :param envelope_sensitivity_to_velocity:
+    :param envelope_values_on_velocity_order:
         coefficient that determines dependence of envelope values on velocity;
         given non-maximum positive velocity, the higher it is, the lower
         envelope values are; if it is 0, velocity does not affect envelope;
@@ -259,8 +259,8 @@ def relative_ahdsr(
     else:
         sustain = np.array([])
 
-    release_duration_ratio = event.velocity ** release_sensitivity_to_velocity
-    release_duration = release_duration_ratio * max_release_duration
+    release_ratio = event.velocity ** release_duration_on_velocity_order
+    release_duration = release_ratio * max_release_duration
     n_frames_with_release = floor(release_duration * frame_rate)
     if n_frames_with_release > 0:
         step = 1 / n_frames_with_release
@@ -272,7 +272,7 @@ def relative_ahdsr(
 
     envelope = np.concatenate((attack, hold, decay, sustain, release))
     envelope *= peak_value
-    coef = event.velocity ** envelope_sensitivity_to_velocity
+    coef = event.velocity ** envelope_values_on_velocity_order
     envelope *= ratio_at_zero_velocity + coef * (1 - ratio_at_zero_velocity)
     return envelope
 
@@ -285,7 +285,7 @@ def trapezoid(
         decay_degree: float = 1.0,
         peak_value: float = 1.0,
         ratio_at_zero_velocity: float = 0.0,
-        envelope_sensitivity_to_velocity: float = 0.0
+        envelope_values_on_velocity_order: float = 0.0
 ) -> np.ndarray:
     """
     Create AHD envelope (so called trapezoid).
@@ -314,7 +314,7 @@ def trapezoid(
         ratio of envelope values at zero velocity to envelope values at maximum
         velocity; usually, this argument should be passed only if output
         envelope is used as modulation index envelope
-    :param envelope_sensitivity_to_velocity:
+    :param envelope_values_on_velocity_order:
         coefficient that determines dependence of envelope values on velocity;
         given non-maximum positive velocity, the higher it is, the lower
         envelope values are; if it is 0, velocity does not affect envelope;
@@ -334,6 +334,6 @@ def trapezoid(
         max_release_duration=0,
         peak_value=peak_value,
         ratio_at_zero_velocity=ratio_at_zero_velocity,
-        envelope_sensitivity_to_velocity=envelope_sensitivity_to_velocity
+        envelope_values_on_velocity_order=envelope_values_on_velocity_order
     )
     return envelope

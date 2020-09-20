@@ -14,7 +14,7 @@ import numpy as np
 def user_defined_envelope(
         event: 'sinethesizer.synth.core.Event', parts: List[Dict[str, Any]],
         ratio_at_zero_velocity: float = 0,
-        envelope_sensitivity_to_velocity: float = 0
+        envelope_values_on_velocity_order: float = 0
 ) -> np.ndarray:
     """
     Create envelope that is an upsampled version of a user-defined envelope.
@@ -32,7 +32,7 @@ def user_defined_envelope(
     :param ratio_at_zero_velocity:
         ratio of envelope values at zero velocity to envelope values at maximum
         velocity
-    :param envelope_sensitivity_to_velocity:
+    :param envelope_values_on_velocity_order:
         coefficient that determines dependence of envelope values on velocity;
         given non-maximum positive velocity, the higher it is, the lower
         envelope values are; if it is 0, velocity does not affect envelope
@@ -66,6 +66,6 @@ def user_defined_envelope(
         remaining_duration_in_frames -= len(current_result)
 
     envelope = np.concatenate(results)
-    coef = event.velocity ** envelope_sensitivity_to_velocity
+    coef = event.velocity ** envelope_values_on_velocity_order
     envelope *= ratio_at_zero_velocity + coef * (1 - ratio_at_zero_velocity)
     return envelope

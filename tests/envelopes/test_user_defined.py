@@ -16,7 +16,7 @@ from sinethesizer.synth.core import Event
 
 @pytest.mark.parametrize(
     "duration, velocity, frame_rate, "
-    "parts, ratio_at_zero_velocity, envelope_sensitivity_to_velocity, "
+    "parts, ratio_at_zero_velocity, envelope_values_on_velocity_order, "
     "expected",
     [
         (
@@ -35,7 +35,7 @@ from sinethesizer.synth.core import Event
             ],
             # `ratio_at_zero_velocity`
             0.2,
-            # `envelope_sensitivity_to_velocity`
+            # `envelope_values_on_velocity_order`
             1.0,
             # `expected`
             np.array([
@@ -61,7 +61,7 @@ from sinethesizer.synth.core import Event
             ],
             # `ratio_at_zero_velocity`
             0.2,
-            # `envelope_sensitivity_to_velocity`
+            # `envelope_values_on_velocity_order`
             1.0,
             # `expected`
             np.array([
@@ -90,7 +90,7 @@ from sinethesizer.synth.core import Event
             ],
             # `ratio_at_zero_velocity`
             0.2,
-            # `envelope_sensitivity_to_velocity`
+            # `envelope_values_on_velocity_order`
             1.0,
             # `expected`
             np.array([
@@ -120,7 +120,7 @@ from sinethesizer.synth.core import Event
             ],
             # `ratio_at_zero_velocity`
             0.2,
-            # `envelope_sensitivity_to_velocity`
+            # `envelope_values_on_velocity_order`
             1.0,
             # `expected`
             np.array([
@@ -133,7 +133,7 @@ from sinethesizer.synth.core import Event
 def test_user_defined_envelope(
         duration: float, velocity: float, frame_rate: int,
         parts: List[Dict[str, Any]], ratio_at_zero_velocity: float,
-        envelope_sensitivity_to_velocity: float, expected: np.ndarray
+        envelope_values_on_velocity_order: float, expected: np.ndarray
 ) -> None:
     """Test `user_defined_envelope` function."""
     event = Event(
@@ -146,6 +146,6 @@ def test_user_defined_envelope(
         frame_rate=frame_rate
     )
     result = user_defined_envelope(
-        event, parts, ratio_at_zero_velocity, envelope_sensitivity_to_velocity
+        event, parts, ratio_at_zero_velocity, envelope_values_on_velocity_order
     )
     np.testing.assert_almost_equal(result, expected)
