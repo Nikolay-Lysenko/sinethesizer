@@ -1,25 +1,25 @@
 ---
 
-- name: oboe
+- name: lead
   partials:
     - wave:
         waveform: sine
         phase: 0.0
         amplitude_envelope_fn:
           name: generic_ahdsr
-          attack_to_ahds_max_ratio: 0.2
-          max_attack_duration: 0.2
+          attack_to_ahds_max_ratio: 0.3
+          max_attack_duration: 0.3
           attack_degree: 0.5
           hold_to_hds_max_ratio: 0.05
           max_hold_duration: 0.05
-          decay_to_ds_max_ratio: 0.05
-          max_decay_duration: 0.05
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
           decay_degree: 2.0
-          sustain_level: 0.95
-          max_sustain_duration: 5.0
+          sustain_level: 0.5
+          max_sustain_duration: 0.0
           max_release_duration: 0.2
-          release_sensitivity_to_velocity: 0.0
-          release_degree: 2.0
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.5
         modulator:
           waveform: sine
           frequency_ratio_numerator: 3
@@ -32,17 +32,17 @@
             attack_degree: 1.0
             hold_to_hds_max_ratio: 0.0
             max_hold_duration: 0.0
-            decay_to_ds_max_ratio: 0.2
-            max_decay_duration: 0.2
-            decay_degree: 2.0
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 5.0
+            decay_degree: 0.75
             sustain_level: 0.5
-            max_sustain_duration: 100.0
+            max_sustain_duration: 0.0
             max_release_duration: 0.0
-            release_sensitivity_to_velocity: 0.0
+            release_duration_on_velocity_order: 0.0
             release_degree: 1.0
             peak_value: 5.0
             ratio_at_zero_velocity: 0.5
-            envelope_sensitivity_to_velocity: 0.5
+            envelope_values_on_velocity_order: 0.5
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
       event_to_amplitude_factor_fn:
@@ -53,12 +53,12 @@
         0: 0.5
         0.1: 0.25
       random_detuning_range: 0.003
-  amplitude_scaling: 0.9
+  amplitude_scaling: 1.0
   effects:
     - name: filter
       kind: absolute
-      max_frequency: 3000
-      order: 3
+      max_frequency: 4000
+      order: 1
 
 - name: bell_like_bass
   partials:
@@ -78,7 +78,7 @@
           sustain_level: 0.05
           max_sustain_duration: 0
           max_release_duration: 0.05
-          release_sensitivity_to_velocity: 0.0
+          release_duration_on_velocity_order: 0.0
           release_degree: 1.5
         modulator:
           waveform: sine
@@ -98,11 +98,11 @@
             sustain_level: 0.05
             max_sustain_duration: 0
             max_release_duration: 0.05
-            release_sensitivity_to_velocity: 0.0
+            release_duration_on_velocity_order: 0.0
             release_degree: 1.5
             peak_value: 5.0
             ratio_at_zero_velocity: 0.5
-            envelope_sensitivity_to_velocity: 0.5
+            envelope_values_on_velocity_order: 0.5
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
       event_to_amplitude_factor_fn:
@@ -113,9 +113,9 @@
         0: 0.5
         0.1: 0.25
       random_detuning_range: 0.001
-  amplitude_scaling: 0.9
+  amplitude_scaling: 1.0
   effects:
     - name: filter
       kind: absolute
-      max_frequency: 3000
-      order: 3
+      max_frequency: 4000
+      order: 1

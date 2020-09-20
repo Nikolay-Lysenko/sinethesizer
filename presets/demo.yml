@@ -84,7 +84,7 @@
     - name: filter
       kind: absolute
       max_frequency: 3000
-      order: 3
+      order: 1
 
 ## This is an example of subtractive synthesis (some frequencies are filtered out).
 - name: filtered_sawtooth
