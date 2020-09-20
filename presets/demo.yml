@@ -80,11 +80,16 @@
       random_detuning_range: 0.005
   amplitude_scaling: 0.5714  # Inverse of sum of `amplitude_ratio` over all partials.
   effects:
-    # Make sound more natural by muting higher frequencies.
-    - name: filter
-      kind: absolute
-      max_frequency: 3000
-      order: 1
+    # Make sound more natural by imitating frequency response of resonating body.
+    - name: equalizer
+      breakpoint_frequencies:
+        - 3000
+        - 8000
+        - 20000
+      gains:
+        - 1.0
+        - 0.5
+        - 0.0
 
 ## This is an example of subtractive synthesis (some frequencies are filtered out).
 - name: filtered_sawtooth
@@ -155,11 +160,16 @@
       random_detuning_range: 0.005
   amplitude_scaling: 1.0
   effects:
-    # Make sound more natural by muting higher frequencies.
-    - name: filter
-      kind: absolute
-      max_frequency: 5000
-      order: 2
+    # Make sound more natural by imitating frequency response of resonating body.
+    - name: equalizer
+      breakpoint_frequencies:
+        - 3000
+        - 8000
+        - 20000
+      gains:
+        - 1.0
+        - 0.5
+        - 0.0
 
 # This is an example of non-AHDSR amplitude envelope.
 - name: sine_with_user_defined_envelope

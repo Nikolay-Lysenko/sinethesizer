@@ -55,10 +55,15 @@
       random_detuning_range: 0.003
   amplitude_scaling: 1.0
   effects:
-    - name: filter
-      kind: absolute
-      max_frequency: 4000
-      order: 1
+    - name: equalizer
+      breakpoint_frequencies:
+        - 3000
+        - 8000
+        - 20000
+      gains:
+        - 1.0
+        - 0.5
+        - 0.0
 
 - name: bell_like_bass
   partials:
@@ -115,7 +120,12 @@
       random_detuning_range: 0.001
   amplitude_scaling: 1.0
   effects:
-    - name: filter
-      kind: absolute
-      max_frequency: 4000
-      order: 1
+    - name: equalizer
+      breakpoint_frequencies:
+        - 3000
+        - 8000
+        - 20000
+      gains:
+        - 1.0
+        - 0.5
+        - 0.0
