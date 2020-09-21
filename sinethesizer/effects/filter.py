@@ -1,6 +1,11 @@
 """
 Filter some frequencies from original sound.
 
+Note that only high-pass filter, low-pass filter, band-pass filter, and
+band-stop filter are implemented in this module. Filters that can assign
+arbitrary gain to an arbitrary frequency are called equalizers in this package,
+so look at `equalizer` module for them.
+
 Author: Nikolay Lysenko
 """
 

@@ -121,6 +121,56 @@
       max_frequency: 15000
       order: 10
 
+## This is an example of more advanced subtractive synthesis (there is an envelope for filter).
+- name: another_filtered_sawtooth
+  partials:
+    - wave:
+        waveform: sawtooth
+        amplitude_envelope_fn:
+          name: trapezoid
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.0
+      detuning_to_amplitude:
+        0.0: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: equalizer_envelope
+          envelope_points:
+            # Initially, gain starts to decay linearly at 1000 Hz and becomes zero at 10000 Hz.
+            - relative_position: 0.0
+              breakpoint_frequencies:
+                - 1000
+                - 10000
+              gains:
+                - 1.0
+                - 0.0
+            # In the middle, gain starts to decay linearly at 5000 Hz and becomes zero at 15000 Hz.
+            - relative_position: 0.5
+              breakpoint_frequencies:
+                - 5000
+                - 15000
+              gains:
+                - 1.0
+                - 0.0
+            # Finally, gain is distributed like at the beginning.
+            - relative_position: 1.0
+              breakpoint_frequencies:
+                - 1000
+                - 10000
+              gains:
+                - 1.0
+                - 0.0
+  amplitude_scaling: 1.0
+  effects:
+    # Avoid aliasing by removing frequencies that are near Nyquist frequency.
+    - name: filter
+      kind: absolute
+      max_frequency: 15000
+      order: 10
+
 # This is an example of FM synthesis.
 - name: fm_sine
   partials:

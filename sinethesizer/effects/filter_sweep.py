@@ -1,7 +1,10 @@
 """
 Apply sound effects based on filters with oscillating cutoffs.
 
-This type of effects is also known as automation of equalizer.
+Note that only high-pass filter, low-pass filter, band-pass filter, and
+band-stop filter are used in this module and there are no envelopes, only
+oscillators. Look at `equalizer` module for envelopes and automation of more
+advanced filters.
 
 Author: Nikolay Lysenko
 """
