@@ -137,8 +137,9 @@
         0.0: 1.0
       random_detuning_range: 0.005
       effects:
-        - name: equalizer_envelope
-          envelope_points:
+        - name: automation
+          automated_effect_name: equalizer
+          break_points:
             # Initially, gain starts to decay linearly at 1000 Hz and becomes zero at 10000 Hz.
             - relative_position: 0.0
               breakpoint_frequencies:

@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Dict, List, Union
+from typing import List
 
 import numpy as np
 from scipy.signal import convolve, firwin2
@@ -51,61 +51,3 @@ def apply_equalizer(
         convolve(sound[1, :], fir, mode='same'),
     ))
     return sound
-
-
-def apply_equalizer_envelope(
-        sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        envelope_points: List[Dict[str, Union[float, List[float]]]],
-        **kwargs
-) -> np.ndarray:
-    """
-    Change distribution across frequencies with equalizer that depends on time.
-
-    :param sound:
-        sound to be modified
-    :param event:
-        parameters of sound event for which this function is called
-    :param envelope_points:
-        points that define equalizer envelope; each point is a dictionary that
-        has three keys: 'relative_position' - a float between 0 and 1 that
-        defines position of the point on the envelope, 'breakpoint_frequencies'
-        - settings of breakpoint frequencies of the equalizer applied at this
-        point, and 'gains' - settings of gains of the equalizer applied at this
-        point; at any other point, output is a linear interpolation
-    :return:
-        sound with dynamically altered frequency balance
-    """
-    n_frames = sound.shape[1]
-    indices = []
-    firs_params = []
-    for envelope_point in envelope_points:
-        index = int(round(envelope_point['relative_position'] * n_frames))
-        indices.append(index)
-        fir_params = {
-            'breakpoint_frequencies': envelope_point['breakpoint_frequencies'],
-            'gains': envelope_point['gains']
-        }
-        firs_params.append(fir_params)
-    indices.insert(0, indices[0])
-    indices.append(indices[-1])
-
-    processed_sound = np.zeros_like(sound)
-    zipped = zip(indices, indices[1:], indices[2:], firs_params)
-    for start_index, center_index, end_index, fir_params in zipped:
-        fragment = sound[:, start_index:end_index]
-        processed_fragment = apply_equalizer(
-            fragment, event, **fir_params, **kwargs
-        )
-        if center_index - start_index > 0:
-            asc_weights = np.linspace(0, 1, center_index - start_index, False)
-        else:
-            asc_weights = np.array([])
-        if end_index - center_index > 0:
-            desc_weights = np.linspace(1, 0, end_index - center_index)
-        else:
-            desc_weights = np.array([])
-        weights = np.hstack((asc_weights, desc_weights))
-
-        processed_fragment *= weights
-        processed_sound[:, start_index:end_index] += processed_fragment
-    return processed_sound
