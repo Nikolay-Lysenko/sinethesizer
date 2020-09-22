@@ -1,13 +1,15 @@
 """
 Apply sound effects based on filters with oscillating cutoffs.
 
-This type of effects is also known as automation of equalizer.
+This type of effects is a partial case of equalizer automation. If automation
+based on a free-form envelope and not on an oscillator is needed, look at
+`automation` module.
 
 Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 import numpy as np
 
@@ -33,8 +35,7 @@ def oscillate_between_sounds(
     :return:
         sound composed from input sounds
     """
-    step = 2 / (sounds.shape[0] - 1)
-    thresholds = np.arange(-1, 1 + 1e-7, step)
+    thresholds = np.linspace(-1, 1, sounds.shape[0])
     weights = np.tile(thresholds.reshape((-1, 1)), (1, sounds.shape[2]))
     wave = generate_mono_wave(
         waveform,
@@ -42,6 +43,7 @@ def oscillate_between_sounds(
         np.ones(sounds.shape[2]),
         frame_rate
     )
+    step = 2 / (sounds.shape[0] - 1)
     weights = (
         (1 - np.abs(weights - wave) / step) * (np.abs(weights - wave) < step)
     )
@@ -51,10 +53,10 @@ def oscillate_between_sounds(
 
 
 def apply_filter_sweep(
-        sound: np.ndarray, sound_info: Dict[str, Any],
+        sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         kind: str = 'absolute',
         bands: List[Tuple[Optional[float], Optional[float]]] = None,
-        invert: bool = False, order: int = 10,
+        invert: bool = False, order: int = 25,
         frequency: float = 6, waveform: str = 'sine'
 ) -> np.ndarray:
     """
@@ -62,9 +64,8 @@ def apply_filter_sweep(
 
     :param sound:
         sound to be modified
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param event:
+        parameters of sound event for which this function is called
     :param kind:
         if it is set to 'absolute', `bands` must be defined in Hz;
         if it is set to 'relative', `bands` must be defined as ratios to
@@ -88,13 +89,13 @@ def apply_filter_sweep(
     bands = bands or [(None, None)]
     if len(bands) == 1:
         sound = apply_frequency_filter(
-            sound, sound_info, kind,
+            sound, event, kind,
             bands[0][0], bands[0][1], invert, order
         )
         return sound
     filtered_sounds = [
         apply_frequency_filter(
-            sound, sound_info, kind,
+            sound, event, kind,
             min_cutoff_frequency, max_cutoff_frequency, invert, order
         )
         for min_cutoff_frequency, max_cutoff_frequency in bands
@@ -104,15 +105,15 @@ def apply_filter_sweep(
     ]
     filtered_sounds = np.concatenate(filtered_sounds)
     sound = oscillate_between_sounds(
-        filtered_sounds, sound_info['frame_rate'], frequency, waveform
+        filtered_sounds, event.frame_rate, frequency, waveform
     )
     return sound
 
 
 def apply_absolute_phaser(
-        sound: np.ndarray, sound_info: Dict[str, Any],
+        sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         min_center: float = 220, max_center: float = 880,
-        band_width: float = 20, n_bands: int = 10, order: int = 10,
+        band_width: float = 20, n_bands: int = 10, order: int = 25,
         frequency: float = 5, waveform: str = 'sine',
         original_share: float = 0.75, wahwah: bool = False
 ) -> np.ndarray:
@@ -121,9 +122,8 @@ def apply_absolute_phaser(
 
     :param sound:
         sound to be modified
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param event:
+        parameters of sound event for which this function is called
     :param min_center:
         central frequency of the lowest band (in Hz)
     :param max_center:
@@ -149,24 +149,22 @@ def apply_absolute_phaser(
     :return:
         phased sound
     """
-    step = (max_center - min_center) / n_bands
     bands = [
         (center - band_width / 2, center + band_width / 2)
-        for center in np.arange(min_center, max_center + 1e-7, step)
+        for center in np.linspace(min_center, max_center, n_bands)
     ]
     invert = not wahwah
     filtered_sound = apply_filter_sweep(
-        sound, sound_info, 'absolute',
-        bands, invert, order, frequency, waveform
+        sound, event, 'absolute', bands, invert, order, frequency, waveform
     )
     sound = original_share * sound + (1 - original_share) * filtered_sound
     return sound
 
 
 def apply_relative_phaser(
-        sound: np.ndarray, sound_info: Dict[str, Any],
+        sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         min_center_ratio: float = 1.0, max_center_ratio: float = 4.0,
-        relative_band_width: float = 0.1, n_bands: int = 10, order: int = 10,
+        relative_band_width: float = 0.1, n_bands: int = 10, order: int = 25,
         frequency: float = 5, waveform: str = 'sine',
         original_share: float = 0.75, wahwah: bool = False
 ) -> np.ndarray:
@@ -175,9 +173,8 @@ def apply_relative_phaser(
 
     :param sound:
         sound to be modified
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param event:
+        parameters of sound event for which this function is called
     :param min_center_ratio:
         central frequency of the lowest band as ratio to fundamental frequency
     :param max_center_ratio:
@@ -203,20 +200,20 @@ def apply_relative_phaser(
     :return:
         phased sound
     """
-    fundamental_frequency = sound_info['fundamental_frequency']
+    fundamental_frequency = event.frequency
     min_center = min_center_ratio * fundamental_frequency
     max_center = max_center_ratio * fundamental_frequency
     band_width = relative_band_width * fundamental_frequency
     sound = apply_absolute_phaser(
-        sound, sound_info, min_center, max_center, band_width,
+        sound, event, min_center, max_center, band_width,
         n_bands, order, frequency, waveform, original_share, wahwah
     )
     return sound
 
 
 def apply_phaser(
-        sound: np.ndarray, sound_info: Dict[str, Any], kind: str = 'absolute',
-        *args, **kwargs
+        sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
+        kind: str = 'absolute', *args, **kwargs
 ) -> np.ndarray:
     """
     Apply phaser effect.
@@ -231,18 +228,17 @@ def apply_phaser(
 
     :param sound:
         sound to be modified
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param event:
+        parameters of sound event for which this function is called
     :param kind:
         kind of phaser; supported values are 'absolute' and 'relative'
     :return:
         phased sound
     """
     if kind == 'absolute':
-        sound = apply_absolute_phaser(sound, sound_info, *args, **kwargs)
+        sound = apply_absolute_phaser(sound, event, *args, **kwargs)
     elif kind == 'relative':
-        sound = apply_relative_phaser(sound, sound_info, *args, **kwargs)
+        sound = apply_relative_phaser(sound, event, *args, **kwargs)
     else:
         raise ValueError(
             f"Kind must be either 'absolute' or 'relative', but found: {kind}"

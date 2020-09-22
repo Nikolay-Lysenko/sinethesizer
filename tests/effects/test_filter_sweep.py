@@ -16,7 +16,8 @@ from sinethesizer.effects.filter_sweep import (
     apply_phaser,
     oscillate_between_sounds,
 )
-from sinethesizer.utils.waves import generate_stereo_wave
+from sinethesizer.synth.core import Event
+from sinethesizer.utils.waves import generate_mono_wave
 
 
 @pytest.mark.parametrize(
@@ -149,18 +150,24 @@ def test_apply_filter_sweep(
 ) -> None:
     """Test `apply_filter_sweep` function."""
     waves = [
-        generate_stereo_wave(
+        generate_mono_wave(
             'sine', frequency, np.ones(frame_rate), frame_rate
         )
         for frequency in frequencies
     ]
     sound = sum(waves)
-    sound_info = {
-        'frame_rate': frame_rate,
-        'fundamental_frequency': min(frequencies)
-    }
+    sound = np.vstack((sound, sound))
+    event = Event(
+        instrument='any_instrument',
+        start_time=0,
+        duration=1,
+        frequency=min(frequencies),
+        velocity=1,
+        effects='',
+        frame_rate=frame_rate
+    )
     sound = apply_filter_sweep(
-        sound, sound_info, kind, bands, invert, order, frequency, waveform
+        sound, event, kind, bands, invert, order, frequency, waveform
     )
     spc = spectrogram(sound[0], frame_rate, **spectrogram_params)[2]
     result = spc.sum(axis=1)[:len(expected)]
@@ -176,11 +183,20 @@ def test_apply_filter_sweep(
 )
 def test_apply_phaser(frequency: float, frame_rate: int, kind: str) -> None:
     """Test that `apply_phaser` function runs without failures."""
-    sound = generate_stereo_wave(
+    sound = generate_mono_wave(
         'sine', frequency, np.ones(frame_rate), frame_rate
     )
-    sound_info = {'frame_rate': frame_rate, 'fundamental_frequency': frequency}
-    result = apply_phaser(sound, sound_info, kind)
+    sound = np.vstack((sound, sound))
+    event = Event(
+        instrument='any_instrument',
+        start_time=0,
+        duration=1,
+        frequency=frequency,
+        velocity=1,
+        effects='',
+        frame_rate=frame_rate
+    )
+    result = apply_phaser(sound, event, kind)
     assert np.all(np.isfinite(result))
 
 

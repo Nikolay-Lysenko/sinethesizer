@@ -7,15 +7,13 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict
-
 import numpy as np
 
 from sinethesizer.utils.waves import generate_mono_wave
 
 
 def apply_absolute_vibrato(
-        sound: np.ndarray, sound_info: Dict[str, Any],
+        sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         frequency: float = 4, width: float = 0.2,
         waveform: str = 'sine'
 ) -> np.ndarray:
@@ -24,9 +22,8 @@ def apply_absolute_vibrato(
 
     :param sound:
         sound to be modified
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param event:
+        parameters of sound event for which this function is called
     :param frequency:
         frequency of sound's frequency oscillations (in Hz)
     :param width:
@@ -48,10 +45,9 @@ def apply_absolute_vibrato(
         / ((highest_to_lowest_ratio + 1) * 2 * np.pi * frequency)
     )
 
-    frame_rate = sound_info['frame_rate']
-    amplitudes = max_delay * frame_rate * np.ones(sound.shape[1])
+    amplitude_envelope = max_delay * event.frame_rate * np.ones(sound.shape[1])
     frequency_wave = generate_mono_wave(
-        waveform, frequency, amplitudes, frame_rate
+        waveform, frequency, amplitude_envelope, event.frame_rate
     )
     time_indices = np.ones(sound.shape[1]).cumsum() - 1 + frequency_wave
 
@@ -69,7 +65,7 @@ def apply_absolute_vibrato(
 
 
 def apply_relative_vibrato(
-        sound: np.ndarray, sound_info: Dict[str, Any],
+        sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         frequency_ratio: float = 0.05, width: float = 0.2,
         waveform: str = 'sine'
 ) -> np.ndarray:
@@ -78,9 +74,8 @@ def apply_relative_vibrato(
 
     :param sound:
         sound to be modified
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param event:
+        parameters of sound event for which this function is called
     :param frequency_ratio:
         frequency of sound's frequency oscillations as ratio
         to fundamental frequency
@@ -92,34 +87,31 @@ def apply_relative_vibrato(
     :return:
         sound with vibrating frequency
     """
-    frequency = frequency_ratio * sound_info['fundamental_frequency']
-    sound = apply_absolute_vibrato(
-        sound, sound_info, frequency, width, waveform
-    )
+    frequency = frequency_ratio * event.frequency
+    sound = apply_absolute_vibrato(sound, event, frequency, width, waveform)
     return sound
 
 
 def apply_vibrato(
-        sound: np.ndarray, sound_info: Dict[str, Any], kind: str = 'absolute',
-        *args, **kwargs
+        sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
+        kind: str = 'absolute', *args, **kwargs
 ) -> np.ndarray:
     """
     Make sound frequency (i.e., pitch) vibrating.
 
     :param sound:
         sound to be modified
-    :param sound_info:
-        information about `sound` variable such as number of frames per second
-        and its fundamental frequency (if it exists)
+    :param event:
+        parameters of sound event for which this function is called
     :param kind:
         kind of filter; supported values are 'absolute' and 'relative'
     :return:
         sound with vibrating pitch
     """
     if kind == 'absolute':
-        sound = apply_absolute_vibrato(sound, sound_info, *args, **kwargs)
+        sound = apply_absolute_vibrato(sound, event, *args, **kwargs)
     elif kind == 'relative':
-        sound = apply_relative_vibrato(sound, sound_info, *args, **kwargs)
+        sound = apply_relative_vibrato(sound, event, *args, **kwargs)
     else:
         raise ValueError(
             f"Kind must be either 'absolute' or 'relative', but found: {kind}"
