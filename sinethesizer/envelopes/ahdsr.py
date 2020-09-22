@@ -100,9 +100,7 @@ def generic_ahdsr(
         floor(max_attack_duration * frame_rate)
     )
     if n_frames_with_attack > 0:
-        step = 1 / n_frames_with_attack
-        xs = np.arange(1, 0, -step)
-        xs = np.clip(xs, 0, None)
+        xs = np.linspace(1, 0, n_frames_with_attack)
         attack = 1 - xs ** attack_degree
     else:
         attack = np.array([])
@@ -120,8 +118,7 @@ def generic_ahdsr(
         floor(max_decay_duration * frame_rate)
     )
     if n_frames_with_decay > 0:
-        step = 1 / n_frames_with_decay
-        xs = np.arange(0, 1, step)
+        xs = np.linspace(0, 1, n_frames_with_decay)
         decay = 1 - (1 - sustain_level) * xs ** decay_degree
     else:
         decay = np.array([])
@@ -140,10 +137,8 @@ def generic_ahdsr(
     release_duration = release_ratio * max_release_duration
     n_frames_with_release = floor(release_duration * frame_rate)
     if n_frames_with_release > 0:
-        step = 1 / n_frames_with_release
-        xs = np.arange(0, 1, step)
+        xs = np.linspace(0, 1, n_frames_with_release)
         release = sustain_level * (1 - xs ** release_degree)
-        release = release[:n_frames_with_release]
     else:
         release = np.array([])
 
@@ -231,9 +226,7 @@ def relative_ahdsr(
         attack_to_ahds_ratio * ahds_duration_in_frames
     )
     if n_frames_with_attack > 0:
-        step = 1 / n_frames_with_attack
-        xs = np.arange(1, 0, -step)
-        xs = np.clip(xs, 0, None)
+        xs = np.linspace(1, 0, n_frames_with_attack)
         attack = 1 - xs ** attack_degree
     else:
         attack = np.array([])
@@ -245,8 +238,7 @@ def relative_ahdsr(
         decay_to_ahds_ratio * ahds_duration_in_frames
     )
     if n_frames_with_decay > 0:
-        step = 1 / n_frames_with_decay
-        xs = np.arange(0, 1, step)
+        xs = np.linspace(0, 1, n_frames_with_decay)
         decay = 1 - (1 - sustain_level) * xs ** decay_degree
     else:
         decay = np.array([])
@@ -263,10 +255,8 @@ def relative_ahdsr(
     release_duration = release_ratio * max_release_duration
     n_frames_with_release = floor(release_duration * frame_rate)
     if n_frames_with_release > 0:
-        step = 1 / n_frames_with_release
-        xs = np.arange(0, 1, step)
+        xs = np.linspace(0, 1, n_frames_with_release)
         release = sustain_level * (1 - xs ** release_degree)
-        release = release[:n_frames_with_release]
     else:
         release = np.array([])
 

@@ -36,8 +36,7 @@ def oscillate_between_sounds(
     :return:
         sound composed from input sounds
     """
-    step = 2 / (sounds.shape[0] - 1)
-    thresholds = np.arange(-1, 1 + 1e-7, step)
+    thresholds = np.linspace(-1, 1, sounds.shape[0])
     weights = np.tile(thresholds.reshape((-1, 1)), (1, sounds.shape[2]))
     wave = generate_mono_wave(
         waveform,
@@ -45,6 +44,7 @@ def oscillate_between_sounds(
         np.ones(sounds.shape[2]),
         frame_rate
     )
+    step = 2 / (sounds.shape[0] - 1)
     weights = (
         (1 - np.abs(weights - wave) / step) * (np.abs(weights - wave) < step)
     )
@@ -150,10 +150,9 @@ def apply_absolute_phaser(
     :return:
         phased sound
     """
-    step = (max_center - min_center) / n_bands
     bands = [
         (center - band_width / 2, center + band_width / 2)
-        for center in np.arange(min_center, max_center + 1e-7, step)
+        for center in np.linspace(min_center, max_center, n_bands)
     ]
     invert = not wahwah
     filtered_sound = apply_filter_sweep(

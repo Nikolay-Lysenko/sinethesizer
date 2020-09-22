@@ -46,11 +46,17 @@ from sinethesizer.synth.core import Event
             0.3,  # `ratio_at_zero_velocity`
             1.0,  # `envelope_values_on_velocity_order`
             np.array([
-                0, 0.25, 0.5, 0.75,
+                # Attack
+                0, 1 / 3, 2 / 3, 1.0,
+                # Hold
                 1.0,
-                1.0, 0.9, 0.8, 0.7, 0.6,
-                0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
-                0.6, 0.525, 0.45, 0.375, 0.3, 0.225, 0.15, 0.075
+                # Decay
+                1.0, 1 - 0.4 / 3, 1 - 0.8 / 3, 0.6,
+                # Sustain
+                0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
+                # Release
+                0.6, 6 / 7 * 0.6, 5 / 7 * 0.6, 4 / 7 * 0.6, 3 / 7 * 0.6,
+                2 / 7 * 0.6, 1 / 7 * 0.6, 0.0
             ])
         ),
         (
@@ -74,11 +80,16 @@ from sinethesizer.synth.core import Event
             0.3,  # `ratio_at_zero_velocity`
             1.0,  # `envelope_values_on_velocity_order`
             np.array([
-                0, 0.125, 0.25, 0.375,
+                # Attack
+                0, 1 / 6, 1 / 3, 0.5,
+                # Hold
                 0.5,
-                0.5, 0.45, 0.4, 0.35, 0.3,
-                0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3,
-                0.3, 0.225, 0.15, 0.075
+                # Decay
+                0.5, 0.5 - 0.2 / 3, 0.5 - 0.4 / 3, 0.3,
+                # Sustain
+                0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3,
+                # Release
+                0.3, 0.2, 0.1, 0.0
             ])
         ),
         (
@@ -102,11 +113,17 @@ from sinethesizer.synth.core import Event
             0.3,  # `ratio_at_zero_velocity`
             1.0,  # `envelope_values_on_velocity_order`
             np.array([
-                0, 0.125, 0.25, 0.375,
+                # Attack
+                0, 1 / 6, 1 / 3, 0.5,
+                # Hold
                 0.5,
-                0.5, 0.45, 0.4, 0.35, 0.3,
-                0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3,
-                0.3, 0.2625, 0.225, 0.1875, 0.15, 0.1125, 0.075, 0.0375
+                # Decay
+                0.5, 0.5 - 0.2 / 3, 0.5 - 0.4 / 3, 0.3,
+                # Sustain
+                0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3,
+                # Release
+                0.3, 6 / 7 * 0.3, 5 / 7 * 0.3, 4 / 7 * 0.3, 3 / 7 * 0.3,
+                2 / 7 * 0.3, 1 / 7 * 0.3, 0.0
             ])
         ),
         (
@@ -130,11 +147,17 @@ from sinethesizer.synth.core import Event
             0.3,  # `ratio_at_zero_velocity`
             1.0,  # `envelope_values_on_velocity_order`
             np.array([
-                0, 0.5, 1.0, 1.5,
+                # Attack
+                0, 2 / 3, 4 / 3, 2.0,
+                # Hold
                 2.0,
-                2.0, 1.8, 1.6, 1.4, 1.2,
-                1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2,
-                1.2, 1.05, 0.9, 0.75, 0.6, 0.45, 0.3, 0.15
+                # Decay
+                2.0, 2 - 0.8 / 3, 2 - 1.6 / 3, 1.2,
+                # Sustain
+                1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2,
+                # Release
+                1.2, 6 / 7 * 1.2, 5 / 7 * 1.2, 4 / 7 * 1.2, 3 / 7 * 1.2,
+                2 / 7 * 1.2, 1 / 7 * 1.2, 0.0
             ])
         ),
         (
@@ -151,23 +174,28 @@ from sinethesizer.synth.core import Event
             1.0,  # `decay_degree`
             0.6,  # `sustain_level`
             1.5,  # `max_sustain_duration`
-            1.0,  # `max_release_duration`
+            1.05,  # `max_release_duration`
             0.6,  # `release_duration_on_velocity_order`
             1.0,  # `release_degree`
             1.0,  # `peak_value`
             0.3,  # `ratio_at_zero_velocity`
             1.0,  # `envelope_values_on_velocity_order`
             np.array([
-                0, 0.2, 0.4, 0.6, 0.8,
-                1.0, 1.0 - 0.4 / 13, 1.0 - 2 * 0.4 / 13, 1.0 - 3 * 0.4 / 13,
-                1.0 - 4 * 0.4 / 13, 1.0 - 5 * 0.4 / 13, 1.0 - 6 * 0.4 / 13,
-                1.0 - 7 * 0.4 / 13, 1.0 - 8 * 0.4 / 13, 1.0 - 9 * 0.4 / 13,
-                1.0 - 10 * 0.4 / 13, 1.0 - 11 * 0.4 / 13, 1.0 - 12 * 0.4 / 13,
+                # Attack
+                0, 0.25, 0.5, 0.75, 1.0,
+                # No hold
+                # Decay
+                1.0, 1.0 - 0.1 / 3, 1.0 - 2 * 0.1 / 3, 1.0 - 3 * 0.1 / 3,
+                1.0 - 4 * 0.1 / 3, 1.0 - 5 * 0.1 / 3, 1.0 - 6 * 0.1 / 3,
+                1.0 - 7 * 0.1 / 3, 1.0 - 8 * 0.1 / 3, 1.0 - 9 * 0.1 / 3,
+                1.0 - 10 * 0.1 / 3, 1.0 - 11 * 0.1 / 3, 1.0 - 12 * 0.1 / 3,
+                # Sustain
                 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
                 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
                 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
+                # Release
                 0.6, 0.57, 0.54, 0.51, 0.48, 0.45, 0.42, 0.39, 0.36, 0.33,
-                0.3, 0.27, 0.24, 0.21, 0.18, 0.15, 0.12, 0.09, 0.06, 0.03
+                0.3, 0.27, 0.24, 0.21, 0.18, 0.15, 0.12, 0.09, 0.06, 0.03, 0.0
             ])
         ),
         (
@@ -191,9 +219,11 @@ from sinethesizer.synth.core import Event
             0.0,  # `ratio_at_zero_velocity`
             1.0,  # `envelope_values_on_velocity_order`
             np.array([
+                # Sustain
                 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3,
                 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3,
-                0.3, 0.2, 0.1
+                # Release
+                0.3, 0.15, 0.0
             ])
         ),
         (
@@ -217,6 +247,7 @@ from sinethesizer.synth.core import Event
             0.0,  # `ratio_at_zero_velocity`
             1.0,  # `envelope_values_on_velocity_order`
             np.array([
+                # Sustain
                 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,
                 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1
             ])
@@ -292,11 +323,16 @@ def test_generic_ahdsr(
             0.0,  # `ratio_at_zero_velocity`
             1.0,  # `envelope_values_on_velocity_order`
             np.array([
-                0, 0.5,
+                # Attack
+                0, 1.0,
+                # Hold
                 1.0, 1.0,
-                1.0, 0.8,
+                # Decay
+                1.0, 0.6,
+                # Sustain
                 0.6, 0.6, 0.6, 0.6,
-                0.6, 0.45, 0.3, 0.15
+                # Release
+                0.6, 0.4, 0.2, 0.0
             ])
         ),
         (
@@ -316,8 +352,10 @@ def test_generic_ahdsr(
             0.0,  # `ratio_at_zero_velocity`
             0.0,  # `envelope_values_on_velocity_order`
             np.array([
+                # Sustain
                 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
-                0.6, 0.48, 0.36, 0.24, 0.12
+                # Release
+                0.6, 0.45, 0.3, 0.15, 0.0
             ])
         ),
     ]
@@ -372,7 +410,14 @@ def test_relative_ahdsr(
             1.0,  # `peak_value`
             0.0,  # `ratio_at_zero_velocity`
             0.0,  # `envelope_values_on_velocity_order`
-            np.array([0, 0.5, 1, 1, 1, 1, 0.8, 0.6, 0.4, 0.2])
+            np.array([
+                # Attack
+                0, 1.0,
+                # Hold
+                1.0, 1.0, 1.0,
+                # Decay
+                1.0, 0.75, 0.5, 0.25, 0.0
+            ])
         ),
     ]
 )
