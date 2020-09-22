@@ -28,7 +28,10 @@ setup(
     author='Nikolay Lysenko',
     author_email='nikolay-lysenco@yandex.ru',
     license='MIT',
-    keywords='synthesizer additive_synthesis fm_synthesis sound_effects',
+    keywords=(
+        'synthesizer additive_synthesis subtractive_synthesis fm_synthesis '
+        'sound_effects adsr_envelope modulation_index filter_envelope'
+    ),
     packages=find_packages(),
     package_data={'sinethesizer': ['default_config.yml']},
     include_package_data=True,
