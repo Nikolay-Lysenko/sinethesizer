@@ -1,5 +1,5 @@
 """
-Make a difference between left and right channels.
+Make left and right channels different.
 
 Author: Nikolay Lysenko
 """
@@ -22,7 +22,7 @@ def apply_haas_effect(
     :param event:
         parameters of sound event for which this function is called
     :param location:
-        location of sound source;
+        location of sound source; a float between -1 and 1 where
         -1 stands for extremely left and 1 stands for extremely right
     :param max_channel_delay:
         maximum possible delay between channels in seconds;

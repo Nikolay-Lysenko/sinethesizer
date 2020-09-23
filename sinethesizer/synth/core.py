@@ -106,7 +106,7 @@ def adjust_envelope_duration(
     Set duration of envelope to a required value.
 
     :param envelope:
-        envelope to be trimmed or propagated
+        envelope to be trimmed or extended
     :param required_len:
         required duration of envelope (in frames)
     :return:
@@ -127,7 +127,7 @@ def generate_modulated_wave(
     Generate wave with modulated frequency.
 
     :param wave:
-        parameters of the wave to be generated
+        parameters of a wave to be generated
     :param frequency:
         fundamental frequency of a wave to be generated (in Hz)
     :param event:
@@ -270,7 +270,7 @@ class Instrument(NamedTuple):
         amplitude factor selected to prevent clipping by playing devices;
         set it to be less than inverse of sum of `amplitude_ratio` parameters
         over all partials (and, if applicable, take into account an increase in
-        partials' amplitudes due to their effects)
+        partials' amplitudes due to effects)
     :param effects:
         sound effects that should be applied to outputs of the instrument
     """

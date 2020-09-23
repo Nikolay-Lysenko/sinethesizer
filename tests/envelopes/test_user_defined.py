@@ -10,7 +10,7 @@ from typing import Any, Dict, List
 import numpy as np
 import pytest
 
-from sinethesizer.envelopes.user_defined import user_defined_envelope
+from sinethesizer.envelopes.user_defined import create_user_defined_envelope
 from sinethesizer.synth.core import Event
 
 
@@ -130,12 +130,12 @@ from sinethesizer.synth.core import Event
         ),
     ]
 )
-def test_user_defined_envelope(
+def test_create_user_defined_envelope(
         duration: float, velocity: float, frame_rate: int,
         parts: List[Dict[str, Any]], ratio_at_zero_velocity: float,
         envelope_values_on_velocity_order: float, expected: np.ndarray
 ) -> None:
-    """Test `user_defined_envelope` function."""
+    """Test `create_user_defined_envelope` function."""
     event = Event(
         instrument='any_instrument',
         start_time=0,
@@ -145,7 +145,7 @@ def test_user_defined_envelope(
         effects='',
         frame_rate=frame_rate
     )
-    result = user_defined_envelope(
+    result = create_user_defined_envelope(
         event, parts, ratio_at_zero_velocity, envelope_values_on_velocity_order
     )
     np.testing.assert_almost_equal(result, expected)

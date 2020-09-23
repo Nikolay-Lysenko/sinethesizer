@@ -20,7 +20,10 @@ from sinethesizer.synth.core import (
 from sinethesizer.synth.event_to_amplitude_factor import (
     compute_amplitude_factor_as_power_of_velocity
 )
-from sinethesizer.envelopes.ahdsr import generic_ahdsr, trapezoid
+from sinethesizer.envelopes.ahdsr import (
+    create_generic_ahdsr_envelope,
+    create_trapezoid_envelope
+)
 
 
 @pytest.mark.parametrize(
@@ -52,7 +55,7 @@ from sinethesizer.envelopes.ahdsr import generic_ahdsr, trapezoid
                             wave=ModulatedWave(
                                 waveform='sine',
                                 phase=0,
-                                amplitude_envelope_fn=trapezoid,
+                                amplitude_envelope_fn=create_trapezoid_envelope,
                                 modulator=None
                             ),
                             frequency_ratio=1.0,
@@ -125,14 +128,14 @@ from sinethesizer.envelopes.ahdsr import generic_ahdsr, trapezoid
                             wave=ModulatedWave(
                                 waveform='sine',
                                 phase=0,
-                                amplitude_envelope_fn=trapezoid,
+                                amplitude_envelope_fn=create_trapezoid_envelope,
                                 modulator=Modulator(
                                     waveform='sine',
                                     frequency_ratio_numerator=3,
                                     frequency_ratio_denominator=1,
                                     phase=0,
                                     modulation_index_envelope_fn=functools.partial(
-                                        generic_ahdsr,
+                                        create_generic_ahdsr_envelope,
                                         attack_to_ahds_max_ratio=0.1,
                                         max_attack_duration=0.05,
                                         attack_degree=2.0,

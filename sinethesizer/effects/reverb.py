@@ -113,7 +113,7 @@ def apply_reverb(
         diffusion_delay_random_range: float = 0.1,
         original_sound_gain: float = 0.8,
         reverberations_gain: float = 0.6,
-        keep_peak_volume: bool = False,
+        keep_peak_amplitude: bool = False,
         random_seed: Optional[int] = None
 ) -> np.ndarray:
     """
@@ -144,9 +144,10 @@ def apply_reverb(
     :param reverberations_gain:
         fraction of amplitude of reverberations sum that is kept
         in resulting sound
-    :param keep_peak_volume:
+    :param keep_peak_amplitude:
         if it is set to `True`, processed sound is rescaled to maintain its
-        original peak volume which is usually changed due to wave interference
+        original peak amplitude which is usually changed due to
+        wave interference
     :param random_seed:
         seed for pseudo-random number generator
     :return:
@@ -179,11 +180,11 @@ def apply_reverb(
         amplitude *= random_factor
         impulse_response[index] = amplitude
 
-    original_peak_volume = np.max(np.abs(sound))
+    original_peak_amplitude = np.max(np.abs(sound))
     sound = np.vstack((
         convolve(sound[0, :], impulse_response),
         convolve(sound[1, :], impulse_response)
     ))
-    if keep_peak_volume:
-        sound = original_peak_volume / np.max(np.abs(sound)) * sound
+    if keep_peak_amplitude:
+        sound = original_peak_amplitude / np.max(np.abs(sound)) * sound
     return sound

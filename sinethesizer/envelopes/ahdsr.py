@@ -10,7 +10,7 @@ from math import ceil, floor
 import numpy as np
 
 
-def generic_ahdsr(
+def create_generic_ahdsr_envelope(
         event: 'sinethesizer.synth.core.Event',
         attack_to_ahds_max_ratio: float = 0.2,
         max_attack_duration: float = 0.2,
@@ -60,8 +60,8 @@ def generic_ahdsr(
         greater than 1, decay is concave; if it is less than 1,
         decay is convex
     :param sustain_level:
-        volume level at sustain stage where 1 is the peak level
-        (i.e., level at the end of attack)
+        amplitude level at sustain stage; a float between 0 and 1 where 1 is
+        the peak level (i.e., level at the end of attack)
     :param max_sustain_duration:
         maximum duration of sustain in seconds
     :param max_release_duration:
@@ -149,7 +149,7 @@ def generic_ahdsr(
     return envelope
 
 
-def relative_ahdsr(
+def create_relative_ahdsr_envelope(
         event: 'sinethesizer.synth.core.Event',
         attack_to_ahds_ratio: float = 0.2,
         attack_degree: float = 1.0,
@@ -189,8 +189,8 @@ def relative_ahdsr(
         greater than 1, decay is concave; if it is less than 1,
         decay is convex
     :param sustain_level:
-        volume level at sustain stage where 1 is the peak level
-        (i.e., level at the end of attack)
+        amplitude level at sustain stage; a float between 0 and 1 where 1 is
+        the peak level (i.e., level at the end of attack)
     :param max_release_duration:
         maximum duration of release in seconds
     :param release_duration_on_velocity_order:
@@ -267,7 +267,7 @@ def relative_ahdsr(
     return envelope
 
 
-def trapezoid(
+def create_trapezoid_envelope(
         event: 'sinethesizer.synth.core.Event',
         attack_share: float = 0.2,
         attack_degree: float = 1.0,
@@ -313,7 +313,7 @@ def trapezoid(
     :return:
         envelope
     """
-    envelope = relative_ahdsr(
+    envelope = create_relative_ahdsr_envelope(
         event,
         attack_to_ahds_ratio=attack_share,
         attack_degree=attack_degree,

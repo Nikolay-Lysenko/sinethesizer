@@ -11,7 +11,7 @@ from typing import Any, Dict, List
 import pytest
 import numpy as np
 
-from sinethesizer.envelopes.misc import constant
+from sinethesizer.envelopes.misc import create_constant_envelope
 from sinethesizer.io.events_to_wav import (
     add_event_to_timeline, convert_events_to_timeline, write_timeline_to_wav
 )
@@ -49,7 +49,7 @@ from sinethesizer.synth.event_to_amplitude_factor import (
                                 waveform='sine',
                                 phase=0,
                                 amplitude_envelope_fn=functools.partial(
-                                    constant,
+                                    create_constant_envelope,
                                     value=1
                                 ),
                                 modulator=None
@@ -128,7 +128,7 @@ def test_add_event_to_timeline(
                                     waveform='sine',
                                     phase=0,
                                     amplitude_envelope_fn=functools.partial(
-                                        constant,
+                                        create_constant_envelope,
                                         value=1
                                     ),
                                     modulator=None

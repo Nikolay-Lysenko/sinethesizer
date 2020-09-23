@@ -19,7 +19,7 @@ def convert_midi_to_events(
         midi_path: str, settings: Dict[str, Any]
 ) -> List[Event]:
     """
-    Collect sound events (played notes) from a MIDI file.
+    Collect sound events (loosely speaking, played notes) from a MIDI file.
 
     :param midi_path:
         path to source MIDI file

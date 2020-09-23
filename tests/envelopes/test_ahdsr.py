@@ -9,7 +9,9 @@ import numpy as np
 import pytest
 
 from sinethesizer.envelopes.ahdsr import (
-    generic_ahdsr, relative_ahdsr, trapezoid
+    create_generic_ahdsr_envelope,
+    create_relative_ahdsr_envelope,
+    create_trapezoid_envelope
 )
 from sinethesizer.synth.core import Event
 
@@ -254,7 +256,7 @@ from sinethesizer.synth.core import Event
         ),
     ]
 )
-def test_generic_ahdsr(
+def test_create_generic_ahdsr_envelope(
         duration: float, velocity: float, frame_rate: int,
         attack_to_ahds_max_ratio: float,
         max_attack_duration: float,
@@ -274,7 +276,7 @@ def test_generic_ahdsr(
         envelope_values_on_velocity_order: float,
         expected: np.ndarray
 ) -> None:
-    """Test `generic_ahdsr` function."""
+    """Test `create_generic_ahdsr_envelope` function."""
     event = Event(
         instrument='any_instrument',
         start_time=0,
@@ -284,7 +286,7 @@ def test_generic_ahdsr(
         effects='',
         frame_rate=frame_rate
     )
-    result = generic_ahdsr(
+    result = create_generic_ahdsr_envelope(
         event,
         attack_to_ahds_max_ratio, max_attack_duration, attack_degree,
         hold_to_hds_max_ratio, max_hold_duration,
@@ -360,7 +362,7 @@ def test_generic_ahdsr(
         ),
     ]
 )
-def test_relative_ahdsr(
+def test_create_relative_ahdsr_envelope(
         duration: float, velocity: float, frame_rate: int,
         attack_to_ahds_ratio: float, attack_degree: float,
         hold_to_ahds_ratio: float,
@@ -372,7 +374,7 @@ def test_relative_ahdsr(
         envelope_values_on_velocity_order: float,
         expected: np.ndarray
 ) -> None:
-    """Test `relative_ahdsr` function."""
+    """Test `create_relative_ahdsr_envelope` function."""
     event = Event(
         instrument='any_instrument',
         start_time=0,
@@ -382,7 +384,7 @@ def test_relative_ahdsr(
         effects='',
         frame_rate=frame_rate
     )
-    result = relative_ahdsr(
+    result = create_relative_ahdsr_envelope(
         event,
         attack_to_ahds_ratio, attack_degree, hold_to_ahds_ratio,
         decay_to_ahds_ratio, decay_degree, sustain_level,
@@ -421,7 +423,7 @@ def test_relative_ahdsr(
         ),
     ]
 )
-def test_trapezoid(
+def test_create_trapezoid_envelope(
         duration: float, velocity: float, frame_rate: int,
         attack_share: float, attack_degree: float,
         decay_share: float, decay_degree: float,
@@ -429,7 +431,7 @@ def test_trapezoid(
         envelope_values_on_velocity_order: float,
         expected: np.ndarray
 ) -> None:
-    """Test `trapezoid` function."""
+    """Test `create_trapezoid_envelope` function."""
     event = Event(
         instrument='any_instrument',
         start_time=0,
@@ -439,7 +441,7 @@ def test_trapezoid(
         effects='',
         frame_rate=frame_rate
     )
-    result = trapezoid(
+    result = create_trapezoid_envelope(
         event,
         attack_share, attack_degree, decay_share, decay_degree,
         peak_value, ratio_at_zero_velocity, envelope_values_on_velocity_order

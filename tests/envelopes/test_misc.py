@@ -8,7 +8,7 @@ Author: Nikolay Lysenko
 import numpy as np
 import pytest
 
-from sinethesizer.envelopes.misc import constant
+from sinethesizer.envelopes.misc import create_constant_envelope
 from sinethesizer.synth.core import Event
 
 
@@ -18,10 +18,10 @@ from sinethesizer.synth.core import Event
         (0.5, 5, 3, np.array([3, 3, 3])),
     ]
 )
-def test_constant(
+def test_create_constant_envelope(
         duration: float, frame_rate: int, value: float, expected: np.ndarray
 ) -> None:
-    """Test `constant` function."""
+    """Test `create_constant_envelope` function."""
     event = Event(
         instrument='any_instrument',
         start_time=0.0,
@@ -31,5 +31,5 @@ def test_constant(
         effects='',
         frame_rate=frame_rate
     )
-    result = constant(event, value)
+    result = create_constant_envelope(event, value)
     np.testing.assert_equal(result, expected)

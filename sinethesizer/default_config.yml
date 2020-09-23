@@ -1,4 +1,4 @@
 # Number of frames per second.
 frame_rate: 44100
-# Duration of silence in seconds added to the end of a track.
+# Duration (in seconds) of silence added to the end of a track.
 trailing_silence: 2

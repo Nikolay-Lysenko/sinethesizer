@@ -48,14 +48,14 @@ def convert_tsv_to_events(
         input_path: str, settings: Dict[str, Any]
 ) -> np.ndarray:
     """
-    Create pressure timeline based on TSV file.
+    Collect sound events (loosely speaking, played notes) from a TSV file.
 
     :param input_path:
         path to TSV file with rows representing events
     :param settings:
         global settings for the track
     :return:
-        sound represented as pressure timeline
+        sound events
     """
     raw_events = []
     with open(input_path) as input_file:

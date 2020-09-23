@@ -10,7 +10,7 @@ from math import ceil
 import numpy as np
 
 
-def constant(
+def create_constant_envelope(
         event: 'sinethesizer.synth.core.Event', value: float
 ) -> np.ndarray:
     """

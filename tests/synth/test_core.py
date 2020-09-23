@@ -13,7 +13,7 @@ import numpy as np
 import pytest
 
 from sinethesizer.effects.stereo import apply_haas_effect
-from sinethesizer.envelopes.misc import constant
+from sinethesizer.envelopes.misc import create_constant_envelope
 from sinethesizer.synth.core import (
     Event, Instrument, ModulatedWave, Modulator, Partial,
     adjust_envelope_duration, generate_modulated_wave, generate_partial,
@@ -48,7 +48,10 @@ def test_adjust_envelope_duration(
             ModulatedWave(
                 waveform='sine',
                 phase=math.pi / 2,
-                amplitude_envelope_fn=functools.partial(constant, value=1),
+                amplitude_envelope_fn=functools.partial(
+                    create_constant_envelope,
+                    value=1
+                ),
                 modulator=None
             ),
             # `frequency`
@@ -84,14 +87,18 @@ def test_adjust_envelope_duration(
             ModulatedWave(
                 waveform='sine',
                 phase=math.pi / 2,
-                amplitude_envelope_fn=functools.partial(constant, value=1),
+                amplitude_envelope_fn=functools.partial(
+                    create_constant_envelope,
+                    value=1
+                ),
                 modulator=Modulator(
                     waveform='sine',
                     frequency_ratio_numerator=3,
                     frequency_ratio_denominator=2,
                     phase=0,
                     modulation_index_envelope_fn=functools.partial(
-                        constant, value=3
+                        create_constant_envelope,
+                        value=3
                     )
                 )
             ),
@@ -143,13 +150,17 @@ def test_generate_modulated_wave(
                 wave=ModulatedWave(
                     waveform='sine',
                     phase=0,
-                    amplitude_envelope_fn=functools.partial(constant, value=1),
+                    amplitude_envelope_fn=functools.partial(
+                        create_constant_envelope,
+                        value=1
+                    ),
                     modulator=None
                 ),
                 frequency_ratio=2.0,
                 amplitude_ratio=0.5,
                 event_to_amplitude_factor_fn=functools.partial(
-                    compute_amplitude_factor_as_power_of_velocity, power=1
+                    compute_amplitude_factor_as_power_of_velocity,
+                    power=1
                 ),
                 detuning_to_amplitude={0.0: 1.0},
                 random_detuning_range=0.0,
@@ -244,7 +255,7 @@ def test_sum_two_sounds(
                                 waveform='sine',
                                 phase=0,
                                 amplitude_envelope_fn=functools.partial(
-                                    constant,
+                                    create_constant_envelope,
                                     value=1
                                 ),
                                 modulator=None
@@ -296,7 +307,7 @@ def test_sum_two_sounds(
                                 waveform='sine',
                                 phase=0,
                                 amplitude_envelope_fn=functools.partial(
-                                    constant,
+                                    create_constant_envelope,
                                     value=1
                                 ),
                                 modulator=None

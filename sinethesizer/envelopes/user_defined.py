@@ -11,7 +11,7 @@ from typing import Any, Dict, List
 import numpy as np
 
 
-def user_defined_envelope(
+def create_user_defined_envelope(
         event: 'sinethesizer.synth.core.Event', parts: List[Dict[str, Any]],
         ratio_at_zero_velocity: float = 0,
         envelope_values_on_velocity_order: float = 0

@@ -26,7 +26,7 @@ def parse_cli_args() -> argparse.Namespace:
     :return:
         namespace with arguments
     """
-    parser = argparse.ArgumentParser(description='Virtual analog synthesizer')
+    parser = argparse.ArgumentParser(description='Standalone synthesizer')
     parser.add_argument(
         '-i', '--input_path', type=str, required=True,
         help='path to input TSV or MIDI file with a track to be played'
@@ -41,11 +41,12 @@ def parse_cli_args() -> argparse.Namespace:
     )
     parser.add_argument(
         '-m', '--instruments_mapping_path', type=str, default=None,
-        help='path to YAML file with instruments mapping from MIDI to '
+        help='path to YAML file where MIDI instruments are mapped to '
+             'instruments from the presets'
     )
     parser.add_argument(
         '-c', '--config_path', type=str, default=None,
-        help='path to configuration file'
+        help='path to configuration file with general settings'
     )
     cli_args = parser.parse_args()
     return cli_args
@@ -74,7 +75,7 @@ def main():
         events = convert_midi_to_events(cli_args.input_path, settings)
     else:
         raise ValueError(
-            "Only input file with extensions tsv, midi, and mid are "
+            "Only input files with extensions tsv, midi, and mid are "
             f"allowed, but found: {extension}."
         )
 
