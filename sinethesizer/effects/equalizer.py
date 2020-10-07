@@ -34,7 +34,7 @@ def equalize_with_absolute_frequencies(
     """
     nyquist_frequency = 0.5 * event.frame_rate
     breakpoint_frequencies = [
-        x / nyquist_frequency for x in breakpoint_frequencies
+        min(x / nyquist_frequency, 1 - 1e-7) for x in breakpoint_frequencies
     ]
     gains = [x for x in gains]  # Copy it to prevent modifying original list.
     if breakpoint_frequencies[0] != 0:
