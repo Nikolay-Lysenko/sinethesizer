@@ -46,7 +46,7 @@ def set_types(events: List[Dict[str, str]]) -> List[Dict[str, Any]]:
 
 def convert_tsv_to_events(
         input_path: str, settings: Dict[str, Any]
-) -> np.ndarray:
+) -> List[Event]:
     """
     Collect sound events (loosely speaking, played notes) from a TSV file.
 
