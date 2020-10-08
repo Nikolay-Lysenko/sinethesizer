@@ -17,7 +17,8 @@ NAME_TO_WAVEFORM = {
     'sine': np.sin,
     'square': scipy.signal.square,
     'triangle': partial(scipy.signal.sawtooth, width=0.5),
-    'sawtooth': scipy.signal.sawtooth
+    'sawtooth': scipy.signal.sawtooth,
+    'white_noise': lambda array: np.random.normal(0, 1, array.shape),
 }
 
 
@@ -30,8 +31,8 @@ def generate_mono_wave(
     Generate wave with exactly one channel.
 
     :param waveform:
-        form of wave;
-        it can be one of 'sine', 'square', 'triangle', and 'sawtooth'
+        form of wave; it can be one of 'sine', 'square', 'triangle',
+        'sawtooth', and 'white_noise'
     :param frequency:
         frequency of wave (in Hz)
     :param amplitude_envelope:

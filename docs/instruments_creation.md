@@ -24,7 +24,7 @@ Further, each wave has these parameters:
 
 Parameter | Description
 :-------: | :---------:
-waveform | Form of wave; one of 'sine', 'square', 'triangle', and 'sawtooth'
+waveform | Form of wave; one of 'sine', 'square', 'triangle', 'sawtooth', and 'white_noise'
 phase | Phase shift of a wave (in radians); this field is optional
 amplitude_envelope_fn | [Function](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/sinethesizer/envelopes/registry.py) that takes parameters such as duration, velocity, and frame rate as inputs and returns amplitude [envelope](https://en.wikipedia.org/wiki/Envelope_(music)) of output wave
 modulator | Parameters of a wave that modulates frequency of original wave (see below); this field is optional
@@ -33,7 +33,7 @@ Finally, modulator is defined by these arguments:
 
 Parameter | Description
 :-------: | :---------:
-waveform | Form of wave; one of 'sine', 'square', 'triangle', and 'sawtooth'
+waveform | Form of wave; one of 'sine', 'square', 'triangle', 'sawtooth', and 'white_noise'
 frequency_ratio_numerator | Numerator in ratio of modulating wave frequency to that of a modulated wave
 frequency_ratio_denominator | Denominator in ratio of modulating wave frequency to that of a modulated wave
 phase | Phase shift of a wave (in radians); this field is optional

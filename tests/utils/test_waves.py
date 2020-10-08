@@ -142,3 +142,17 @@ def test_generate_mono_wave(
         waveform, frequency, amplitude_envelope, frame_rate, phase, modulator
     )
     np.testing.assert_almost_equal(result, expected)
+
+
+@pytest.mark.parametrize(
+    "amplitude_envelope,expected_len",
+    [
+        (np.array([1, 1, 1, 1]), 4)
+    ]
+)
+def test_generate_mono_wave_with_white_noise(
+        amplitude_envelope: np.ndarray, expected_len: int
+) -> None:
+    """Test `generate_mono_wave` function with white noise."""
+    result = generate_mono_wave('white_noise', 440, amplitude_envelope, 8)
+    assert len(result) == expected_len
