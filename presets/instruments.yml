@@ -1,15 +1,81 @@
 ---
 
-- name: lead
+- name: sawtooth_with_filter_envelope
+  partials:
+    - wave:
+        waveform: sawtooth
+        phase: 0.0
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.3
+          max_attack_duration: 0.5
+          attack_degree: 0.5
+          hold_to_hds_max_ratio: 0.05
+          max_hold_duration: 0.05
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 2.0
+          sustain_level: 0.5
+          max_sustain_duration: 0.0
+          max_release_duration: 0.2
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.5
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.0
+      detuning_to_amplitude:
+        -0.2: 0.1
+        -0.1: 0.15
+        0: 0.5
+        0.1: 0.15
+        0.2: 0.1
+      random_detuning_range: 0.003
+      effects:
+        - name: automation
+          automated_effect_name: filter
+          kind: relative_wrt_velocity
+          order: 2
+          max_frequency_ratio_on_velocity_order: 1.0
+          break_points:
+            - relative_position: 0.0
+              max_frequency_ratio_at_zero_velocity: 2
+              max_frequency_ratio_at_max_velocity: 3
+            - relative_position: 0.15
+              max_frequency_ratio_at_zero_velocity: 3
+              max_frequency_ratio_at_max_velocity: 7
+            - relative_position: 0.3
+              max_frequency_ratio_at_zero_velocity: 4
+              max_frequency_ratio_at_max_velocity: 10
+            - relative_position: 0.65
+              max_frequency_ratio_at_zero_velocity: 3
+              max_frequency_ratio_at_max_velocity: 7
+            - relative_position: 1.0
+              max_frequency_ratio_at_zero_velocity: 2
+              max_frequency_ratio_at_max_velocity: 3
+  amplitude_scaling: 1.0
+  effects:
+    - name: equalizer
+      breakpoint_frequencies:
+        - 3000
+        - 10000
+        - 20000
+      gains:
+        - 1.0
+        - 0.5
+        - 0.0
+
+- name: fm_sine
   partials:
     - wave:
         waveform: sine
         phase: 0.0
         amplitude_envelope_fn:
           name: generic_ahdsr
-          attack_to_ahds_max_ratio: 0.3
-          max_attack_duration: 0.3
-          attack_degree: 0.5
+          attack_to_ahds_max_ratio: 0.4
+          max_attack_duration: 0.4
+          attack_degree: 1.5
           hold_to_hds_max_ratio: 0.05
           max_hold_duration: 0.05
           decay_to_ds_max_ratio: 1.0
@@ -35,13 +101,13 @@
             decay_to_ds_max_ratio: 1.0
             max_decay_duration: 5.0
             decay_degree: 0.75
-            sustain_level: 0.5
+            sustain_level: 0.4
             max_sustain_duration: 0.0
             max_release_duration: 0.0
             release_duration_on_velocity_order: 0.0
             release_degree: 1.0
             peak_value: 5.0
-            ratio_at_zero_velocity: 0.5
+            ratio_at_zero_velocity: 0.33
             envelope_values_on_velocity_order: 0.5
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
@@ -49,11 +115,13 @@
         name: power_fn_of_velocity
         power: 1.0
       detuning_to_amplitude:
-        -0.1: 0.25
+        -0.2: 0.05
+        -0.1: 0.2
         0: 0.5
-        0.1: 0.25
+        0.1: 0.2
+        0.2: 0.05
       random_detuning_range: 0.003
-  amplitude_scaling: 1.0
+  amplitude_scaling: 0.8
   effects:
     - name: equalizer
       breakpoint_frequencies:
