@@ -100,6 +100,74 @@ from sinethesizer.utils.waves import generate_mono_wave
                 ),
             ]
         ),
+        (
+            # `frequencies`
+            [100],
+            # `frame_rate`
+            10000,
+            # `automated_effect_name`
+            'panning',
+            # `break_points`
+            [
+                {
+                    'relative_position': 0,
+                    'left_volume_ratio': 1.0,
+                    'right_volume_ratio': 1.0,
+                },
+                {
+                    'relative_position': 0.25,
+                    'left_volume_ratio': 0.25,
+                    'right_volume_ratio': 1.0,
+                },
+                {
+                    'relative_position': 0.5,
+                    'left_volume_ratio': 0.5,
+                    'right_volume_ratio': 1.0,
+                },
+                {
+                    'relative_position': 1,
+                    'left_volume_ratio': 1.0,
+                    'right_volume_ratio': 1.0,
+                },
+            ],
+            # `spectrogram_params`
+            {'nperseg': 100},
+            # `expected`
+            # In this test case, two integer numbers define start and end
+            # segments of spectrogram and the array contains summed over time
+            # power for frequencies 0, 100, 200, ..., 1900 respectively for
+            # spectrogram segments between the start and the end.
+            [
+                (
+                    0,
+                    5,
+                    np.array([
+                        0.0003073, 0.0208728, 0.0004687, 0.0003312, 0.0001999
+                    ])
+                ),
+                (
+                    26,
+                    31,
+                    np.array([
+                        0.00003104, 0.0016946, 0.0000454, 0.00003239, 0.0000193
+                    ])
+                ),
+                (
+                    52,
+                    57,
+                    np.array([
+                        0.0001143, 0.00510456, 0.0001717, 0.00011839, 0.0000688
+                    ])
+                ),
+                (
+                    90,
+                    95,
+                    np.array([
+                        0.0003272, 0.0147043, 0.0004909, 0.0003388, 0.0001971
+                    ])
+                ),
+            ]
+        ),
     ]
 )
 def test_apply_automated_effect(
@@ -134,4 +202,3 @@ def test_apply_automated_effect(
         spc_slice = spc[:len(expected_distribution), start_segment:end_segment]
         result = spc_slice.sum(axis=1)
         np.testing.assert_almost_equal(result, expected_distribution)
-

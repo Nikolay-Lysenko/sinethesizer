@@ -80,7 +80,7 @@ def apply_automated_effect(
     effect_fn = REGISTRY_OF_AUTOMATABLE_EFFECTS[automated_effect_name]
     zipped = zip(indices, indices[1:], indices[2:], effects_params)
     for start_index, center_index, end_index, effect_params in zipped:
-        fragment = sound[:, start_index:end_index]
+        fragment = np.copy(sound[:, start_index:end_index])
         processed_fragment = effect_fn(
             fragment, event, **effect_params, **kwargs
         )
