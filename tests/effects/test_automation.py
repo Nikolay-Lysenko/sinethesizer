@@ -135,7 +135,7 @@ from sinethesizer.utils.waves import generate_mono_wave
             # `expected`
             # In this test case, two integer numbers define start and end
             # segments of spectrogram and the array contains summed over time
-            # power for frequencies 0, 100, 200, ..., 1900 respectively for
+            # power for frequencies 0, 100, 200, 300, and 400 respectively for
             # spectrogram segments between the start and the end.
             [
                 (
