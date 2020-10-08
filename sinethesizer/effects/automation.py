@@ -37,7 +37,8 @@ REGISTRY_OF_AUTOMATABLE_EFFECTS = {
 
 def apply_automated_effect(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        automated_effect_name: str, break_points: List[Dict[str, Any]]
+        automated_effect_name: str, break_points: List[Dict[str, Any]],
+        **kwargs
 ) -> np.ndarray:
     """
     Apply an effect with settings changing over time.
@@ -80,7 +81,9 @@ def apply_automated_effect(
     zipped = zip(indices, indices[1:], indices[2:], effects_params)
     for start_index, center_index, end_index, effect_params in zipped:
         fragment = sound[:, start_index:end_index]
-        processed_fragment = effect_fn(fragment, event, **effect_params)
+        processed_fragment = effect_fn(
+            fragment, event, **effect_params, **kwargs
+        )
         if center_index - start_index > 0:
             asc_weights = np.linspace(0, 1, center_index - start_index, False)
         else:
