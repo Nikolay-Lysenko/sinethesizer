@@ -89,7 +89,7 @@ def apply_automated_effect(
         else:
             asc_weights = np.array([])
         if end_index - center_index > 0:
-            desc_weights = np.linspace(1, 0, end_index - center_index)
+            desc_weights = np.linspace(1, 0, end_index - center_index, False)
         else:
             desc_weights = np.array([])
         weights = np.hstack((asc_weights, desc_weights))
