@@ -18,6 +18,7 @@ from sinethesizer.effects.reverb import apply_reverb
 from sinethesizer.effects.stereo import apply_haas_effect, apply_panning
 from sinethesizer.effects.tremolo import apply_tremolo
 from sinethesizer.effects.vibrato import apply_vibrato
+from sinethesizer.effects.volume import apply_amplitude_normalization
 
 
 EFFECT_FN_TYPE = Callable[
@@ -34,6 +35,7 @@ def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
         registry of effects
     """
     registry = {
+        'amplitude_normalization': apply_amplitude_normalization,
         'automation': apply_automated_effect,
         'equalizer': apply_equalizer,
         'filter': apply_frequency_filter,

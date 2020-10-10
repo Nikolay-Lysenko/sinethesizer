@@ -19,9 +19,11 @@ from sinethesizer.effects.reverb import apply_reverb
 from sinethesizer.effects.stereo import apply_haas_effect, apply_panning
 from sinethesizer.effects.tremolo import apply_tremolo
 from sinethesizer.effects.vibrato import apply_vibrato
+from sinethesizer.effects.volume import apply_amplitude_normalization
 
 
 REGISTRY_OF_AUTOMATABLE_EFFECTS = {
+    'amplitude_normalization': apply_amplitude_normalization,
     'equalizer': apply_equalizer,
     'filter': apply_frequency_filter,
     'filter_sweep': apply_filter_sweep,
