@@ -197,3 +197,39 @@
         - 1.0
         - 0.5
         - 0.0
+
+- name: filtered_noise
+  partials:
+    - wave:
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: trapezoid
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.0
+      detuning_to_amplitude:
+        0.0: 1.0
+      random_detuning_range: 0.0
+      effects:
+        - name: filter_sweep
+          kind: relative
+          bands:
+            - [0.95, 1.0526]
+            - [0.9475, 1.0554]
+          frequency: 5
+          order: 3
+        - name: automation
+          automated_effect_name: amplitude_normalization
+          break_points:
+            - relative_position: 0.0
+              value_at_max_velocity: 0.95
+              value_on_velocity_order: 1.0
+            - relative_position: 0.9
+              value_at_max_velocity: 0.95
+              value_on_velocity_order: 1.0
+            - relative_position: 1.0  # Prevent snaps that are byproducts of filtering.
+              value_at_max_velocity: 0.0
+              value_on_velocity_order: 1.0
+  amplitude_scaling: 1.0
