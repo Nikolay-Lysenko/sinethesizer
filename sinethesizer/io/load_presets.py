@@ -6,7 +6,9 @@ Author: Nikolay Lysenko
 
 
 import functools
-from typing import Any, Dict, List, Optional
+import warnings
+from math import gcd
+from typing import Any, Dict, List, Optional, Tuple
 
 import yaml
 
@@ -94,14 +96,52 @@ def convert_modulator(
         return None
     modulator = Modulator(
         waveform=modulator_data['waveform'],
-        frequency_ratio_numerator=modulator_data['frequency_ratio_numerator'],
-        frequency_ratio_denominator=modulator_data['frequency_ratio_denominator'],
+        carrier_frequency_ratio=modulator_data['carrier_frequency_ratio'],
+        modulator_frequency_ratio=modulator_data['modulator_frequency_ratio'],
         phase=modulator_data.get('phase', 0),
         modulation_index_envelope_fn=create_envelope_fn(
             modulator_data['modulation_index_envelope_fn']
         )
     )
     return modulator
+
+
+def compute_frequency_ratios(
+        modulator_data: Dict[str, Any]
+) -> Tuple[float, float]:
+    """
+    Compute ratios of carrier and modulator frequencies to that of fundamental.
+
+    :param modulator_data:
+        parameters of modulating wave as dictionary
+    :return:
+        ratios of carrier and modulator frequencies to that of fundamental
+    """
+    numerator = modulator_data['frequency_ratio_numerator']
+    denominator = modulator_data['frequency_ratio_denominator']
+    divisor = gcd(numerator, denominator)
+    frequency_scaling = max(denominator, numerator) / divisor
+    # If above value is too high, scaled frequencies are above Nyquist
+    # frequency and so output is bad. Fortunately, absence of scaling
+    # works good in this case, because missing fundamental lies below
+    # audible range.
+    # However, if above value is neither low nor too high, there is no
+    # good option, because for high notes missing fundamental lies inside
+    # audible range, but scaled frequencies are above Nyquist frequency.
+    min_threshold = 10
+    max_threshold = 50
+    if frequency_scaling <= min_threshold:
+        carrier_frequency_ratio = denominator / divisor
+        modulator_frequency_ratio = numerator / divisor
+    else:
+        carrier_frequency_ratio = 1
+        modulator_frequency_ratio = numerator / denominator
+        if frequency_scaling <= max_threshold:  # pragma: no cover
+            warnings.warn(
+                'Problems with missing fundamental may happen.',
+                UserWarning
+            )
+    return carrier_frequency_ratio, modulator_frequency_ratio
 
 
 def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
@@ -113,13 +153,54 @@ def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
     :return:
         parameters of modulated wave as internal data structure
     """
+    am_enabled = 'amplitude_modulator' in wave_data.keys()
+    rm_enabled = 'ring_modulator' in wave_data.keys()
+    fm_enabled = 'frequency_modulator' in wave_data.keys()
+    pm_enabled = 'phase_modulator' in wave_data.keys()
+    if am_enabled and rm_enabled:
+        raise ValueError("Currently, a wave can not have both AM and RM.")
+    if fm_enabled and pm_enabled:
+        raise ValueError("Currently, a wave can not have both FM and PM.")
+
+    # The goal is to multiply frequency ratios for FM or PM by carrier
+    # frequency ratio for AM or RM (if it exists). It is needed, because
+    # output wave of FM or PM acts like carrier wave for AM or RM.
+    factor = 1
+    keys = [
+        'amplitude_modulator', 'ring_modulator',
+        'frequency_modulator', 'phase_modulator'
+    ]
+    enabledness = [am_enabled, rm_enabled, fm_enabled, pm_enabled]
+    for key, enabled in zip(keys, enabledness):
+        if not enabled:
+            continue
+        carrier_frequency_ratio, modulator_frequency_ratio = (
+            compute_frequency_ratios(wave_data[key])
+        )
+        carrier_frequency_ratio *= factor
+        modulator_frequency_ratio *= factor
+        factor = carrier_frequency_ratio
+        wave_data[key]['carrier_frequency_ratio'] = carrier_frequency_ratio
+        wave_data[key]['modulator_frequency_ratio'] = modulator_frequency_ratio
+
     modulated_wave = ModulatedWave(
         waveform=wave_data['waveform'],
         phase=wave_data.get('phase', 0),
         amplitude_envelope_fn=create_envelope_fn(
             wave_data['amplitude_envelope_fn']
         ),
-        modulator=convert_modulator(wave_data.get('modulator'))
+        frequency_modulator=convert_modulator(
+            wave_data.get('frequency_modulator')
+        ),
+        phase_modulator=convert_modulator(
+            wave_data.get('phase_modulator')
+        ),
+        amplitude_modulator=convert_modulator(
+            wave_data.get('amplitude_modulator')
+        ),
+        ring_modulator=convert_modulator(
+            wave_data.get('ring_modulator')
+        )
     )
     return modulated_wave
 

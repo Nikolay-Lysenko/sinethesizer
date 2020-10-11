@@ -7,7 +7,6 @@ Author: Nikolay Lysenko
 
 import json
 import random
-from math import gcd
 from typing import Dict, List, NamedTuple, Optional
 
 import numpy as np
@@ -54,16 +53,18 @@ class Event(NamedTuple):
 
 class Modulator(NamedTuple):
     """
-    Parameters of a wave that modulates frequency of another wave.
+    Parameters of a wave that modulates some property of another wave.
 
     :param waveform:
         form of a modulating wave
-    :param frequency_ratio_numerator:
-        numerator in ratio of modulating wave frequency to that of a
-        modulated wave
-    :param frequency_ratio_denominator:
-        denominator in ratio of modulating wave frequency to that of a
-        modulated wave
+    :param carrier_frequency_ratio:
+        ratio of carrier frequency to fundamental frequency of output wave
+        produced with this modulator and, maybe, with other modulators of the
+        same wave
+    :param modulator_frequency_ratio:
+        ratio of modulator frequency to fundamental frequency of output wave
+        produced with this modulator and, maybe, with other modulators of the
+        same wave
     :param phase:
         phase shift of a modulating wave (in radians)
     :param modulation_index_envelope_fn:
@@ -72,15 +73,15 @@ class Modulator(NamedTuple):
         wave (this envelope is known as modulation index envelope)
     """
     waveform: str
-    frequency_ratio_numerator: int
-    frequency_ratio_denominator: int
+    carrier_frequency_ratio: float
+    modulator_frequency_ratio: float
     phase: float
     modulation_index_envelope_fn: ENVELOPE_FN_TYPE
 
 
 class ModulatedWave(NamedTuple):
     """
-    Parameters of a wave with modulated frequency.
+    Parameters of a wave with various types of modulation.
 
     :param waveform:
         form of a modulated wave (so called carrier)
@@ -89,14 +90,27 @@ class ModulatedWave(NamedTuple):
     :param amplitude_envelope_fn:
         function that takes parameters such as duration, velocity, and
         frame rate as inputs and returns amplitude envelope of output wave
-    :param modulator:
-        parameters of a modulating wave; if it is `None`, frequency is not
-        modulated
+        (before amplitude modulation and ring modulation)
+    :param amplitude_modulator:
+        parameters of an amplitude modulating wave;
+        if it is not `None`, `ring_modulator` must be `None`
+    :param ring_modulator:
+        parameters of a modulating wave for ring modulation;
+        if it is not `None`, `amplitude_modulator` must be `None`
+    :param frequency_modulator:
+        parameters of a frequency modulating wave;
+        if it is not `None`, `phase_modulator` must be `None`
+    :param phase_modulator:
+        parameters of a phase modulating wave;
+        if it is not `None`, `frequency_modulator` must be `None`
     """
     waveform: str
     phase: float
     amplitude_envelope_fn: ENVELOPE_FN_TYPE
-    modulator: Optional[Modulator]
+    amplitude_modulator: Optional[Modulator]
+    ring_modulator: Optional[Modulator]
+    frequency_modulator: Optional[Modulator]
+    phase_modulator: Optional[Modulator]
 
 
 def adjust_envelope_duration(
@@ -136,26 +150,31 @@ def generate_modulated_wave(
         wave with modulated frequency
     """
     amplitude_envelope = wave.amplitude_envelope_fn(event)
-    if wave.modulator is None:
-        modulator = None
-        carrier_frequency = frequency
-    else:
-        numerator = wave.modulator.frequency_ratio_numerator
-        denominator = wave.modulator.frequency_ratio_denominator
-        divisor = gcd(numerator, denominator)
-        carrier_frequency = (denominator / divisor) * frequency
-        modulator_frequency = (numerator / divisor) * frequency
-        index_envelope = wave.modulator.modulation_index_envelope_fn(event)
-        index_envelope = adjust_envelope_duration(
-            index_envelope, len(amplitude_envelope)
-        )
-        modulator = generate_mono_wave(
-            wave.modulator.waveform,
-            modulator_frequency,
-            index_envelope,
-            event.frame_rate,
-            wave.modulator.phase
-        )
+    n_frames = len(amplitude_envelope)
+
+    carrier_frequency = frequency
+    modulators_as_params = [
+        wave.amplitude_modulator, wave.ring_modulator,
+        wave.frequency_modulator, wave.phase_modulator
+    ]
+    modulators_as_arrays = []
+    for params in modulators_as_params:
+        modulator_as_array = None
+        if params is not None:
+            # NB: `carrier_frequency` is overridden below,
+            # so order in `modulators_as_params` matters.
+            carrier_frequency = params.carrier_frequency_ratio * frequency
+            modulator_frequency = params.modulator_frequency_ratio * frequency
+            index_envelope = params.modulation_index_envelope_fn(event)
+            index_envelope = adjust_envelope_duration(index_envelope, n_frames)
+            modulator_as_array = generate_mono_wave(
+                params.waveform,
+                modulator_frequency,
+                index_envelope,
+                event.frame_rate,
+                params.phase
+            )
+        modulators_as_arrays.append(modulator_as_array)
 
     result = generate_mono_wave(
         wave.waveform,
@@ -163,7 +182,7 @@ def generate_modulated_wave(
         amplitude_envelope,
         event.frame_rate,
         wave.phase,
-        modulator
+        *modulators_as_arrays
     )
 
     result = np.vstack((result, result))  # Two channels for stereo sound.

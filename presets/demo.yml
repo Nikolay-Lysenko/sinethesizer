@@ -179,7 +179,8 @@
         waveform: sine
         amplitude_envelope_fn:
           name: trapezoid
-        modulator:
+        # Also, `frequency_modulator`, `amplitude_modulator`, and `ring_modulator` can be set.
+        phase_modulator:
           waveform: sine
           frequency_ratio_numerator: 3
           frequency_ratio_denominator: 1
