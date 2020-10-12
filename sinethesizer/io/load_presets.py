@@ -240,9 +240,9 @@ def convert_partials(partials_data: List[Dict[str, Any]]) -> List[Partial]:
                 partial_data['event_to_amplitude_factor_fn']
             ),
             detuning_to_amplitude=norm_amplitudes_of_detuned_waves(
-                partial_data['detuning_to_amplitude']
+                partial_data.get('detuning_to_amplitude', {0: 1})
             ),
-            random_detuning_range=partial_data['random_detuning_range'],
+            random_detuning_range=partial_data.get('random_detuning_range', 0),
             effects=create_list_of_effect_fns(partial_data.get('effects', []))
         )
         partials.append(partial)

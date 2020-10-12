@@ -209,9 +209,6 @@
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.0
-      detuning_to_amplitude:
-        0.0: 1.0
-      random_detuning_range: 0.0
       effects:
         - name: filter_sweep
           kind: relative

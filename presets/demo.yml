@@ -13,9 +13,6 @@
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.0
-      detuning_to_amplitude:
-        0.0: 1.0
-      random_detuning_range: 0.0
   amplitude_scaling: 1.0
 
 # It is a richer sine wave.
@@ -51,8 +48,6 @@
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.0
-      detuning_to_amplitude:
-        0.0: 1.0
       random_detuning_range: 0.005
     - wave:
         waveform: sine
@@ -63,8 +58,6 @@
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.1  # The lower velocity is, the more quiet than fundamental this partial is.
-      detuning_to_amplitude:
-        0.0: 1.0
       random_detuning_range: 0.005
     - wave:
         waveform: sine
@@ -75,8 +68,6 @@
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.15  # This partial depends on velocity even stronger than the previous one.
-      detuning_to_amplitude:
-        0.0: 1.0
       random_detuning_range: 0.005
   amplitude_scaling: 0.5714  # Inverse of sum of `amplitude_ratio` over all partials.
   effects:
@@ -103,8 +94,6 @@
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.0
-      detuning_to_amplitude:
-        0.0: 1.0
       random_detuning_range: 0.005
       effects:
         - name: filter
@@ -133,8 +122,6 @@
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.0
-      detuning_to_amplitude:
-        0.0: 1.0
       random_detuning_range: 0.005
       effects:
         - name: automation
@@ -207,8 +194,6 @@
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.0
-      detuning_to_amplitude:
-        0.0: 1.0
       random_detuning_range: 0.005
   amplitude_scaling: 1.0
   effects:
@@ -261,7 +246,4 @@
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.0
-      detuning_to_amplitude:
-        0.0: 1.0
-      random_detuning_range: 0.0
   amplitude_scaling: 1.0
