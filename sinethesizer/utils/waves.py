@@ -1,16 +1,17 @@
 """
-Generate basic periodic waves with modulations.
+Generate basic waves with modulations.
 
 Author: Nikolay Lysenko
 """
 
 
-from typing import Optional
-
 from functools import partial
+from typing import Optional
 
 import numpy as np
 import scipy.signal
+
+from sinethesizer.utils.noise import generate_power_law_noise
 
 
 NAME_TO_WAVEFORM = {
@@ -18,7 +19,9 @@ NAME_TO_WAVEFORM = {
     'square': scipy.signal.square,
     'triangle': partial(scipy.signal.sawtooth, width=0.5),
     'sawtooth': scipy.signal.sawtooth,
-    'white_noise': lambda array: np.random.normal(0, 1, array.shape),
+    'white_noise': partial(generate_power_law_noise, psd_decay_order=0),
+    'pink_noise': partial(generate_power_law_noise, psd_decay_order=1),
+    'brown_noise': partial(generate_power_law_noise, psd_decay_order=2),
 }
 
 
@@ -32,7 +35,7 @@ def generate_mono_wave_without_amplitude_envelope(
 
     :param waveform:
         form of wave; it can be one of 'sine', 'square', 'triangle',
-        'sawtooth', and 'white_noise'
+        'sawtooth', 'white_noise', 'pink_noise', and 'brown_noise'
     :param frequency:
         frequency of wave (in Hz)
     :param duration_in_frames:
@@ -50,25 +53,31 @@ def generate_mono_wave_without_amplitude_envelope(
     """
     moments_in_seconds = np.arange(duration_in_frames) / frame_rate
     wave_fn = NAME_TO_WAVEFORM[waveform]
+    args_dict = {'pink_noise': [frame_rate], 'brown_noise': [frame_rate]}
+    args = args_dict.get(waveform, [])
     if frequency_modulator is None and phase_modulator is None:
         wave = wave_fn(
             2 * np.pi * frequency * moments_in_seconds
-            + phase
+            + phase,
+            *args
         )
     elif frequency_modulator is None:
         wave = wave_fn(
             2 * np.pi * frequency * moments_in_seconds
-            + phase + phase_modulator
+            + phase + phase_modulator,
+            *args
         )
     elif phase_modulator is None:
         wave = wave_fn(
             2 * np.pi * (frequency + frequency_modulator) * moments_in_seconds
-            + phase
+            + phase,
+            *args
         )
     else:
         wave = wave_fn(
             2 * np.pi * (frequency + frequency_modulator) * moments_in_seconds
-            + phase + phase_modulator
+            + phase + phase_modulator,
+            *args
         )
     return wave
 
@@ -113,7 +122,7 @@ def generate_mono_wave(
 
     :param waveform:
         form of wave; it can be one of 'sine', 'square', 'triangle',
-        'sawtooth', and 'white_noise'
+        'sawtooth', 'white_noise', 'pink_noise', and 'brown_noise'
     :param frequency:
         frequency of wave (in Hz)
     :param amplitude_envelope:
