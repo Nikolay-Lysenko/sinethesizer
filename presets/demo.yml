@@ -22,7 +22,7 @@
         waveform: sine
         amplitude_envelope_fn:
           name: trapezoid
-        quasiperiodic_bandwidth: 2.0
+        quasiperiodic_bandwidth: 1.0
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
       event_to_amplitude_factor_fn:
