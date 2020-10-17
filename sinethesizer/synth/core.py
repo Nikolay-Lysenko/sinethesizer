@@ -65,12 +65,12 @@ class Modulator(NamedTuple):
         ratio of modulator frequency to fundamental frequency of output wave
         produced with this modulator and, maybe, with other modulators of the
         same wave
-    :param phase:
-        phase shift of a modulating wave (in radians)
     :param modulation_index_envelope_fn:
         function that takes parameters such as duration, velocity, and
         frame rate as inputs and returns amplitude envelope of a modulating
         wave (this envelope is known as modulation index envelope)
+    :param phase:
+        phase shift of a modulating wave (in radians)
     :param use_ring_modulation:
         if it is set to `True` and amplitude is modulated, ring modulation
         is applied instead of classical amplitude modulation
@@ -78,8 +78,8 @@ class Modulator(NamedTuple):
     waveform: str
     carrier_frequency_ratio: float
     modulator_frequency_ratio: float
-    phase: float
     modulation_index_envelope_fn: ENVELOPE_FN_TYPE
+    phase: float
     use_ring_modulation: bool
 
 
@@ -104,8 +104,8 @@ class ModulatedWave(NamedTuple):
         these changes make output wave quasi-periodic and, hence, more natural
     """
     waveform: str
-    phase: float
     amplitude_envelope_fn: ENVELOPE_FN_TYPE
+    phase: float
     amplitude_modulator: Optional[Modulator]
     phase_modulator: Optional[Modulator]
     quasiperiodic_bandwidth: float

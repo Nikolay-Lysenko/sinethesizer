@@ -98,10 +98,10 @@ def convert_modulator(
         waveform=modulator_data['waveform'],
         carrier_frequency_ratio=modulator_data['carrier_frequency_ratio'],
         modulator_frequency_ratio=modulator_data['modulator_frequency_ratio'],
-        phase=modulator_data.get('phase', 0),
         modulation_index_envelope_fn=create_envelope_fn(
             modulator_data['modulation_index_envelope_fn']
         ),
+        phase=modulator_data.get('phase', 0),
         use_ring_modulation=modulator_data.get('use_ring_modulation', False)
     )
     return modulator
@@ -180,10 +180,10 @@ def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
 
     modulated_wave = ModulatedWave(
         waveform=wave_data['waveform'],
-        phase=wave_data.get('phase', 0),
         amplitude_envelope_fn=create_envelope_fn(
             wave_data['amplitude_envelope_fn']
         ),
+        phase=wave_data.get('phase', 0),
         amplitude_modulator=convert_modulator(
             wave_data.get('amplitude_modulator')
         ),
