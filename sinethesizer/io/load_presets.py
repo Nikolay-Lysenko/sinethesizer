@@ -200,7 +200,8 @@ def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
         ),
         ring_modulator=convert_modulator(
             wave_data.get('ring_modulator')
-        )
+        ),
+        quasiperiodic_bandwidth=wave_data.get('quasiperiodic_bandwidth', 0)
     )
     return modulated_wave
 
