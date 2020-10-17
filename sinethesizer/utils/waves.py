@@ -19,7 +19,7 @@ NAME_TO_WAVEFORM = {
     'square': scipy.signal.square,
     'triangle': partial(scipy.signal.sawtooth, width=0.5),
     'sawtooth': scipy.signal.sawtooth,
-    'white_noise': partial(generate_power_law_noise, psd_decay_order=0),
+    'white_noise': lambda xs: np.random.normal(0, 0.3, xs.shape),
     'pink_noise': partial(generate_power_law_noise, psd_decay_order=1),
     'brown_noise': partial(generate_power_law_noise, psd_decay_order=2),
 }
