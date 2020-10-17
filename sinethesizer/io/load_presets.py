@@ -6,8 +6,8 @@ Author: Nikolay Lysenko
 
 
 import functools
+import math
 import warnings
-from math import gcd
 from typing import Any, Dict, List, Optional, Tuple
 
 import yaml
@@ -101,7 +101,8 @@ def convert_modulator(
         phase=modulator_data.get('phase', 0),
         modulation_index_envelope_fn=create_envelope_fn(
             modulator_data['modulation_index_envelope_fn']
-        )
+        ),
+        use_ring_modulation=modulator_data.get('use_ring_modulation', False)
     )
     return modulator
 
@@ -119,7 +120,7 @@ def compute_frequency_ratios(
     """
     numerator = modulator_data['frequency_ratio_numerator']
     denominator = modulator_data['frequency_ratio_denominator']
-    divisor = gcd(numerator, denominator)
+    divisor = math.gcd(numerator, denominator)
     frequency_scaling = max(denominator, numerator) / divisor
     # If above value is too high, scaled frequencies are above Nyquist
     # frequency and so output is bad. Fortunately, absence of scaling
@@ -128,6 +129,11 @@ def compute_frequency_ratios(
     # However, if above value is neither low nor too high, there is no
     # good option, because for high notes missing fundamental lies inside
     # audible range, but scaled frequencies are above Nyquist frequency.
+    # So let us choose thresholds.
+    # If `frequency_scaling` <= 10, notes up to C7 are played without aliasing
+    # given frame rate equal to 44100.
+    # If `frequency_scaling` >= 50, missing fundamentals for notes up to C6
+    # are in infrasonic range.
     min_threshold = 10
     max_threshold = 50
     if frequency_scaling <= min_threshold:
@@ -153,24 +159,13 @@ def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
     :return:
         parameters of modulated wave as internal data structure
     """
-    am_enabled = 'amplitude_modulator' in wave_data.keys()
-    rm_enabled = 'ring_modulator' in wave_data.keys()
-    fm_enabled = 'frequency_modulator' in wave_data.keys()
-    pm_enabled = 'phase_modulator' in wave_data.keys()
-    if am_enabled and rm_enabled:
-        raise ValueError("Currently, a wave can not have both AM and RM.")
-    if fm_enabled and pm_enabled:
-        raise ValueError("Currently, a wave can not have both FM and PM.")
-
-    # The goal is to multiply frequency ratios for FM or PM by carrier
-    # frequency ratio for AM or RM (if it exists). It is needed, because
-    # output wave of FM or PM acts like carrier wave for AM or RM.
+    # Output wave of PM acts like carrier wave for AM. So frequency ratios for
+    # PM must be multiplied by carrier frequency ratio for AM (if it exists).
     factor = 1
-    keys = [
-        'amplitude_modulator', 'ring_modulator',
-        'frequency_modulator', 'phase_modulator'
-    ]
-    enabledness = [am_enabled, rm_enabled, fm_enabled, pm_enabled]
+    keys = ['amplitude_modulator', 'phase_modulator']
+    am_enabled = 'amplitude_modulator' in wave_data.keys()
+    pm_enabled = 'phase_modulator' in wave_data.keys()
+    enabledness = [am_enabled, pm_enabled]
     for key, enabled in zip(keys, enabledness):
         if not enabled:
             continue
@@ -189,17 +184,11 @@ def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
         amplitude_envelope_fn=create_envelope_fn(
             wave_data['amplitude_envelope_fn']
         ),
-        frequency_modulator=convert_modulator(
-            wave_data.get('frequency_modulator')
-        ),
-        phase_modulator=convert_modulator(
-            wave_data.get('phase_modulator')
-        ),
         amplitude_modulator=convert_modulator(
             wave_data.get('amplitude_modulator')
         ),
-        ring_modulator=convert_modulator(
-            wave_data.get('ring_modulator')
+        phase_modulator=convert_modulator(
+            wave_data.get('phase_modulator')
         ),
         quasiperiodic_bandwidth=wave_data.get('quasiperiodic_bandwidth', 0)
     )
@@ -213,7 +202,7 @@ def norm_amplitudes_of_detuned_waves(
     Norm amplitudes of detuned waves to sum up to 1.
 
     :param detuning_to_amplitude:
-        mapping from a detuning size in semitones to relative amplitude
+        mapping from detuning size in semitones to relative amplitude
         of a wave with the corresponding detuned frequency
     :return:
         input mapping modified to have unit sum of values
@@ -240,10 +229,10 @@ def convert_partials(partials_data: List[Dict[str, Any]]) -> List[Partial]:
             event_to_amplitude_factor_fn=create_event_to_amplitude_factor_fn(
                 partial_data['event_to_amplitude_factor_fn']
             ),
+            random_detuning_range=partial_data.get('random_detuning_range', 0),
             detuning_to_amplitude=norm_amplitudes_of_detuned_waves(
                 partial_data.get('detuning_to_amplitude', {0: 1})
             ),
-            random_detuning_range=partial_data.get('random_detuning_range', 0),
             effects=create_list_of_effect_fns(partial_data.get('effects', []))
         )
         partials.append(partial)

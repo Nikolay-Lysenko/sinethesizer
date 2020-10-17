@@ -53,7 +53,7 @@ class Event(NamedTuple):
 
 class Modulator(NamedTuple):
     """
-    Parameters of a wave that modulates some property of another wave.
+    Parameters of a wave that modulates phase or amplitude of another wave.
 
     :param waveform:
         form of a modulating wave
@@ -71,12 +71,16 @@ class Modulator(NamedTuple):
         function that takes parameters such as duration, velocity, and
         frame rate as inputs and returns amplitude envelope of a modulating
         wave (this envelope is known as modulation index envelope)
+    :param use_ring_modulation:
+        if it is set to `True` and amplitude is modulated, ring modulation
+        is applied instead of classical amplitude modulation
     """
     waveform: str
     carrier_frequency_ratio: float
     modulator_frequency_ratio: float
     phase: float
     modulation_index_envelope_fn: ENVELOPE_FN_TYPE
+    use_ring_modulation: bool
 
 
 class ModulatedWave(NamedTuple):
@@ -90,19 +94,11 @@ class ModulatedWave(NamedTuple):
     :param amplitude_envelope_fn:
         function that takes parameters such as duration, velocity, and
         frame rate as inputs and returns amplitude envelope of output wave
-        (before amplitude modulation and ring modulation)
+        (before amplitude modulation)
     :param amplitude_modulator:
-        parameters of an amplitude modulating wave;
-        if it is not `None`, `ring_modulator` must be `None`
-    :param ring_modulator:
-        parameters of a modulating wave for ring modulation;
-        if it is not `None`, `amplitude_modulator` must be `None`
-    :param frequency_modulator:
-        parameters of a frequency modulating wave;
-        if it is not `None`, `phase_modulator` must be `None`
+        parameters of an amplitude modulating wave
     :param phase_modulator:
-        parameters of a phase modulating wave;
-        if it is not `None`, `frequency_modulator` must be `None`
+        parameters of a phase modulating wave
     :param quasiperiodic_bandwidth:
         bandwidth (in semitones) of instantaneous frequency random changes;
         these changes make output wave quasi-periodic and, hence, more natural
@@ -111,8 +107,6 @@ class ModulatedWave(NamedTuple):
     phase: float
     amplitude_envelope_fn: ENVELOPE_FN_TYPE
     amplitude_modulator: Optional[Modulator]
-    ring_modulator: Optional[Modulator]
-    frequency_modulator: Optional[Modulator]
     phase_modulator: Optional[Modulator]
     quasiperiodic_bandwidth: float
 
@@ -213,8 +207,6 @@ def generate_modulated_wave(
     carrier_frequency = frequency
     modulators_as_params = {
         'amplitude_modulator': wave.amplitude_modulator,
-        'ring_modulator': wave.ring_modulator,
-        'frequency_modulator': wave.frequency_modulator,
         'phase_modulator': wave.phase_modulator,
     }
     modulators_as_arrays = {}
@@ -235,6 +227,10 @@ def generate_modulated_wave(
                 params.phase
             )
         modulators_as_arrays[key] = modulator_as_array
+
+    if wave.amplitude_modulator is not None:
+        constant = int(not wave.amplitude_modulator.use_ring_modulation)
+        modulators_as_arrays['amplitude_modulator'] += constant
     modulators_as_arrays['phase_modulator'] = introduce_quasiperiodicity(
         modulators_as_arrays['phase_modulator'], n_frames, event.frame_rate,
         frequency, wave.quasiperiodic_bandwidth
@@ -269,11 +265,11 @@ class Partial(NamedTuple):
     :param event_to_amplitude_factor_fn:
         function that maps event to its multiplicative contribution to
         partial's amplitude
-    :param detuning_to_amplitude:
-        mapping from a detuning size (in semitones) to amplitude factor of
-        a wave with the corresponding detuned frequency
     :param random_detuning_range:
-        range of additional random detuning (in semitones)
+        range of random detuning (in semitones)
+    :param detuning_to_amplitude:
+        mapping from additional detuning size (in semitones) to
+        amplitude factor of a wave with the corresponding detuned frequency
     :param effects:
         sound effects that should be applied to this partial
     """
@@ -281,8 +277,8 @@ class Partial(NamedTuple):
     frequency_ratio: float
     amplitude_ratio: float
     event_to_amplitude_factor_fn: EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE
-    detuning_to_amplitude: Dict[float, float]
     random_detuning_range: float
+    detuning_to_amplitude: Dict[float, float]
     effects: List[EFFECT_FN_TYPE]
 
 
@@ -321,6 +317,7 @@ def generate_partial(partial: Partial, event: Event) -> np.ndarray:
     :return:
         partial
     """
+    semitone = 2 ** (1 / 12)
     sound = np.array([[], []], dtype=np.float64)
     partial_frequency = partial.frequency_ratio * event.frequency
     borders_of_random_detuning = (
@@ -330,7 +327,7 @@ def generate_partial(partial: Partial, event: Event) -> np.ndarray:
     params = partial.detuning_to_amplitude.items()
     for freq_shift_in_semitones, amplitude_ratio in params:
         freq_shift_in_semitones += random.uniform(*borders_of_random_detuning)
-        frequency_ratio = 2 ** (freq_shift_in_semitones / 12)
+        frequency_ratio = semitone ** freq_shift_in_semitones
         detuned_frequency = frequency_ratio * partial_frequency
         wave = generate_modulated_wave(partial.wave, detuned_frequency, event)
         wave *= amplitude_ratio
