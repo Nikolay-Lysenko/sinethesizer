@@ -93,7 +93,7 @@ def find_reflection_times(
         reflection_times.append(next_reflection_time)
     delay_without_randomness = early_reflections_delay
     max_n_iterations = int(1e5)
-    for _ in range(max_n_iterations):
+    for _ in range(max_n_iterations):  # pragma: no branch
         delay_without_randomness *= diffusion_delay_factor
         random_number = random_numbers_generator.uniform(
             -diffusion_delay_random_range, diffusion_delay_random_range

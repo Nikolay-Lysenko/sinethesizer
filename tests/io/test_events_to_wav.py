@@ -47,12 +47,14 @@ from sinethesizer.synth.event_to_amplitude_factor import (
                         Partial(
                             wave=ModulatedWave(
                                 waveform='sine',
-                                phase=0,
                                 amplitude_envelope_fn=functools.partial(
                                     create_constant_envelope,
                                     value=1
                                 ),
-                                modulator=None
+                                phase=0,
+                                amplitude_modulator=None,
+                                phase_modulator=None,
+                                quasiperiodic_bandwidth=0
                             ),
                             frequency_ratio=1.0,
                             amplitude_ratio=1.0,
@@ -126,12 +128,14 @@ def test_add_event_to_timeline(
                             Partial(
                                 wave=ModulatedWave(
                                     waveform='sine',
-                                    phase=0,
                                     amplitude_envelope_fn=functools.partial(
                                         create_constant_envelope,
                                         value=1
                                     ),
-                                    modulator=None
+                                    phase=0,
+                                    amplitude_modulator=None,
+                                    phase_modulator=None,
+                                    quasiperiodic_bandwidth=0
                                 ),
                                 frequency_ratio=1.0,
                                 amplitude_ratio=1.0,
