@@ -135,39 +135,27 @@
     - wave:
         waveform: sine
         amplitude_envelope_fn:
-          name: generic_ahdsr
-          attack_to_ahds_max_ratio: 0.1
-          max_attack_duration: 0.05
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.05
+          max_attack_duration: 0.025
           attack_degree: 2.0
-          hold_to_hds_max_ratio: 0.0
-          max_hold_duration: 0.0
-          decay_to_ds_max_ratio: 1.0
-          max_decay_duration: 100
-          decay_degree: 0.5
-          sustain_level: 0.05
-          max_sustain_duration: 0
+          decay_half_life_ratio: 0.2
           max_release_duration: 0.05
           release_duration_on_velocity_order: 0.0
-          release_degree: 1.5
+          release_degree: 1.0
         phase_modulator:
           waveform: sine
           frequency_ratio_numerator: 2
           frequency_ratio_denominator: 1
           modulation_index_envelope_fn:
-            name: generic_ahdsr
-            attack_to_ahds_max_ratio: 0.1
-            max_attack_duration: 0.05
+            name: exponentially_decaying
+            attack_to_ad_max_ratio: 0.05
+            max_attack_duration: 0.025
             attack_degree: 2.0
-            hold_to_hds_max_ratio: 0.0
-            max_hold_duration: 0.0
-            decay_to_ds_max_ratio: 1.0
-            max_decay_duration: 100
-            decay_degree: 0.5
-            sustain_level: 0.05
-            max_sustain_duration: 0
+            decay_half_life_ratio: 0.2
             max_release_duration: 0.05
             release_duration_on_velocity_order: 0.0
-            release_degree: 1.5
+            release_degree: 1.0
             peak_value: 5.0
             ratio_at_zero_velocity: 0.5
             envelope_values_on_velocity_order: 0.5
@@ -231,18 +219,12 @@
     - wave:
         waveform: sine
         amplitude_envelope_fn:
-          name: generic_ahdsr
-          attack_to_ahds_max_ratio: 0.05
-          max_attack_duration: 0.03
-          attack_degree: 1.0
-          hold_to_hds_max_ratio: 0.0
-          max_hold_duration: 0.0
-          decay_to_ds_max_ratio: 1.0
-          max_decay_duration: 100
-          decay_degree: 0.4
-          sustain_level: 0.0
-          max_sustain_duration: 0.0
-          max_release_duration: 0.0
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.03
+          max_attack_duration: 0.015
+          attack_degree: 2.0
+          decay_half_life_ratio: 0.125
+          max_release_duration: 0.05
           release_duration_on_velocity_order: 0.0
           release_degree: 1.0
       frequency_ratio: 1.0
@@ -254,18 +236,12 @@
     - wave:
         waveform: sine
         amplitude_envelope_fn:
-          name: generic_ahdsr
-          attack_to_ahds_max_ratio: 0.05
-          max_attack_duration: 0.03
-          attack_degree: 0.9
-          hold_to_hds_max_ratio: 0.0
-          max_hold_duration: 0.0
-          decay_to_ds_max_ratio: 0.5
-          max_decay_duration: 100
-          decay_degree: 0.4
-          sustain_level: 0.0
-          max_sustain_duration: 100
-          max_release_duration: 0.0
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.03
+          max_attack_duration: 0.015
+          attack_degree: 2.0
+          decay_half_life_ratio: 0.0625
+          max_release_duration: 0.05
           release_duration_on_velocity_order: 0.0
           release_degree: 1.0
       frequency_ratio: 1.0
@@ -277,18 +253,12 @@
     - wave:
         waveform: sine
         amplitude_envelope_fn:
-          name: generic_ahdsr
-          attack_to_ahds_max_ratio: 0.05
-          max_attack_duration: 0.03
-          attack_degree: 0.9
-          hold_to_hds_max_ratio: 0.0
-          max_hold_duration: 0.0
-          decay_to_ds_max_ratio: 0.5
-          max_decay_duration: 100
-          decay_degree: 0.4
-          sustain_level: 0.0
-          max_sustain_duration: 100
-          max_release_duration: 0.0
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.03
+          max_attack_duration: 0.015
+          attack_degree: 2.0
+          decay_half_life_ratio: 0.0625
+          max_release_duration: 0.05
           release_duration_on_velocity_order: 0.0
           release_degree: 1.0
       frequency_ratio: 1.6
@@ -300,18 +270,12 @@
     - wave:
         waveform: sine
         amplitude_envelope_fn:
-          name: generic_ahdsr
-          attack_to_ahds_max_ratio: 0.05
-          max_attack_duration: 0.03
-          attack_degree: 0.9
-          hold_to_hds_max_ratio: 0.0
-          max_hold_duration: 0.0
-          decay_to_ds_max_ratio: 0.5
-          max_decay_duration: 100
-          decay_degree: 0.4
-          sustain_level: 0.0
-          max_sustain_duration: 100
-          max_release_duration: 0.0
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.03
+          max_attack_duration: 0.015
+          attack_degree: 2.0
+          decay_half_life_ratio: 0.0625
+          max_release_duration: 0.05
           release_duration_on_velocity_order: 0.0
           release_degree: 1.0
       frequency_ratio: 2.2
@@ -323,18 +287,12 @@
     - wave:
         waveform: sine
         amplitude_envelope_fn:
-          name: generic_ahdsr
-          attack_to_ahds_max_ratio: 0.05
-          max_attack_duration: 0.03
-          attack_degree: 0.9
-          hold_to_hds_max_ratio: 0.0
-          max_hold_duration: 0.0
-          decay_to_ds_max_ratio: 0.5
-          max_decay_duration: 100
-          decay_degree: 0.4
-          sustain_level: 0.0
-          max_sustain_duration: 100
-          max_release_duration: 0.0
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.03
+          max_attack_duration: 0.015
+          attack_degree: 2.0
+          decay_half_life_ratio: 0.0625
+          max_release_duration: 0.05
           release_duration_on_velocity_order: 0.0
           release_degree: 1.0
       frequency_ratio: 2.3
@@ -346,22 +304,16 @@
     - wave:
         waveform: white_noise
         amplitude_envelope_fn:
-          name: generic_ahdsr
-          attack_to_ahds_max_ratio: 0.05
-          max_attack_duration: 0.03
-          attack_degree: 0.9
-          hold_to_hds_max_ratio: 0.0
-          max_hold_duration: 0.0
-          decay_to_ds_max_ratio: 0.5
-          max_decay_duration: 100
-          decay_degree: 0.4
-          sustain_level: 0.0
-          max_sustain_duration: 100
-          max_release_duration: 0.0
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.03
+          max_attack_duration: 0.015
+          attack_degree: 2.0
+          decay_half_life_ratio: 0.0625
+          max_release_duration: 0.05
           release_duration_on_velocity_order: 0.0
           release_degree: 1.0
       frequency_ratio: 5.0  # This value affects nothing, because it is noise.
-      amplitude_ratio: 0.1  # This value affects nothing, because it is changed by effects.
+      amplitude_ratio: 0.02  # This value affects nothing, because it is changed by effects.
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.0
@@ -372,5 +324,5 @@
           max_frequency_ratio: 7
           order: 1
         - name: amplitude_normalization
-          value_at_max_velocity: 0.1
-  amplitude_scaling: 0.471
+          value_at_max_velocity: 0.02
+  amplitude_scaling: 0.49
