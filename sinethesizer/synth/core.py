@@ -320,6 +320,10 @@ def generate_partial(partial: Partial, event: Event) -> np.ndarray:
     semitone = 2 ** (1 / 12)
     sound = np.array([[], []], dtype=np.float64)
     partial_frequency = partial.frequency_ratio * event.frequency
+    nyquist_frequency = event.frame_rate / 2
+    if partial_frequency >= nyquist_frequency:
+        # This partial can not be heard, but it creates aliasing, so remove it.
+        return sound
     borders_of_random_detuning = (
         -partial.random_detuning_range / 2,
         partial.random_detuning_range / 2

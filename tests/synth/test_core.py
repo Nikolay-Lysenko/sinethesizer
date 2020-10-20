@@ -241,6 +241,48 @@ def test_generate_modulated_wave(
                 ]
             ])
         ),
+        (
+            # `partial`
+            Partial(
+                wave=ModulatedWave(
+                    waveform='sine',
+                    phase=0,
+                    amplitude_envelope_fn=functools.partial(
+                        create_constant_envelope,
+                        value=1
+                    ),
+                    amplitude_modulator=None,
+                    phase_modulator=None,
+                    quasiperiodic_bandwidth=0
+                ),
+                frequency_ratio=2.0,
+                amplitude_ratio=0.5,
+                event_to_amplitude_factor_fn=functools.partial(
+                    compute_amplitude_factor_as_power_of_velocity,
+                    power=1
+                ),
+                detuning_to_amplitude={0.0: 1.0},
+                random_detuning_range=0.0,
+                effects=[
+                    functools.partial(
+                        apply_haas_effect,
+                        location=-1, max_channel_delay=0.1
+                    )
+                ]
+            ),
+            # `event`
+            Event(
+                instrument='any_instrument',
+                start_time=0.0,
+                duration=1.0,
+                frequency=15.0,
+                velocity=1.0,
+                effects='',
+                frame_rate=20
+            ),
+            # `expected`
+            np.array([[], []])
+        ),
     ]
 )
 def test_generate_partial(

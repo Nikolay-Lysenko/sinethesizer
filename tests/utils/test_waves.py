@@ -10,8 +10,11 @@ from typing import Optional
 
 import pytest
 import numpy as np
+from scipy.signal import spectrogram
 
-from sinethesizer.utils.waves import generate_mono_wave
+from sinethesizer.utils.waves import (
+    generate_mono_wave, generate_power_law_noise
+)
 
 
 @pytest.mark.parametrize(
@@ -88,7 +91,7 @@ from sinethesizer.utils.waves import generate_mono_wave
             # `phase_modulator`
             None,
             # `expected`
-            np.array([1.0, 2, 1, 2, -1, -2, -1, -2])
+            np.array([0.0, 2, 1, 2, 0, -2, -1, -2])
         ),
         (
             # `waveform`
@@ -106,7 +109,10 @@ from sinethesizer.utils.waves import generate_mono_wave
             # `phase_modulator`
             None,
             # `expected`
-            np.array([-1, -0.5, 0, 0.5, 1, 0.5, 0, -0.5])
+            np.array([
+                -0.7666667, -0.4916667, 0, 0.4916667,
+                0.7666667, 0.4916667, 0, -0.4916667
+            ])
         ),
         (
             # `waveform`
@@ -124,7 +130,7 @@ from sinethesizer.utils.waves import generate_mono_wave
             # `phase_modulator`
             None,
             # `expected`
-            np.array([-1, -0.75, -0.5, -0.25,  0,  0.25,  0.5,  0.75])
+            np.array([0, -0.75, -0.5, -0.25,  0,  0.25,  0.5,  0.75])
         ),
         (
             # `waveform`
@@ -142,7 +148,7 @@ from sinethesizer.utils.waves import generate_mono_wave
             # `phase_modulator`
             None,
             # `expected`
-            np.array([-0.5, -3, -1, -0.25, 0, 0.5, 0.5, 1.5])
+            np.array([0, -3, -1, -0.25, 0, 0.5, 0.5, 1.5])
         ),
         (
             # `waveform`
@@ -160,7 +166,7 @@ from sinethesizer.utils.waves import generate_mono_wave
             # `phase_modulator`
             np.array([0, 0, 0, 0, 0, 0, 1, 0]),
             # `expected`
-            np.array([-1, -0.75, -0.5, -0.25, 0, 0.25, 0.8183099, 0.75])
+            np.array([0, -0.75, -0.5, -0.25, 0, 0.25, 0.74365, 0.75])
         ),
     ]
 )
@@ -190,3 +196,26 @@ def test_generate_mono_wave_with_white_noise(
     """Test `generate_mono_wave` function with white noise."""
     result = generate_mono_wave('white_noise', 440, amplitude_envelope, 8)
     assert len(result) == expected_len
+
+
+@pytest.mark.parametrize(
+    "xs, frame_rate, psd_decay_order, n_equalizer_points, nperseg",
+    [
+        (np.linspace(0, 1000, 1000), 10000, 0, 300, 100),
+        (np.linspace(0, 1000, 1000), 10000, 1, 300, 100),
+        (np.linspace(0, 1000, 1000), 10000, 2, 300, 100),
+    ]
+)
+def test_generate_power_law_noise(
+        xs: np.ndarray, frame_rate: int, psd_decay_order: float,
+        n_equalizer_points: int, nperseg: int
+) -> None:
+    """Test `generate_power_law_noise` function."""
+    noise = generate_power_law_noise(
+        xs, frame_rate, psd_decay_order, n_equalizer_points
+    )
+    spc = spectrogram(noise, frame_rate, nperseg=nperseg)[2]
+    result = spc.sum(axis=1)
+    if psd_decay_order > 0:
+        assert result[0] > result[-1]
+        assert result[10] > result[30]
