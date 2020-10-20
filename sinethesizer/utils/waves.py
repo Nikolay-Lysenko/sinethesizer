@@ -15,20 +15,20 @@ import scipy.signal
 TWO_PI = 2 * np.pi
 
 
-def generate_sawtooth_wave(xs: np.ndarray, phase_step: float) -> np.ndarray:
+def generate_sawtooth_wave(xs: np.ndarray, angle_step: float) -> np.ndarray:
     """
     Generate band-limited sawtooth wave.
 
-    PolyBLEP method is used to remove aliasing. It involves a polynomial
+    PolyBLEP method is applied to remove aliasing. It involves a polynomial
     approximation of BLEP (Band-Limited Heavyside Step function). Values at
     points that are close enough to points of discontinuity, are modified
-    based on this approximation. This works, because exactly discontinuity
-    brings all high-frequency content to sawtooth wave.
+    based on this approximation. The method works, because discontinuity is
+    the thing that brings high-frequency content to sawtooth wave.
 
     :param xs:
         angles (in radians) at which sawtooth function is computed
-    :param phase_step:
-        step of successive phase increments with frequency and frame rate of
+    :param angle_step:
+        step of successive angle increments with frequency and frame rate of
         `xs` and regardless any frequency/phase modulations in `xs`
     :return:
         sawtooth wave
@@ -36,8 +36,8 @@ def generate_sawtooth_wave(xs: np.ndarray, phase_step: float) -> np.ndarray:
     mod_xs = np.mod(xs, TWO_PI)
     poly_blep_residual = np.zeros_like(xs)
 
-    to_the_left_of_discontinuity = mod_xs > TWO_PI - phase_step
-    curr_xs = (mod_xs - TWO_PI) / phase_step
+    to_the_left_of_discontinuity = mod_xs > TWO_PI - angle_step
+    curr_xs = (mod_xs - TWO_PI) / angle_step
     curr_residual = -(curr_xs ** 2 + 2 * curr_xs + 1)
     np.copyto(
         poly_blep_residual,
@@ -45,8 +45,8 @@ def generate_sawtooth_wave(xs: np.ndarray, phase_step: float) -> np.ndarray:
         where=to_the_left_of_discontinuity
     )
 
-    to_the_right_of_discontinuity = mod_xs < phase_step
-    curr_xs = mod_xs / phase_step
+    to_the_right_of_discontinuity = mod_xs < angle_step
+    curr_xs = mod_xs / angle_step
     curr_residual = (curr_xs ** 2 - 2 * curr_xs + 1)
     np.copyto(
         poly_blep_residual,
@@ -58,20 +58,20 @@ def generate_sawtooth_wave(xs: np.ndarray, phase_step: float) -> np.ndarray:
     return sawtooth_wave
 
 
-def generate_square_wave(xs: np.ndarray, phase_step: float) -> np.ndarray:
+def generate_square_wave(xs: np.ndarray, angle_step: float) -> np.ndarray:
     """
     Generate band-limited square wave.
 
-    PolyBLEP method is used to remove aliasing. It involves a polynomial
+    PolyBLEP method is applied to remove aliasing. It involves a polynomial
     approximation of BLEP (Band-Limited Heavyside Step function). Values at
     points that are close enough to points of discontinuity, are modified
-    based on this approximation. This works, because exactly discontinuity
-    brings all high-frequency content to square wave.
+    based on this approximation. The method works, because discontinuity is
+    the thing that brings high-frequency content to square wave.
 
     :param xs:
         angles (in radians) at which square wave function is computed
-    :param phase_step:
-        step of successive phase increments with frequency and frame rate of
+    :param angle_step:
+        step of successive angle increments with frequency and frame rate of
         `xs` and regardless any frequency/phase modulations in `xs`
     :return:
         square wave
@@ -79,8 +79,8 @@ def generate_square_wave(xs: np.ndarray, phase_step: float) -> np.ndarray:
     mod_xs = np.mod(xs, TWO_PI)
     poly_blep_residual = np.zeros_like(xs)
 
-    to_the_left_of_discontinuity_at_zero = mod_xs > TWO_PI - phase_step
-    curr_xs = (mod_xs - TWO_PI) / phase_step
+    to_the_left_of_discontinuity_at_zero = mod_xs > TWO_PI - angle_step
+    curr_xs = (mod_xs - TWO_PI) / angle_step
     curr_residual = curr_xs ** 2 + 2 * curr_xs + 1
     np.copyto(
         poly_blep_residual,
@@ -89,9 +89,9 @@ def generate_square_wave(xs: np.ndarray, phase_step: float) -> np.ndarray:
     )
 
     to_the_left_of_discontinuity_at_pi = (
-        (np.pi - phase_step < mod_xs) & (mod_xs < np.pi)
+        (np.pi - angle_step < mod_xs) & (mod_xs < np.pi)
     )
-    curr_xs = (mod_xs - np.pi) / phase_step
+    curr_xs = (mod_xs - np.pi) / angle_step
     curr_residual = -(curr_xs ** 2 + 2 * curr_xs + 1)
     np.copyto(
         poly_blep_residual,
@@ -99,8 +99,8 @@ def generate_square_wave(xs: np.ndarray, phase_step: float) -> np.ndarray:
         where=to_the_left_of_discontinuity_at_pi
     )
 
-    to_the_right_of_discontinuity_at_zero = mod_xs < phase_step
-    curr_xs = mod_xs / phase_step
+    to_the_right_of_discontinuity_at_zero = mod_xs < angle_step
+    curr_xs = mod_xs / angle_step
     curr_residual = -(curr_xs ** 2 - 2 * curr_xs + 1)
     np.copyto(
         poly_blep_residual,
@@ -109,9 +109,9 @@ def generate_square_wave(xs: np.ndarray, phase_step: float) -> np.ndarray:
     )
 
     to_the_right_of_discontinuity_at_pi = (
-        (np.pi <= mod_xs) & (mod_xs < np.pi + phase_step)
+        (np.pi <= mod_xs) & (mod_xs < np.pi + angle_step)
     )
-    curr_xs = (mod_xs - np.pi) / phase_step
+    curr_xs = (mod_xs - np.pi) / angle_step
     curr_residual = curr_xs ** 2 - 2 * curr_xs + 1
     np.copyto(
         poly_blep_residual,
@@ -206,10 +206,10 @@ def generate_mono_wave(
     }
     wave_fn = name_to_waveform[waveform]
 
-    phase_step = TWO_PI * frequency / frame_rate
+    angle_step = TWO_PI * frequency / frame_rate
     args_dict = {
-        'sawtooth': [phase_step],
-        'square': [phase_step],
+        'sawtooth': [angle_step],
+        'square': [angle_step],
         'pink_noise': [frame_rate],
         'brown_noise': [frame_rate],
     }
