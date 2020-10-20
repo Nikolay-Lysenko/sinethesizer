@@ -109,10 +109,7 @@ from sinethesizer.utils.waves import (
             # `phase_modulator`
             None,
             # `expected`
-            np.array([
-                -0.7666667, -0.4916667, 0, 0.4916667,
-                0.7666667, 0.4916667, 0, -0.4916667
-            ])
+            np.array([-1, -0.5, 0, 0.5, 1, 0.5, 0, -0.5])
         ),
         (
             # `waveform`

@@ -123,59 +123,6 @@ def generate_square_wave(xs: np.ndarray, phase_step: float) -> np.ndarray:
     return square_wave
 
 
-def generate_triangle_wave(xs: np.ndarray, phase_step: float) -> np.ndarray:
-    """
-    Generate band-limited triangle wave.
-
-    PolyBLAMP method is used to remove aliasing. It involves a polynomial
-    approximation of BLAMP (Band-Limited Ramp function where ramp function is
-    an integral of Heavyside step function and its band-limited version is
-    an integral of BLEP). Values at points that are close enough to points of
-    first derivative non-existance, are modified based on this approximation.
-    This works, because exactly discontinuous changes in first derivative bring
-    all high-frequency content to triangle wave.
-
-    :param xs:
-        angles (in radians) at which triangle wave function is computed
-    :param phase_step:
-        step of successive phase increments with frequency and frame rate of
-        `xs` and regardless any frequency/phase modulations in `xs`
-    :return:
-        triangle wave
-    """
-    mod_xs = np.mod(xs, TWO_PI)
-    poly_blamp_residual = np.zeros_like(xs)
-
-    near_discontinuity_at_zero = (
-        (mod_xs > TWO_PI - 2 * phase_step) | (mod_xs < 2 * phase_step)
-    )
-    curr_xs = np.minimum(TWO_PI - mod_xs, mod_xs) / phase_step
-    curr_residual = phase_step / (15 * TWO_PI) * (
-        (2 - curr_xs) ** 5 - 4 * np.clip(1 - curr_xs, 0, None) ** 5
-    )
-    np.copyto(
-        poly_blamp_residual,
-        curr_residual,
-        where=near_discontinuity_at_zero
-    )
-
-    near_discontinuity_at_pi = (
-        (np.pi - 2 * phase_step < mod_xs) & (mod_xs < np.pi + 2 * phase_step)
-    )
-    curr_xs = np.abs(mod_xs - np.pi) / phase_step
-    curr_residual = phase_step / (15 * TWO_PI) * (
-        4 * np.clip(1 - curr_xs, 0, None) ** 5 - (2 - curr_xs) ** 5
-    )
-    np.copyto(
-        poly_blamp_residual,
-        curr_residual,
-        where=near_discontinuity_at_pi
-    )
-
-    triangle_wave = scipy.signal.sawtooth(xs, width=0.5) + poly_blamp_residual
-    return triangle_wave
-
-
 def generate_power_law_noise(
         xs: np.ndarray, frame_rate: int, psd_decay_order: float,
         n_equalizer_points: int = 300
@@ -252,14 +199,10 @@ def generate_mono_wave(
         'sine': np.sin,
         'sawtooth': generate_sawtooth_wave,
         'square': generate_square_wave,
-        'triangle': generate_triangle_wave,
+        'triangle': partial(scipy.signal.sawtooth, width=0.5),
         'white_noise': lambda xs: np.random.normal(0, 0.3, xs.shape),
         'pink_noise': partial(generate_power_law_noise, psd_decay_order=1),
         'brown_noise': partial(generate_power_law_noise, psd_decay_order=2),
-        # Below waves can be used in effects like filter sweep.
-        'raw_sawtooth': scipy.signal.sawtooth,
-        'raw_square': scipy.signal.square,
-        'raw_triangle': partial(scipy.signal.sawtooth, width=0.5)
     }
     wave_fn = name_to_waveform[waveform]
 
@@ -267,7 +210,6 @@ def generate_mono_wave(
     args_dict = {
         'sawtooth': [phase_step],
         'square': [phase_step],
-        'triangle': [phase_step],
         'pink_noise': [frame_rate],
         'brown_noise': [frame_rate],
     }
