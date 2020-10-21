@@ -95,13 +95,13 @@ from sinethesizer.utils.waves import (
         ),
         (
             # `waveform`
-            'triangle',
+            'square',
             # `frequency`
-            1,
+            10,
             # `amplitude_envelope`
-            np.array([1, 1, 1, 1, 1, 1, 1, 1]),
+            np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]),
             # `frame_rate`
-            8,
+            128,
             # `phase`
             0,
             # `amplitude_modulator`
@@ -109,7 +109,30 @@ from sinethesizer.utils.waves import (
             # `phase_modulator`
             None,
             # `expected`
-            np.array([-1, -0.5, 0, 0.5, 1, 0.5, 0, -0.5])
+            np.array([
+                0, 1, 1, 1, 1, 1, 0.64, -0.84, -1, -1, -1, -1, -0.96, 0.36, 1
+            ])
+        ),
+        (
+            # `waveform`
+            'triangle',
+            # `frequency`
+            1,
+            # `amplitude_envelope`
+            np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]),
+            # `frame_rate`
+            12,
+            # `phase`
+            0,
+            # `amplitude_modulator`
+            None,
+            # `phase_modulator`
+            None,
+            # `expected`
+            np.array([
+                -0.8444444, -0.6611111, -0.3333333, 0, 0.3333333, 0.6611111,
+                0.8444444, 0.6611111, 0.3333333, 0, -0.3333333, -0.6611111
+            ])
         ),
         (
             # `waveform`
@@ -164,6 +187,28 @@ from sinethesizer.utils.waves import (
             np.array([0, 0, 0, 0, 0, 0, 1, 0]),
             # `expected`
             np.array([0, -0.75, -0.5, -0.25, 0, 0.25, 0.74365, 0.75])
+        ),
+        (
+            # `waveform`
+            'sawtooth',
+            # `frequency`
+            10,
+            # `amplitude_envelope`
+            np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]),
+            # `frame_rate`
+            128,
+            # `phase`
+            0,
+            # `amplitude_modulator`
+            None,
+            # `phase_modulator`
+            None,
+            # `expected`
+            np.array([
+                0, -0.84375, -0.6875, -0.53125, -0.375, -0.21875,
+                -0.0625, 0.09375, 0.25, 0.40625, 0.5625, 0.71875,
+                0.835, -0.32875, -0.8125, -0.65625, -0.5, -0.34375
+            ])
         ),
     ]
 )

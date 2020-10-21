@@ -235,7 +235,7 @@ def test_apply_phaser(frequency: float, frame_rate: int, kind: str) -> None:
             # `frequency`
             0.5,
             # `waveform`
-            'triangle',
+            'raw_triangle',
             # `expected`
             np.array([[1, -0.25, -1.5, 2, 15, 2.5, -1.5, 1.25]])
         ),
@@ -266,7 +266,7 @@ def test_apply_phaser(frequency: float, frame_rate: int, kind: str) -> None:
             # `frequency`
             0.5,
             # `waveform`
-            'triangle',
+            'raw_triangle',
             # `expected`
             np.array([
                 [1, -0.25, -1.5, 2, 15, 2.5, -1.5, 1.25],
