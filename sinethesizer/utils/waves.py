@@ -6,6 +6,7 @@ Author: Nikolay Lysenko
 
 
 from functools import partial
+from math import floor, log
 from typing import Optional
 
 import numpy as np
@@ -146,7 +147,7 @@ def generate_triangle_wave(xs: np.ndarray, angle_step: float) -> np.ndarray:
 
 def generate_power_law_noise(
         xs: np.ndarray, frame_rate: int, psd_decay_order: float,
-        n_equalizer_points: int = 300
+        exponential_step: float = 2
 ) -> np.ndarray:
     """
     Generate noise with bandwidth intensity decaying as power of frequency.
@@ -154,32 +155,37 @@ def generate_power_law_noise(
     :param xs:
         arrays of input data points; only its length is used
     :param frame_rate:
-        number of frames per second in `xs`; it is used for computing
-        filter size
+        number of frames per second in `xs`
     :param psd_decay_order:
         power of frequency in intensity denominator
-    :param n_equalizer_points:
-        number of points to approximate gain at each frequency
+    :param exponential_step:
+        exponential step for defining filter parameters
     :return:
         noise
     """
     white_noise = np.random.normal(0, 0.3, xs.shape)
     if psd_decay_order == 0:
         return white_noise
+
     nyquist_frequency = frame_rate / 2
     audibility_threshold_in_hz = 20
     ratio = audibility_threshold_in_hz / nyquist_frequency
+    inverse_ratio = 1 / ratio
+    n_full_steps = floor(log(inverse_ratio, exponential_step))
+    breakpoint_frequencies = [0]
+    gains = [1]
+    for i in range(n_full_steps + 1):
+        breakpoint_frequencies.append(exponential_step ** i * ratio)
+        gains.append(1 / exponential_step ** (0.5 * psd_decay_order * i))
     # Gain at Nyquist frequency must be 0 in order to prevent aliasing.
-    breakpoint_frequencies = np.linspace(ratio, 1 - 1e-7, n_equalizer_points)
-    gains = 1 / breakpoint_frequencies ** psd_decay_order
-    breakpoint_frequencies = np.hstack(
-        (np.array([0]), breakpoint_frequencies, np.array([1]))
-    )
-    gains = np.hstack((gains[:1], gains, np.array([0]))) / gains[0]
-    # Below constant is chosen empirically for pink and brown noise.
-    # An effect named amplitude normalization can be used for finer control.
-    gain_factor = 25
-    gains *= gain_factor
+    breakpoint_frequencies.append(1)
+    gains.append(0)
+
+    # Below constants are chosen empirically for pink and brown noises only.
+    scaling_dict = {1.0: 11, 2.0: 29}
+    scaling = scaling_dict.get(psd_decay_order, 1)
+    gains = [scaling * x for x in gains]
+
     fir_size = 2 * int(round(frame_rate / 100)) + 1
     fir = scipy.signal.firwin2(fir_size, breakpoint_frequencies, gains)
     result = scipy.signal.convolve(white_noise, fir, mode='same')
