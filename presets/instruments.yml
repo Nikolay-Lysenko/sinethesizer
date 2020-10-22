@@ -21,9 +21,6 @@
           release_degree: 0.5
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       detuning_to_amplitude:
         -0.2: 0.1
         -0.1: 0.15
@@ -108,9 +105,6 @@
             envelope_values_on_velocity_order: 0.5
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       detuning_to_amplitude:
         -0.2: 0.05
         -0.1: 0.2
@@ -161,9 +155,6 @@
             envelope_values_on_velocity_order: 0.5
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       detuning_to_amplitude:
         -0.1: 0.25
         0: 0.5
@@ -189,9 +180,6 @@
           name: trapezoid
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       effects:
         - name: filter_sweep
           kind: relative
@@ -229,9 +217,6 @@
           release_degree: 1.0
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       random_detuning_range: 0.002
     - wave:
         waveform: sine
@@ -246,9 +231,6 @@
           release_degree: 1.0
       frequency_ratio: 1.0
       amplitude_ratio: 0.17
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       random_detuning_range: 0.002
     - wave:
         waveform: sine
@@ -263,9 +245,6 @@
           release_degree: 1.0
       frequency_ratio: 1.6
       amplitude_ratio: 0.255
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       random_detuning_range: 0.002
     - wave:
         waveform: sine
@@ -280,9 +259,6 @@
           release_degree: 1.0
       frequency_ratio: 2.2
       amplitude_ratio: 0.34
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       random_detuning_range: 0.002
     - wave:
         waveform: sine
@@ -297,9 +273,6 @@
           release_degree: 1.0
       frequency_ratio: 2.3
       amplitude_ratio: 0.255
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       random_detuning_range: 0.002
     - wave:
         waveform: white_noise
@@ -312,11 +285,8 @@
           max_release_duration: 0.05
           release_duration_on_velocity_order: 0.0
           release_degree: 1.0
-      frequency_ratio: 5.0  # This value affects nothing, because it is noise.
+      frequency_ratio: 5.0  # This value affects nothing, because noise has no frequency.
       amplitude_ratio: 0.02  # This value affects nothing, because it is changed by effects.
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       effects:
         - name: filter
           kind: relative

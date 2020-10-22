@@ -10,9 +10,6 @@
           name: trapezoid
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
   amplitude_scaling: 1.0
 
 # It is a richer sine wave.
@@ -25,9 +22,6 @@
         quasiperiodic_bandwidth: 1.0
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       random_detuning_range: 0.005
   amplitude_scaling: 1.0
 
@@ -86,9 +80,6 @@
           name: trapezoid
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       random_detuning_range: 0.005
       effects:
         - name: filter
@@ -108,9 +99,6 @@
           name: trapezoid
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       random_detuning_range: 0.005
       effects:
         - name: automation
@@ -149,7 +137,6 @@
         waveform: sine
         amplitude_envelope_fn:
           name: trapezoid
-        # Also, `amplitude_modulator` can be set.
         phase_modulator:
           waveform: sine
           frequency_ratio_numerator: 3
@@ -174,9 +161,6 @@
             envelope_values_on_velocity_order: 0.5
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
       random_detuning_range: 0.005
   amplitude_scaling: 1.0
   effects:
@@ -226,7 +210,4 @@
               max_duration: null
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
   amplitude_scaling: 1.0

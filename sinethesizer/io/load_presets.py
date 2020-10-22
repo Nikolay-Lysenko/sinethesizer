@@ -40,47 +40,6 @@ def create_envelope_fn(envelope_data: Dict[str, Any]) -> ENVELOPE_FN_TYPE:
     return envelope_fn
 
 
-def create_list_of_effect_fns(
-        effects_data: List[Dict[str, Any]]
-) -> List[EFFECT_FN_TYPE]:
-    """
-    Create list of functions that apply sound effects to timelines.
-
-    :param effects_data:
-        effects parameters
-    :return:
-        sound effects functions
-    """
-    effects_registry = get_effects_registry()
-    effects_fns = []
-    for effect_data in effects_data:
-        effect_fn = functools.partial(
-            effects_registry[effect_data['name']],
-            **{k: v for k, v in effect_data.items() if k != 'name'}
-        )
-        effects_fns.append(effect_fn)
-    return effects_fns
-
-
-def create_event_to_amplitude_factor_fn(
-        fn_data: Dict[str, Any]
-) -> EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE:
-    """
-    Create function for multiplicative contribution of event to amplitude.
-
-    :param fn_data:
-        function parameters
-    :return:
-        amplitude factor function
-    """
-    registry = get_event_to_amplitude_factor_functions_registry()
-    event_to_amplitude_factor_fn = functools.partial(
-        registry[fn_data['name']],
-        **{k: v for k, v in fn_data.items() if k != 'name'}
-    )
-    return event_to_amplitude_factor_fn
-
-
 def convert_modulator(
         modulator_data: Optional[Dict[str, Any]]
 ) -> Optional[Modulator]:
@@ -211,6 +170,49 @@ def norm_amplitudes_of_detuned_waves(
     return {k: v / denominator for k, v in detuning_to_amplitude.items()}
 
 
+def create_event_to_amplitude_factor_fn(
+        fn_data: Dict[str, Any]
+) -> EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE:
+    """
+    Create function for multiplicative contribution of event to amplitude.
+
+    :param fn_data:
+        function parameters
+    :return:
+        amplitude factor function
+    """
+    if fn_data is None:
+        fn_data = {'name': 'power_fn_of_velocity', 'power': 1.0}
+    registry = get_event_to_amplitude_factor_functions_registry()
+    event_to_amplitude_factor_fn = functools.partial(
+        registry[fn_data['name']],
+        **{k: v for k, v in fn_data.items() if k != 'name'}
+    )
+    return event_to_amplitude_factor_fn
+
+
+def create_list_of_effect_fns(
+        effects_data: List[Dict[str, Any]]
+) -> List[EFFECT_FN_TYPE]:
+    """
+    Create list of functions that apply sound effects to timelines.
+
+    :param effects_data:
+        effects parameters
+    :return:
+        sound effects functions
+    """
+    effects_registry = get_effects_registry()
+    effects_fns = []
+    for effect_data in effects_data:
+        effect_fn = functools.partial(
+            effects_registry[effect_data['name']],
+            **{k: v for k, v in effect_data.items() if k != 'name'}
+        )
+        effects_fns.append(effect_fn)
+    return effects_fns
+
+
 def convert_partials(partials_data: List[Dict[str, Any]]) -> List[Partial]:
     """
     Convert representations of partials to internal data structures.
@@ -227,7 +229,7 @@ def convert_partials(partials_data: List[Dict[str, Any]]) -> List[Partial]:
             frequency_ratio=partial_data['frequency_ratio'],
             amplitude_ratio=partial_data['amplitude_ratio'],
             event_to_amplitude_factor_fn=create_event_to_amplitude_factor_fn(
-                partial_data['event_to_amplitude_factor_fn']
+                partial_data.get('event_to_amplitude_factor_fn')
             ),
             random_detuning_range=partial_data.get('random_detuning_range', 0),
             detuning_to_amplitude=norm_amplitudes_of_detuned_waves(
