@@ -10,7 +10,7 @@ import numpy as np
 
 def apply_overdrive(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        fraction_to_clip: float = 0.1, strength: float = 0.3
+        fraction_to_clip: float = 0.1, strength: float = 0.333
 ) -> np.ndarray:
     """
     Overdrive the sound.
