@@ -89,12 +89,12 @@ class ModulatedWave(NamedTuple):
 
     :param waveform:
         form of a modulated wave (so called carrier)
-    :param phase:
-        phase shift of a carrier (in radians)
     :param amplitude_envelope_fn:
         function that takes parameters such as duration, velocity, and
         frame rate as inputs and returns amplitude envelope of output wave
         (before amplitude modulation)
+    :param phase:
+        phase shift of a carrier (in radians)
     :param amplitude_modulator:
         parameters of an amplitude modulating wave
     :param phase_modulator:
@@ -286,7 +286,7 @@ def sum_two_sounds(
         first_sound: np.ndarray, second_sound: np.ndarray
 ) -> np.ndarray:
     """
-    Sum two sound of probably unequal durations.
+    Sum two sounds of probably unequal durations.
 
     :param first_sound:
         first sound as array of shape (n_channels, n_frames)

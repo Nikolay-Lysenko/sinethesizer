@@ -27,7 +27,7 @@ def generate_sawtooth_wave(xs: np.ndarray, angle_step: float) -> np.ndarray:
     the thing that brings high-frequency content to sawtooth wave.
 
     :param xs:
-        angles (in radians) at which sawtooth function is computed
+        angles (in radians) at which to compute sawtooth wave values
     :param angle_step:
         step of successive angle increments with frequency and frame rate of
         `xs` and regardless any frequency/phase modulations in `xs`;
@@ -63,7 +63,7 @@ def generate_square_wave(xs: np.ndarray, angle_step: float) -> np.ndarray:
     the thing that brings high-frequency content to square wave.
 
     :param xs:
-        angles (in radians) at which square wave function is computed
+        angles (in radians) at which to compute square wave values
     :param angle_step:
         step of successive angle increments with frequency and frame rate of
         `xs` and regardless any frequency/phase modulations in `xs`;
@@ -111,7 +111,7 @@ def generate_triangle_wave(xs: np.ndarray, angle_step: float) -> np.ndarray:
     things that bring high-frequency content to triangle wave.
 
     :param xs:
-        angles (in radians) at which triangle wave function is computed
+        angles (in radians) at which to compute triangle wave values
     :param angle_step:
         step of successive angle increments with frequency and frame rate of
         `xs` and regardless any frequency/phase modulations in `xs`;
@@ -153,11 +153,11 @@ def generate_power_law_noise(
     Generate noise with bandwidth intensity decaying as power of frequency.
 
     :param xs:
-        arrays of input data points; only its length is used
+        array of input data points; only its length is used
     :param frame_rate:
         number of frames per second in `xs`
     :param psd_decay_order:
-        power of frequency in intensity denominator
+        order of intensity (i.e., power, not amplitude) decay with frequency
     :param exponential_step:
         exponential step for defining filter parameters
     :return:

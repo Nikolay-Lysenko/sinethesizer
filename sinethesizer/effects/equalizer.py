@@ -1,6 +1,12 @@
 """
 Change power and amplitude distribution across frequencies.
 
+Note that functions from this module rely on `scipy.signal.firwin2` and so
+actual output is not always equal to the desired output. That being said,
+the module can not be used for tasks that require high precision (e.g., narrow
+notch filter), but it can be used for tasks where general proximity is enough
+(e.g., imitation of resonating body).
+
 Author: Nikolay Lysenko
 """
 
