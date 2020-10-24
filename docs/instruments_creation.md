@@ -24,7 +24,7 @@ Further, each wave has these parameters:
 
 Parameter | Description | Required
 :-------: | :---------: | :------:
-waveform | Form of wave; one of 'sine', 'square', 'triangle', 'sawtooth', 'white_noise', 'pink_noise', and 'brown_noise' | Yes
+waveform | Form of wave; one of 'sine', 'sawtooth', 'square', 'triangle', 'white_noise', 'pink_noise', 'brown_noise', and 'karplus_strong' | Yes
 amplitude_envelope_fn | [Function](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/sinethesizer/envelopes/registry.py) that takes parameters such as duration, velocity, and frame rate as inputs and returns amplitude [envelope](https://en.wikipedia.org/wiki/Envelope_(music)) of output wave | Yes
 phase | Phase shift of a wave (in radians) | No 
 amplitude_modulator | Parameters of a wave that modulates amplitude of original wave (see below) | No
@@ -35,7 +35,7 @@ Finally, a modulator is defined by these arguments:
 
 Parameter | Description | Required
 :-------: | :---------: | :------:
-waveform | Form of wave; one of 'sine', 'square', 'triangle', 'sawtooth', 'white_noise', 'pink_noise', and 'brown_noise' | Yes
+waveform | Form of wave; one of 'sine', 'sawtooth', 'square', 'triangle', 'white_noise', 'pink_noise', 'brown_noise', and 'karplus_strong' | Yes
 frequency_ratio_numerator | Numerator in ratio of modulating wave frequency to that of a modulated wave | Yes
 frequency_ratio_denominator | Denominator in ratio of modulating wave frequency to that of a modulated wave | Yes
 modulation_index_envelope_fn | [Function](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/sinethesizer/envelopes/registry.py) that takes parameters such as duration, velocity, and frame rate as inputs and returns amplitude envelope of modulating wave | Yes

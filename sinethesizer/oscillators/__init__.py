@@ -5,8 +5,8 @@ Author: Nikolay Lysenko
 """
 
 
-from . import analog, facade, noise
+from . import analog, facade, karplus_strong, noise
 from .facade import generate_mono_wave
 
 
-__all__ = ['analog', 'facade', 'generate_mono_wave', 'noise']
+__all__ = ['analog', 'facade', 'generate_mono_wave', 'karplus_strong', 'noise']

@@ -226,6 +226,20 @@ def test_generate_mono_wave_with_analog_waveforms(
 @pytest.mark.parametrize(
     "waveform, amplitude_envelope, expected_len",
     [
+        ('karplus_strong', np.ones(100), 100),
+    ]
+)
+def test_generate_mono_wave_with_model_based_waves(
+        waveform: str, amplitude_envelope: np.ndarray, expected_len: int
+) -> None:
+    """Test model-based waves produced by `generate_mono_wave` function."""
+    result = generate_mono_wave(waveform, 440, amplitude_envelope, 1024)
+    assert len(result) == expected_len
+
+
+@pytest.mark.parametrize(
+    "waveform, amplitude_envelope, expected_len",
+    [
         ('white_noise', np.array([1, 1, 1, 1]), 4),
         ('pink_noise', np.array([1, 1, 1, 1]), 4),
     ]
