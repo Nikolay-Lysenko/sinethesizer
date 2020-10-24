@@ -16,7 +16,7 @@ from sinethesizer.envelopes import ENVELOPE_FN_TYPE
 from sinethesizer.synth.event_to_amplitude_factor import (
     EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE
 )
-from sinethesizer.utils.waves import generate_mono_wave
+from sinethesizer.oscillators import generate_mono_wave
 
 
 class Event(NamedTuple):

@@ -13,7 +13,7 @@ from scipy.signal import spectrogram
 
 from sinethesizer.effects.automation import apply_automated_effect
 from sinethesizer.synth.core import Event
-from sinethesizer.utils.waves import generate_mono_wave
+from sinethesizer.oscillators import generate_mono_wave
 
 
 @pytest.mark.parametrize(

@@ -14,7 +14,7 @@ from typing import List, Optional, Tuple
 import numpy as np
 
 from sinethesizer.effects.filter import apply_frequency_filter
-from sinethesizer.utils.waves import generate_mono_wave
+from sinethesizer.oscillators import generate_mono_wave
 
 
 def oscillate_between_sounds(

@@ -19,7 +19,7 @@ from sinethesizer.effects.filter import (
     filter_relative_frequencies_wrt_velocity
 )
 from sinethesizer.synth.core import Event
-from sinethesizer.utils.waves import generate_mono_wave
+from sinethesizer.oscillators import generate_mono_wave
 
 
 @pytest.mark.parametrize(

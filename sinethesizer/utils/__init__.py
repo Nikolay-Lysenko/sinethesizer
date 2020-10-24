@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from . import music_theory, waves
+from . import music_theory
 
 
-__all__ = ['music_theory', 'waves']
+__all__ = ['music_theory']

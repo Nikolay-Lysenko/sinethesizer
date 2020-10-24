@@ -17,7 +17,7 @@ from sinethesizer.effects.filter_sweep import (
     oscillate_between_sounds,
 )
 from sinethesizer.synth.core import Event
-from sinethesizer.utils.waves import generate_mono_wave
+from sinethesizer.oscillators import generate_mono_wave
 
 
 @pytest.mark.parametrize(

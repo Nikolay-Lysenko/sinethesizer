@@ -1,5 +1,5 @@
 """
-Test `sinethesizer.utils.waves` module.
+Test `sinethesizer.oscillators.facade` module.
 
 Author: Nikolay Lysenko
 """
@@ -10,11 +10,8 @@ from typing import Optional
 
 import pytest
 import numpy as np
-from scipy.signal import spectrogram
 
-from sinethesizer.utils.waves import (
-    generate_mono_wave, generate_power_law_noise
-)
+from sinethesizer.oscillators.facade import generate_mono_wave
 
 
 @pytest.mark.parametrize(
@@ -212,13 +209,13 @@ from sinethesizer.utils.waves import (
         ),
     ]
 )
-def test_generate_mono_wave(
+def test_generate_mono_wave_with_analog_waveforms(
         waveform: str, frequency: float, amplitude_envelope: np.ndarray,
         frame_rate: int, phase: float,
         amplitude_modulator: Optional[np.ndarray],
         phase_modulator: Optional[np.ndarray], expected: np.ndarray
 ) -> None:
-    """Test `generate_mono_wave` function."""
+    """Test analog waveforms produced by `generate_mono_wave` function."""
     result = generate_mono_wave(
         waveform, frequency, amplitude_envelope, frame_rate, phase,
         amplitude_modulator, phase_modulator
@@ -227,37 +224,15 @@ def test_generate_mono_wave(
 
 
 @pytest.mark.parametrize(
-    "amplitude_envelope, expected_len",
+    "waveform, amplitude_envelope, expected_len",
     [
-        (np.array([1, 1, 1, 1]), 4)
+        ('white_noise', np.array([1, 1, 1, 1]), 4),
+        ('pink_noise', np.array([1, 1, 1, 1]), 4),
     ]
 )
-def test_generate_mono_wave_with_white_noise(
-        amplitude_envelope: np.ndarray, expected_len: int
+def test_generate_mono_wave_with_noises(
+        waveform: str, amplitude_envelope: np.ndarray, expected_len: int
 ) -> None:
-    """Test `generate_mono_wave` function with white noise."""
-    result = generate_mono_wave('white_noise', 440, amplitude_envelope, 8)
+    """Test noises produced by `generate_mono_wave` function."""
+    result = generate_mono_wave(waveform, 440, amplitude_envelope, 1024)
     assert len(result) == expected_len
-
-
-@pytest.mark.parametrize(
-    "xs, frame_rate, psd_decay_order, n_equalizer_points, nperseg",
-    [
-        (np.linspace(0, 1000, 1000), 10000, 0, 300, 100),
-        (np.linspace(0, 1000, 1000), 10000, 1, 300, 100),
-        (np.linspace(0, 1000, 1000), 10000, 2, 300, 100),
-    ]
-)
-def test_generate_power_law_noise(
-        xs: np.ndarray, frame_rate: int, psd_decay_order: float,
-        n_equalizer_points: int, nperseg: int
-) -> None:
-    """Test `generate_power_law_noise` function."""
-    noise = generate_power_law_noise(
-        xs, frame_rate, psd_decay_order, n_equalizer_points
-    )
-    spc = spectrogram(noise, frame_rate, nperseg=nperseg)[2]
-    result = spc.sum(axis=1)
-    if psd_decay_order > 0:
-        assert result[0] > result[-1]
-        assert result[10] > result[30]
