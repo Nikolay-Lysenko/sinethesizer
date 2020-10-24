@@ -172,19 +172,26 @@ def generate_power_law_noise(
     ratio = audibility_threshold_in_hz / nyquist_frequency
     inverse_ratio = 1 / ratio
     n_full_steps = floor(log(inverse_ratio, exponential_step))
-    breakpoint_frequencies = [0]
-    gains = [1]
-    for i in range(n_full_steps + 1):
-        breakpoint_frequencies.append(exponential_step ** i * ratio)
-        gains.append(1 / exponential_step ** (0.5 * psd_decay_order * i))
-    # Gain at Nyquist frequency must be 0 in order to prevent aliasing.
-    breakpoint_frequencies.append(1)
-    gains.append(0)
+
+    breakpoint_frequencies = np.logspace(
+        0, n_full_steps, n_full_steps + 1,
+        base=exponential_step
+    )
+    breakpoint_frequencies *= ratio
+    breakpoint_frequencies = np.insert(breakpoint_frequencies, 0, 0)
+    breakpoint_frequencies = np.append(breakpoint_frequencies, 1)
+
+    gains = np.logspace(
+        0, 0.5 * psd_decay_order * n_full_steps, n_full_steps + 1,
+        base=1/exponential_step
+    )
+    gains = np.insert(gains, 0, 1)
+    gains = np.append(gains, 0)  # It prevents aliasing.
 
     # Below constants are chosen empirically for pink and brown noises only.
     scaling_dict = {1.0: 11, 2.0: 29}
     scaling = scaling_dict.get(psd_decay_order, 1)
-    gains = [scaling * x for x in gains]
+    gains *= scaling
 
     fir_size = 2 * int(round(frame_rate / 100)) + 1
     fir = scipy.signal.firwin2(fir_size, breakpoint_frequencies, gains)
