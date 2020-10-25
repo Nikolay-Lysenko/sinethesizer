@@ -19,9 +19,11 @@ from sinethesizer.effects.reverb import apply_reverb
 from sinethesizer.effects.stereo import apply_haas_effect, apply_panning
 from sinethesizer.effects.tremolo import apply_tremolo
 from sinethesizer.effects.vibrato import apply_vibrato
+from sinethesizer.effects.volume import apply_amplitude_normalization
 
 
 REGISTRY_OF_AUTOMATABLE_EFFECTS = {
+    'amplitude_normalization': apply_amplitude_normalization,
     'equalizer': apply_equalizer,
     'filter': apply_frequency_filter,
     'filter_sweep': apply_filter_sweep,
@@ -37,7 +39,8 @@ REGISTRY_OF_AUTOMATABLE_EFFECTS = {
 
 def apply_automated_effect(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        automated_effect_name: str, break_points: List[Dict[str, Any]]
+        automated_effect_name: str, break_points: List[Dict[str, Any]],
+        **kwargs
 ) -> np.ndarray:
     """
     Apply an effect with settings changing over time.
@@ -79,14 +82,16 @@ def apply_automated_effect(
     effect_fn = REGISTRY_OF_AUTOMATABLE_EFFECTS[automated_effect_name]
     zipped = zip(indices, indices[1:], indices[2:], effects_params)
     for start_index, center_index, end_index, effect_params in zipped:
-        fragment = sound[:, start_index:end_index]
-        processed_fragment = effect_fn(fragment, event, **effect_params)
+        fragment = np.copy(sound[:, start_index:end_index])
+        processed_fragment = effect_fn(
+            fragment, event, **effect_params, **kwargs
+        )
         if center_index - start_index > 0:
             asc_weights = np.linspace(0, 1, center_index - start_index, False)
         else:
             asc_weights = np.array([])
         if end_index - center_index > 0:
-            desc_weights = np.linspace(1, 0, end_index - center_index)
+            desc_weights = np.linspace(1, 0, end_index - center_index, False)
         else:
             desc_weights = np.array([])
         weights = np.hstack((asc_weights, desc_weights))

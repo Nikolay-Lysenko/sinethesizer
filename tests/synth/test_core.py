@@ -17,7 +17,7 @@ from sinethesizer.envelopes.misc import create_constant_envelope
 from sinethesizer.synth.core import (
     Event, Instrument, ModulatedWave, Modulator, Partial,
     adjust_envelope_duration, generate_modulated_wave, generate_partial,
-    sum_two_sounds, synthesize
+    introduce_quasiperiodicity, sum_two_sounds, synthesize
 )
 from sinethesizer.synth.event_to_amplitude_factor import (
     compute_amplitude_factor_as_power_of_velocity
@@ -41,6 +41,41 @@ def test_adjust_envelope_duration(
 
 
 @pytest.mark.parametrize(
+    "phase_modulator, n_frames, frame_rate, frequency,"
+    "quasiperiodic_bandwidth, lower_threshold, upper_threshold",
+    [
+        (
+            None, 30000, 10000, 100, 1,
+            0.95 * (2 ** (0.5 / 12) - 1), 1.05 * (2 ** (0.5 / 12) - 1)
+        ),
+        (
+            # In this test, `phase_modulator` can contain only zeros.
+            np.zeros(30000), 30000, 10000, 100, 1,
+            0.95 * (2 ** (0.5 / 12) - 1), 1.05 * (2 ** (0.5 / 12) - 1)
+        ),
+    ]
+)
+def test_introduce_quasiperiodicity(
+        phase_modulator: np.ndarray, n_frames: int, frame_rate: int,
+        frequency: float, quasiperiodic_bandwidth: float,
+        lower_threshold: float, upper_threshold: float
+) -> None:
+    """Test `introduce_quasiperiodicity` function."""
+    modulator = introduce_quasiperiodicity(
+        phase_modulator, n_frames, frame_rate, frequency,
+        quasiperiodic_bandwidth
+    )
+    assert len(modulator) == n_frames
+    derivative_of_modulator = np.diff(modulator) * frame_rate
+    scaled_derivative = derivative_of_modulator / frequency / (2 * np.pi)
+    scaled_derivative = np.abs(scaled_derivative)
+    quantile = 0.9973  # This value comes from the rule of three sigmas.
+    quantile_of_freq_deviation = np.quantile(scaled_derivative, quantile)
+    assert quantile_of_freq_deviation >= lower_threshold
+    assert quantile_of_freq_deviation <= upper_threshold
+
+
+@pytest.mark.parametrize(
     "wave, frequency, event, expected",
     [
         (
@@ -52,7 +87,9 @@ def test_adjust_envelope_duration(
                     create_constant_envelope,
                     value=1
                 ),
-                modulator=None
+                amplitude_modulator=None,
+                phase_modulator=None,
+                quasiperiodic_bandwidth=0
             ),
             # `frequency`
             2,
@@ -86,21 +123,24 @@ def test_adjust_envelope_duration(
             # `wave`
             ModulatedWave(
                 waveform='sine',
-                phase=math.pi / 2,
                 amplitude_envelope_fn=functools.partial(
                     create_constant_envelope,
                     value=1
                 ),
-                modulator=Modulator(
+                phase=math.pi / 2,
+                amplitude_modulator=None,
+                phase_modulator=Modulator(
                     waveform='sine',
-                    frequency_ratio_numerator=3,
-                    frequency_ratio_denominator=2,
-                    phase=0,
+                    carrier_frequency_ratio=2,
+                    modulator_frequency_ratio=3,
                     modulation_index_envelope_fn=functools.partial(
                         create_constant_envelope,
                         value=3
-                    )
-                )
+                    ),
+                    phase=0,
+                    use_ring_modulation=False
+                ),
+                quasiperiodic_bandwidth=0
             ),
             # `frequency`
             2,
@@ -154,7 +194,9 @@ def test_generate_modulated_wave(
                         create_constant_envelope,
                         value=1
                     ),
-                    modulator=None
+                    amplitude_modulator=None,
+                    phase_modulator=None,
+                    quasiperiodic_bandwidth=0
                 ),
                 frequency_ratio=2.0,
                 amplitude_ratio=0.5,
@@ -198,6 +240,48 @@ def test_generate_modulated_wave(
                     0.0, -0.293892626, -0.475528258, -0.475528258, -0.293892626,
                 ]
             ])
+        ),
+        (
+            # `partial`
+            Partial(
+                wave=ModulatedWave(
+                    waveform='sine',
+                    phase=0,
+                    amplitude_envelope_fn=functools.partial(
+                        create_constant_envelope,
+                        value=1
+                    ),
+                    amplitude_modulator=None,
+                    phase_modulator=None,
+                    quasiperiodic_bandwidth=0
+                ),
+                frequency_ratio=2.0,
+                amplitude_ratio=0.5,
+                event_to_amplitude_factor_fn=functools.partial(
+                    compute_amplitude_factor_as_power_of_velocity,
+                    power=1
+                ),
+                detuning_to_amplitude={0.0: 1.0},
+                random_detuning_range=0.0,
+                effects=[
+                    functools.partial(
+                        apply_haas_effect,
+                        location=-1, max_channel_delay=0.1
+                    )
+                ]
+            ),
+            # `event`
+            Event(
+                instrument='any_instrument',
+                start_time=0.0,
+                duration=1.0,
+                frequency=15.0,
+                velocity=1.0,
+                effects='',
+                frame_rate=20
+            ),
+            # `expected`
+            np.array([[], []])
         ),
     ]
 )
@@ -253,12 +337,14 @@ def test_sum_two_sounds(
                         Partial(
                             wave=ModulatedWave(
                                 waveform='sine',
-                                phase=0,
                                 amplitude_envelope_fn=functools.partial(
                                     create_constant_envelope,
                                     value=1
                                 ),
-                                modulator=None
+                                phase=0,
+                                amplitude_modulator=None,
+                                phase_modulator=None,
+                                quasiperiodic_bandwidth=0
                             ),
                             frequency_ratio=1.0,
                             amplitude_ratio=1.0,
@@ -305,12 +391,14 @@ def test_sum_two_sounds(
                         Partial(
                             wave=ModulatedWave(
                                 waveform='sine',
-                                phase=0,
                                 amplitude_envelope_fn=functools.partial(
                                     create_constant_envelope,
                                     value=1
                                 ),
-                                modulator=None
+                                phase=0,
+                                amplitude_modulator=None,
+                                phase_modulator=None,
+                                quasiperiodic_bandwidth=0
                             ),
                             frequency_ratio=1.0,
                             amplitude_ratio=1.0,

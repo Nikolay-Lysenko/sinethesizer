@@ -18,8 +18,8 @@ from sinethesizer.synth.core import Event
     "sound, event, first_reflection_delay, decay_duration, "
     "amplitude_random_range, n_early_reflections, early_reflections_delay, "
     "diffusion_delay_factor, diffusion_delay_random_range, "
-    "original_sound_gain, reverberations_gain, keep_peak_volume, random_seed, "
-    "expected",
+    "late_reflections_decay_power, original_sound_gain, reverberations_gain, "
+    "random_seed, keep_peak_volume, expected",
     [
         (
             # `sound`
@@ -51,27 +51,31 @@ from sinethesizer.synth.core import Event
             0.5,
             # `diffusion_delay_random_range`
             0.0,
+            # `late_reflections_decay_power`
+            10.0,
             # `original_sound_gain`
             1.0,
             # `reverberations_gain`
             1.0,
-            # `keep_peak_volume`
-            False,
             # `random_seed`
             0,
+            # `keep_peak_volume`
+            False,
             # `expected`
             np.array([
                 [
                     1, 2, 3, 4, 5, 10, 5, 1,
-                    1, 2, 3, 4, 5.44444444, 10.88888889, 6.5, 3.13888889,
-                    2.77777778, 5.19444444, 3.16666667, 2.25, 1.11111111,
-                    0.30555556, 0.02777778
+                    0.00517892437, 0.0103578487, 0.0155367731, 0.0207156975,
+                    0.0262673218, 0.0525346436, 0.0271127032, 0.00692147148,
+                    0.00226701291, 0.00428227858, 0.00257054458, 0.00163143618,
+                    0.00101775133, 0.000358903552, 0.000051784429
                 ],
                 [
                     1, 5, 10, 5, 4, 3, 2, 1,
-                    1, 5, 10, 5, 4.44444444, 5.22222222, 6.61111111,
-                    4.08333333, 3.58333333, 2.44444444, 1.69444444,
-                    1.05555556, 0.41666667, 0.22222222, 0.02777778
+                    0.00517892437, 0.0258946219, 0.0517892437, 0.0258946219,
+                    0.0210883974, 0.0174002729, 0.0141848298, 0.00759411567,
+                    0.00274953608, 0.00213585123, 0.00140424771, 0.0008797819,
+                    0.000355316102, 0.000203550265, 0.000051784429
                 ]
             ])
         ),
@@ -105,29 +109,31 @@ from sinethesizer.synth.core import Event
             0.5,
             # `diffusion_delay_random_range`
             0.0,
+            # `late_reflections_decay_power`
+            10.0,
             # `original_sound_gain`
             1.0,
             # `reverberations_gain`
             1.0,
-            # `keep_peak_volume`
-            True,
             # `random_seed`
             0,
+            # `keep_peak_volume`
+            True,
             # `expected`
             np.array([
                 [
-                    0.91836735, 1.83673469, 2.75510204, 3.67346939, 4.59183673,
-                    9.18367347, 4.59183673, 0.91836735, 0.91836735, 1.83673469,
-                    2.75510204, 3.67346939, 5, 10, 5.96938776, 2.88265306,
-                    2.55102041, 4.77040816, 2.90816327, 2.06632653, 1.02040816,
-                    0.28061224, 0.0255102
+                    1, 2, 3, 4, 5, 10, 5, 1,
+                    0.00517892437, 0.0103578487, 0.0155367731, 0.0207156975,
+                    0.0262673218, 0.0525346436, 0.0271127032, 0.00692147148,
+                    0.00226701291, 0.00428227858, 0.00257054458, 0.00163143618,
+                    0.00101775133, 0.000358903552, 0.000051784429
                 ],
                 [
-                    0.91836735, 4.59183673, 9.18367347, 4.59183673, 3.67346939,
-                    2.75510204, 1.83673469, 0.91836735, 0.91836735, 4.59183673,
-                    9.18367347, 4.59183673, 4.08163265, 4.79591837, 6.07142857,
-                    3.75, 3.29081633, 2.24489796, 1.55612245, 0.96938776,
-                    0.38265306, 0.20408163, 0.0255102
+                    1, 5, 10, 5, 4, 3, 2, 1,
+                    0.00517892437, 0.0258946219, 0.0517892437, 0.0258946219,
+                    0.0210883974, 0.0174002729, 0.0141848298, 0.00759411567,
+                    0.00274953608, 0.00213585123, 0.00140424771, 0.0008797819,
+                    0.000355316102, 0.000203550265, 0.000051784429
                 ]
             ])
         ),
@@ -142,6 +148,7 @@ def test_apply_reverb(
         early_reflections_delay: float,
         diffusion_delay_factor: float,
         diffusion_delay_random_range: float,
+        late_reflections_decay_power: float,
         original_sound_gain: float,
         reverberations_gain: float,
         keep_peak_volume: bool,
@@ -153,6 +160,8 @@ def test_apply_reverb(
         sound, event, first_reflection_delay, decay_duration,
         amplitude_random_range, n_early_reflections, early_reflections_delay,
         diffusion_delay_factor, diffusion_delay_random_range,
-        original_sound_gain, reverberations_gain, keep_peak_volume, random_seed
+        late_reflections_decay_power, original_sound_gain, reverberations_gain,
+        random_seed, keep_peak_volume
     )
+    print(result)
     np.testing.assert_almost_equal(result, expected)

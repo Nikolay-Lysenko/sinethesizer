@@ -1,4 +1,7 @@
-# Number of frames per second.
-frame_rate: 44100
+# Number of frames per second (also known as sampling frequency).
+# The higher it is, the longer code runs and the larger output files are.
+# On the other hand, the higher it is, the less probable undesirable artifacts are.
+frame_rate: 48000
+
 # Duration (in seconds) of silence added to the end of a track.
 trailing_silence: 2

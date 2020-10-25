@@ -7,7 +7,6 @@ Author: Nikolay Lysenko
 
 import json
 import random
-from math import gcd
 from typing import Dict, List, NamedTuple, Optional
 
 import numpy as np
@@ -17,7 +16,7 @@ from sinethesizer.envelopes import ENVELOPE_FN_TYPE
 from sinethesizer.synth.event_to_amplitude_factor import (
     EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE
 )
-from sinethesizer.utils.waves import generate_mono_wave
+from sinethesizer.oscillators import generate_mono_wave
 
 
 class Event(NamedTuple):
@@ -54,49 +53,62 @@ class Event(NamedTuple):
 
 class Modulator(NamedTuple):
     """
-    Parameters of a wave that modulates frequency of another wave.
+    Parameters of a wave that modulates phase or amplitude of another wave.
 
     :param waveform:
         form of a modulating wave
-    :param frequency_ratio_numerator:
-        numerator in ratio of modulating wave frequency to that of a
-        modulated wave
-    :param frequency_ratio_denominator:
-        denominator in ratio of modulating wave frequency to that of a
-        modulated wave
-    :param phase:
-        phase shift of a modulating wave (in radians)
+    :param carrier_frequency_ratio:
+        ratio of carrier frequency to fundamental frequency of output wave
+        produced with this modulator and, maybe, with other modulators of the
+        same wave
+    :param modulator_frequency_ratio:
+        ratio of modulator frequency to fundamental frequency of output wave
+        produced with this modulator and, maybe, with other modulators of the
+        same wave
     :param modulation_index_envelope_fn:
         function that takes parameters such as duration, velocity, and
         frame rate as inputs and returns amplitude envelope of a modulating
         wave (this envelope is known as modulation index envelope)
+    :param phase:
+        phase shift of a modulating wave (in radians)
+    :param use_ring_modulation:
+        if it is set to `True` and amplitude is modulated, ring modulation
+        is applied instead of classical amplitude modulation
     """
     waveform: str
-    frequency_ratio_numerator: int
-    frequency_ratio_denominator: int
-    phase: float
+    carrier_frequency_ratio: float
+    modulator_frequency_ratio: float
     modulation_index_envelope_fn: ENVELOPE_FN_TYPE
+    phase: float
+    use_ring_modulation: bool
 
 
 class ModulatedWave(NamedTuple):
     """
-    Parameters of a wave with modulated frequency.
+    Parameters of a wave with various types of modulation.
 
     :param waveform:
         form of a modulated wave (so called carrier)
-    :param phase:
-        phase shift of a carrier (in radians)
     :param amplitude_envelope_fn:
         function that takes parameters such as duration, velocity, and
         frame rate as inputs and returns amplitude envelope of output wave
-    :param modulator:
-        parameters of a modulating wave; if it is `None`, frequency is not
-        modulated
+        (before amplitude modulation)
+    :param phase:
+        phase shift of a carrier (in radians)
+    :param amplitude_modulator:
+        parameters of an amplitude modulating wave
+    :param phase_modulator:
+        parameters of a phase modulating wave
+    :param quasiperiodic_bandwidth:
+        bandwidth (in semitones) of instantaneous frequency random changes;
+        these changes make output wave quasi-periodic and, hence, more natural
     """
     waveform: str
-    phase: float
     amplitude_envelope_fn: ENVELOPE_FN_TYPE
-    modulator: Optional[Modulator]
+    phase: float
+    amplitude_modulator: Optional[Modulator]
+    phase_modulator: Optional[Modulator]
+    quasiperiodic_bandwidth: float
 
 
 def adjust_envelope_duration(
@@ -120,6 +132,60 @@ def adjust_envelope_duration(
     return envelope
 
 
+def introduce_quasiperiodicity(
+        phase_modulator: Optional[np.ndarray], n_frames: int, frame_rate: int,
+        frequency: float, quasiperiodic_bandwidth: float
+) -> np.ndarray:
+    """
+    Add non-periodic component (here, smoothed noise) to phase modulator.
+
+    :param phase_modulator:
+        phase modulator (if it exists)
+    :param n_frames:
+        required duration of phase modulator
+    :param frame_rate:
+        number of frames per second
+    :param frequency:
+        perceived (in other words, central) frequency of output wave
+    :param quasiperiodic_bandwidth:
+        bandwidth (in semitones) of instantaneous frequency random changes
+    :return:
+        phase modulator that makes output wave quasi-periodic
+    """
+    if quasiperiodic_bandwidth == 0:
+        return phase_modulator
+    semitone = 2 ** (1 / 12)
+    half_of_bandwidth = 0.5 * quasiperiodic_bandwidth
+    max_deviation_in_hz = frequency * (semitone ** half_of_bandwidth - 1)
+    # Instantaneous frequency for PM is carrier frequency plus derivative of
+    # phase modulator (i.e., d(phase_modulator)/dt) divided by 2 * pi.
+    # If phase modulator is moving average of standard Gaussian noise,
+    # its derivative is a Gaussian random variable (with 0 mean and 2 ** 0.5
+    # standard deviation) divided by window size and multiplied by frame rate
+    # (loosely speaking, dt = 1 / frame_rate).
+    # Below `window_size` is set so that three standard deviations of
+    # (1 / (2 * pi)) * d(phase_modulator)/dt random variable are equal to
+    # `max_deviation_in_hz`.
+    n_sigmas = 3
+    std_of_sum = 2 ** 0.5
+    window_size = int(round(
+        n_sigmas * std_of_sum * frame_rate
+        / (2 * np.pi * max_deviation_in_hz)
+    ))
+
+    # Output of convolution with valid mode of two arrays of size N and M is
+    # max(M, N) - min(M, N) + 1. This output must be equal to `n_frames` and
+    # M = `window_size`. Let us solve it for N.
+    noise_len = n_frames + window_size - 1
+    noise = np.random.normal(0, 1, noise_len)
+    weights = np.ones(window_size) / window_size
+    smoothed_noise = np.convolve(noise, weights, mode='valid')
+
+    if phase_modulator is None:
+        return smoothed_noise
+    return phase_modulator + smoothed_noise
+
+
 def generate_modulated_wave(
         wave: ModulatedWave, frequency: float, event: Event
 ) -> np.ndarray:
@@ -136,26 +202,39 @@ def generate_modulated_wave(
         wave with modulated frequency
     """
     amplitude_envelope = wave.amplitude_envelope_fn(event)
-    if wave.modulator is None:
-        modulator = None
-        carrier_frequency = frequency
-    else:
-        numerator = wave.modulator.frequency_ratio_numerator
-        denominator = wave.modulator.frequency_ratio_denominator
-        divisor = gcd(numerator, denominator)
-        carrier_frequency = (denominator / divisor) * frequency
-        modulator_frequency = (numerator / divisor) * frequency
-        index_envelope = wave.modulator.modulation_index_envelope_fn(event)
-        index_envelope = adjust_envelope_duration(
-            index_envelope, len(amplitude_envelope)
-        )
-        modulator = generate_mono_wave(
-            wave.modulator.waveform,
-            modulator_frequency,
-            index_envelope,
-            event.frame_rate,
-            wave.modulator.phase
-        )
+    n_frames = len(amplitude_envelope)
+
+    carrier_frequency = frequency
+    modulators_as_params = {
+        'amplitude_modulator': wave.amplitude_modulator,
+        'phase_modulator': wave.phase_modulator,
+    }
+    modulators_as_arrays = {}
+    for key, params in modulators_as_params.items():
+        modulator_as_array = None
+        if params is not None:
+            # NB: `carrier_frequency` is overridden below,
+            # so order in `modulators_as_params` matters.
+            carrier_frequency = params.carrier_frequency_ratio * frequency
+            modulator_frequency = params.modulator_frequency_ratio * frequency
+            index_envelope = params.modulation_index_envelope_fn(event)
+            index_envelope = adjust_envelope_duration(index_envelope, n_frames)
+            modulator_as_array = generate_mono_wave(
+                params.waveform,
+                modulator_frequency,
+                index_envelope,
+                event.frame_rate,
+                params.phase
+            )
+        modulators_as_arrays[key] = modulator_as_array
+
+    if wave.amplitude_modulator is not None:
+        constant = int(not wave.amplitude_modulator.use_ring_modulation)
+        modulators_as_arrays['amplitude_modulator'] += constant
+    modulators_as_arrays['phase_modulator'] = introduce_quasiperiodicity(
+        modulators_as_arrays['phase_modulator'], n_frames, event.frame_rate,
+        frequency, wave.quasiperiodic_bandwidth
+    )
 
     result = generate_mono_wave(
         wave.waveform,
@@ -163,7 +242,7 @@ def generate_modulated_wave(
         amplitude_envelope,
         event.frame_rate,
         wave.phase,
-        modulator
+        **modulators_as_arrays
     )
 
     result = np.vstack((result, result))  # Two channels for stereo sound.
@@ -186,12 +265,11 @@ class Partial(NamedTuple):
     :param event_to_amplitude_factor_fn:
         function that maps event to its multiplicative contribution to
         partial's amplitude
-    :param detuning_to_amplitude:
-        mapping from a detuning size (in semitones) to amplitude factor of
-        a wave with the corresponding detuned frequency; sum of slightly
-        detuned waves sounds less artificial than one pure wave
     :param random_detuning_range:
-        range of additional random detuning (in semitones)
+        range of random detuning (in semitones)
+    :param detuning_to_amplitude:
+        mapping from additional detuning size (in semitones) to
+        amplitude factor of a wave with the corresponding detuned frequency
     :param effects:
         sound effects that should be applied to this partial
     """
@@ -199,8 +277,8 @@ class Partial(NamedTuple):
     frequency_ratio: float
     amplitude_ratio: float
     event_to_amplitude_factor_fn: EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE
-    detuning_to_amplitude: Dict[float, float]
     random_detuning_range: float
+    detuning_to_amplitude: Dict[float, float]
     effects: List[EFFECT_FN_TYPE]
 
 
@@ -208,7 +286,7 @@ def sum_two_sounds(
         first_sound: np.ndarray, second_sound: np.ndarray
 ) -> np.ndarray:
     """
-    Sum two sound of probably unequal durations.
+    Sum two sounds of probably unequal durations.
 
     :param first_sound:
         first sound as array of shape (n_channels, n_frames)
@@ -239,8 +317,13 @@ def generate_partial(partial: Partial, event: Event) -> np.ndarray:
     :return:
         partial
     """
+    semitone = 2 ** (1 / 12)
     sound = np.array([[], []], dtype=np.float64)
     partial_frequency = partial.frequency_ratio * event.frequency
+    nyquist_frequency = event.frame_rate / 2
+    if partial_frequency >= nyquist_frequency:
+        # This partial can not be heard, but it creates aliasing, so remove it.
+        return sound
     borders_of_random_detuning = (
         -partial.random_detuning_range / 2,
         partial.random_detuning_range / 2
@@ -248,7 +331,7 @@ def generate_partial(partial: Partial, event: Event) -> np.ndarray:
     params = partial.detuning_to_amplitude.items()
     for freq_shift_in_semitones, amplitude_ratio in params:
         freq_shift_in_semitones += random.uniform(*borders_of_random_detuning)
-        frequency_ratio = 2 ** (freq_shift_in_semitones / 12)
+        frequency_ratio = semitone ** freq_shift_in_semitones
         detuned_frequency = frequency_ratio * partial_frequency
         wave = generate_modulated_wave(partial.wave, detuned_frequency, event)
         wave *= amplitude_ratio

@@ -14,7 +14,9 @@ from sinethesizer.envelopes.ahdsr import (
     create_relative_ahdsr_envelope,
     create_trapezoid_envelope
 )
-from sinethesizer.envelopes.misc import create_constant_envelope
+from sinethesizer.envelopes.misc import (
+    create_constant_envelope, create_exponentially_decaying_envelope
+)
 from sinethesizer.envelopes.user_defined import create_user_defined_envelope
 
 
@@ -30,6 +32,7 @@ def get_envelopes_registry() -> Dict[str, ENVELOPE_FN_TYPE]:
     """
     registry = {
         'constant': create_constant_envelope,
+        'exponentially_decaying': create_exponentially_decaying_envelope,
         'generic_ahdsr': create_generic_ahdsr_envelope,
         'relative_ahdsr': create_relative_ahdsr_envelope,
         'trapezoid': create_trapezoid_envelope,

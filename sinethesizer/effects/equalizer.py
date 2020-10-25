@@ -1,6 +1,12 @@
 """
 Change power and amplitude distribution across frequencies.
 
+Note that functions from this module rely on `scipy.signal.firwin2` and so
+actual output is not always equal to the desired output. That being said,
+the module can not be used for tasks that require high precision (e.g., narrow
+notch filter), but it can be used for tasks where general proximity is enough
+(e.g., imitation of resonating body).
+
 Author: Nikolay Lysenko
 """
 
@@ -34,7 +40,7 @@ def equalize_with_absolute_frequencies(
     """
     nyquist_frequency = 0.5 * event.frame_rate
     breakpoint_frequencies = [
-        x / nyquist_frequency for x in breakpoint_frequencies
+        min(x / nyquist_frequency, 1) for x in breakpoint_frequencies
     ]
     gains = [x for x in gains]  # Copy it to prevent modifying original list.
     if breakpoint_frequencies[0] != 0:

@@ -64,7 +64,7 @@ def standardize_note(note: str) -> str:
 
 def convert_note_to_frequency(note: str) -> float:
     """
-    Convert note to its frequency.
+    Convert note to its frequency in Hz.
 
     Supported notes can contain any number of sharps ('#') and flats ('b'),
     but must be in range of standard piano keyboard.

@@ -11,10 +11,10 @@ It is a digital synthesizer that has no GUI and is controlled through text files
 
 The list of implemented and planned features is as follows:
 - [x] Balance between freedom for user and simplicity of input formats
-- [x] Support of additive synthesis, subtractive synthesis, and FM synthesis
-- [x] Sound effects (e.g., tremolo, overdrive, reverb, etc) 
+- [x] Support of additive synthesis, subtractive synthesis, and AM/PM synthesis
+- [x] Sound effects (e.g., phaser, overdrive, reverb, etc)
 - [x] Custom envelopes
-- [ ] Noises and drums
+- [x] Noises and drums
 - [ ] Rich collection of presets
 
 ## Installation
@@ -37,7 +37,7 @@ python -m sinethesizer \
     -o path/to/output.wav
 ```
 
-However, MIDI files do not carry information about source location and sound effects. Here, TSV (Tab-Separated Values) files of special schema can be used as a more self-contained alternative to MIDI. To process such file, run:
+However, MIDI files do not carry information about source location and event-level effects. Here, TSV (Tab-Separated Values) files of special schema can be used as a more self-contained alternative to MIDI. To process such file, run:
 ```bash
 python -m sinethesizer \
     -i path/to/track.tsv \

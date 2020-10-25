@@ -40,6 +40,57 @@ from sinethesizer.envelopes.ahdsr import (
                 "          name: trapezoid",
                 "      frequency_ratio: 1.0",
                 "      amplitude_ratio: 1.0",
+                "      detuning_to_amplitude:",
+                "        0.0: 1.0",
+                "      random_detuning_range: 0.0",
+                "  amplitude_scaling: 1.0",
+            ],
+            {
+                'sine': Instrument(
+                    partials=[
+                        Partial(
+                            wave=ModulatedWave(
+                                waveform='sine',
+                                amplitude_envelope_fn=create_trapezoid_envelope,
+                                phase=0,
+                                amplitude_modulator=None,
+                                phase_modulator=None,
+                                quasiperiodic_bandwidth=0
+                            ),
+                            frequency_ratio=1.0,
+                            amplitude_ratio=1.0,
+                            event_to_amplitude_factor_fn=functools.partial(
+                                compute_amplitude_factor_as_power_of_velocity,
+                                power=1
+                            ),
+                            detuning_to_amplitude={0.0: 1.0},
+                            random_detuning_range=0.0,
+                            effects=[]
+                        )
+                    ],
+                    amplitude_scaling=1.0,
+                    effects=[]
+                )
+            }
+        ),
+        (
+            [
+                "---",
+                "- name: sine",
+                "  partials:",
+                "    - wave:",
+                "        waveform: sine",
+                "        amplitude_envelope_fn:",
+                "          name: trapezoid",
+                "        amplitude_modulator:",
+                "          waveform: sine",
+                "          frequency_ratio_numerator: 99",
+                "          frequency_ratio_denominator: 100",
+                "          modulation_index_envelope_fn:",
+                "            name: trapezoid",
+                "          use_ring_modulation: true",
+                "      frequency_ratio: 1.0",
+                "      amplitude_ratio: 1.0",
                 "      event_to_amplitude_factor_fn:",
                 "        name: power_fn_of_velocity",
                 "        power: 1.0",
@@ -54,9 +105,18 @@ from sinethesizer.envelopes.ahdsr import (
                         Partial(
                             wave=ModulatedWave(
                                 waveform='sine',
-                                phase=0,
                                 amplitude_envelope_fn=create_trapezoid_envelope,
-                                modulator=None
+                                phase=0,
+                                amplitude_modulator=Modulator(
+                                    waveform='sine',
+                                    carrier_frequency_ratio=1,
+                                    modulator_frequency_ratio=0.99,
+                                    modulation_index_envelope_fn=create_trapezoid_envelope,
+                                    phase=0,
+                                    use_ring_modulation=True
+                                ),
+                                phase_modulator=None,
+                                quasiperiodic_bandwidth=0
                             ),
                             frequency_ratio=1.0,
                             amplitude_ratio=1.0,
@@ -83,7 +143,7 @@ from sinethesizer.envelopes.ahdsr import (
                 "        waveform: sine",
                 "        amplitude_envelope_fn:",
                 "          name: trapezoid",
-                "        modulator:",
+                "        phase_modulator:",
                 "          waveform: sine",
                 "          frequency_ratio_numerator: 3",
                 "          frequency_ratio_denominator: 1",
@@ -127,13 +187,13 @@ from sinethesizer.envelopes.ahdsr import (
                         Partial(
                             wave=ModulatedWave(
                                 waveform='sine',
-                                phase=0,
                                 amplitude_envelope_fn=create_trapezoid_envelope,
-                                modulator=Modulator(
+                                phase=0,
+                                amplitude_modulator=None,
+                                phase_modulator=Modulator(
                                     waveform='sine',
-                                    frequency_ratio_numerator=3,
-                                    frequency_ratio_denominator=1,
-                                    phase=0,
+                                    carrier_frequency_ratio=1,
+                                    modulator_frequency_ratio=3,
                                     modulation_index_envelope_fn=functools.partial(
                                         create_generic_ahdsr_envelope,
                                         attack_to_ahds_max_ratio=0.1,
@@ -152,8 +212,11 @@ from sinethesizer.envelopes.ahdsr import (
                                         peak_value=5.0,
                                         ratio_at_zero_velocity=0.5,
                                         envelope_values_on_velocity_order=0.5
-                                    )
-                                )
+                                    ),
+                                    phase=0,
+                                    use_ring_modulation=False
+                                ),
+                                quasiperiodic_bandwidth=0
                             ),
                             frequency_ratio=1.0,
                             amplitude_ratio=1.0,

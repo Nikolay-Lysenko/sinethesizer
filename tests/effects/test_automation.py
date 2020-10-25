@@ -13,7 +13,73 @@ from scipy.signal import spectrogram
 
 from sinethesizer.effects.automation import apply_automated_effect
 from sinethesizer.synth.core import Event
-from sinethesizer.utils.waves import generate_mono_wave
+from sinethesizer.oscillators import generate_mono_wave
+
+
+@pytest.mark.parametrize(
+    "sound, event, automated_effect_name, break_points, expected",
+    [
+        (
+            # `sound`
+            np.array([
+                [1.0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            ]),
+            # `event`
+            Event(
+                instrument='any_instrument',
+                start_time=0,
+                duration=1,
+                frequency=440,
+                velocity=1,
+                effects='',
+                frame_rate=8
+            ),
+            # `automated_effect_name`
+            'panning',
+            # `break_points`
+            [
+                {
+                    'relative_position': 0,
+                    'left_volume_ratio': 1.0,
+                    'right_volume_ratio': 1.0,
+                },
+                {
+                    'relative_position': 0.25,
+                    'left_volume_ratio': 0.25,
+                    'right_volume_ratio': 1.0,
+                },
+                {
+                    'relative_position': 0.5,
+                    'left_volume_ratio': 0.5,
+                    'right_volume_ratio': 1.0,
+                },
+                {
+                    'relative_position': 1,
+                    'left_volume_ratio': 1.0,
+                    'right_volume_ratio': 1.0,
+                },
+            ],
+            # `expected`
+            np.array([
+                [
+                    1, 0.8125, 0.625, 0.4375, 0.25, 0.3125, 0.375, 0.4375,
+                    0.5, 0.5625, 0.625, 0.6875, 0.75, 0.8125, 0.875, 0.9375
+                ],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            ])
+        ),
+    ]
+)
+def test_apply_automated_effect(
+        sound: np.ndarray, event: Event, automated_effect_name: str,
+        break_points: List[Dict[str, Any]], expected: np.ndarray
+) -> None:
+    """Test `apply_automated_effect` function."""
+    result = apply_automated_effect(
+        sound, event, automated_effect_name, break_points
+    )
+    np.testing.assert_almost_equal(result, expected)
 
 
 @pytest.mark.parametrize(
@@ -62,53 +128,53 @@ from sinethesizer.utils.waves import generate_mono_wave
                     0,
                     5,
                     np.array([
-                        0.0002183, 0.0004449, 0.0007267, 0.0013604, 0.0075377,
-                        0.0220382, 0.0224577, 0.0227558, 0.0230753, 0.0232609,
-                        0.0234798, 0.0234915, 0.0235627, 0.0234495, 0.0235014,
-                        0.0230627, 0.0231495, 0.0225367, 0.0227892, 0.0221962
+                        0.0002183, 0.0004449, 0.0007268, 0.0013604, 0.0075382,
+                        0.0220401, 0.0224595, 0.0227577, 0.0230772, 0.0232628,
+                        0.0234817, 0.0234934, 0.0235646, 0.0234514, 0.0235033,
+                        0.0230645, 0.0231514, 0.0225386, 0.0227911, 0.0221979
                     ])
                 ),
                 (
                     26,
                     31,
                     np.array([
-                        0.0004726, 0.0246527, 0.0265902, 0.0265404, 0.0278111,
-                        0.0287469, 0.0288369, 0.0291045, 0.0292126, 0.029238,
-                        0.0292028, 0.0289911, 0.0287447, 0.0284273, 0.0280728,
-                        0.0278993, 0.0273279, 0.0268932, 0.0270518, 0.0250346
+                        0.0004725, 0.0246534, 0.0265909, 0.0265413, 0.0278156,
+                        0.0287562, .028847, 0.029115, 0.0292235, 0.029249,
+                        0.029214, 0.0290024, 0.028756, 0.0284386, 0.028084,
+                        0.0279104, 0.0273389, 0.0269038, 0.027062, 0.0250446
                     ])
                 ),
                 (
                     52,
                     57,
                     np.array([
-                        0.0001075, 0.0250414, 0.0285338, 0.0278403, 0.0256055,
-                        0.0239786, 0.0231653, 0.0225009, 0.0217015, 0.0206943,
-                        0.0186929, 0.0133212, 0.0081255, 0.0041418, 0.0015606,
-                        0.0004099, 0.0002907, 0.0002895, 0.0002744, 0.0002428
+                        0.0001076, 0.025058, 0.028553, 0.0278598, 0.0256236,
+                        0.023996, 0.0231824, 0.0225178, 0.0217181, 0.0207106,
+                        0.0187084, 0.0133343, 0.0081357, 0.0041491, 0.0015651,
+                        0.0004121, 0.0002923, 0.0002912, 0.000276, 0.0002442
                     ])
                 ),
                 (
                     107,
                     112,
                     np.array([
-                        0.0016842, 0.0218644, 0.0187497, 0.0202582, 0.0068620,
-                        0.0013392, 0.0008960, 0.0004691, 0.0002142, 0.0000986,
-                        0.0000691, 0.0000479, 0.0000290, 0.0000161, 0.0000067,
-                        0.0000021, 0.0000009, 0.0000004, 0.0000001, 0.00000006
+                        0.0016849, 0.0218725, 0.0187567, 0.0202654, 0.0068659,
+                        0.00134, 0.0008968, 0.0004696, 0.0002146, 0.000099,
+                        0.0000694, 0.0000482, 0.0000291, 0.0000162, 0.0000067,
+                        0.00000213, 0.0000009, 0.0000004, 0.0000001, 0.00000006
                     ])
                 ),
             ]
         ),
     ]
 )
-def test_apply_automated_effect(
+def test_apply_automated_effect_with_spectrogram_checks(
         frequencies: List[float], frame_rate: int, automated_effect_name: str,
         break_points: List[Dict[str, Union[float, List[float]]]],
         spectrogram_params: Dict[str, Any],
         expected: List[Tuple[int, int, np.ndarray]]
 ) -> None:
-    """Test `apply_automated_effect` function."""
+    """Test `apply_automated_effect` function with spectrogram checks."""
     waves = [
         generate_mono_wave(
             'sine', frequency, np.ones(frame_rate), frame_rate
@@ -134,4 +200,3 @@ def test_apply_automated_effect(
         spc_slice = spc[:len(expected_distribution), start_segment:end_segment]
         result = spc_slice.sum(axis=1)
         np.testing.assert_almost_equal(result, expected_distribution)
-

@@ -9,7 +9,7 @@ Author: Nikolay Lysenko
 
 import numpy as np
 
-from sinethesizer.utils.waves import generate_mono_wave
+from sinethesizer.oscillators import generate_mono_wave
 
 
 def apply_absolute_vibrato(

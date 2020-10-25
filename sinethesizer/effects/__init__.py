@@ -15,7 +15,8 @@ from . import (
     reverb,
     stereo,
     tremolo,
-    vibrato
+    vibrato,
+    volume,
 )
 from .registry import EFFECT_FN_TYPE, get_effects_registry
 
@@ -32,5 +33,6 @@ __all__ = [
     'reverb',
     'stereo',
     'tremolo',
-    'vibrato'
+    'vibrato',
+    'volume',
 ]

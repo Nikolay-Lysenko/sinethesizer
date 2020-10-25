@@ -10,32 +10,18 @@
           name: trapezoid
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
-      detuning_to_amplitude:
-        0.0: 1.0
-      random_detuning_range: 0.0
   amplitude_scaling: 1.0
 
 # It is a richer sine wave.
-- name: detuned_sine
+- name: quasiperiodic_sine
   partials:
     - wave:
         waveform: sine
         amplitude_envelope_fn:
           name: trapezoid
+        quasiperiodic_bandwidth: 1.0
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
-      detuning_to_amplitude:
-        -0.1: 0.1
-        -0.05: 0.2
-        0: 0.4
-        0.05: 0.2
-        0.1: 0.1
       random_detuning_range: 0.005
   amplitude_scaling: 1.0
 
@@ -51,8 +37,6 @@
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.0
-      detuning_to_amplitude:
-        0.0: 1.0
       random_detuning_range: 0.005
     - wave:
         waveform: sine
@@ -63,8 +47,6 @@
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.1  # The lower velocity is, the more quiet than fundamental this partial is.
-      detuning_to_amplitude:
-        0.0: 1.0
       random_detuning_range: 0.005
     - wave:
         waveform: sine
@@ -75,8 +57,6 @@
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.15  # This partial depends on velocity even stronger than the previous one.
-      detuning_to_amplitude:
-        0.0: 1.0
       random_detuning_range: 0.005
   amplitude_scaling: 0.5714  # Inverse of sum of `amplitude_ratio` over all partials.
   effects:
@@ -100,11 +80,6 @@
           name: trapezoid
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
-      detuning_to_amplitude:
-        0.0: 1.0
       random_detuning_range: 0.005
       effects:
         - name: filter
@@ -114,12 +89,6 @@
           invert: true
           order: 10
   amplitude_scaling: 1.0
-  effects:
-    # Avoid aliasing by removing frequencies that are near Nyquist frequency.
-    - name: filter
-      kind: absolute
-      max_frequency: 15000
-      order: 10
 
 ## This is an example of more advanced subtractive synthesis (there is an envelope for filter).
 - name: another_filtered_sawtooth
@@ -130,11 +99,6 @@
           name: trapezoid
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
-      detuning_to_amplitude:
-        0.0: 1.0
       random_detuning_range: 0.005
       effects:
         - name: automation
@@ -165,21 +129,15 @@
                 - 1.0
                 - 0.0
   amplitude_scaling: 1.0
-  effects:
-    # Avoid aliasing by removing frequencies that are near Nyquist frequency.
-    - name: filter
-      kind: absolute
-      max_frequency: 15000
-      order: 10
 
-# This is an example of FM synthesis.
+# This is an example of FM synthesis (although, to be rigorous, it is PM synthesis).
 - name: fm_sine
   partials:
     - wave:
         waveform: sine
         amplitude_envelope_fn:
           name: trapezoid
-        modulator:
+        phase_modulator:
           waveform: sine
           frequency_ratio_numerator: 3
           frequency_ratio_denominator: 1
@@ -203,11 +161,6 @@
             envelope_values_on_velocity_order: 0.5
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
-      detuning_to_amplitude:
-        0.0: 1.0
       random_detuning_range: 0.005
   amplitude_scaling: 1.0
   effects:
@@ -257,10 +210,4 @@
               max_duration: null
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
-      event_to_amplitude_factor_fn:
-        name: power_fn_of_velocity
-        power: 1.0
-      detuning_to_amplitude:
-        0.0: 1.0
-      random_detuning_range: 0.0
   amplitude_scaling: 1.0
