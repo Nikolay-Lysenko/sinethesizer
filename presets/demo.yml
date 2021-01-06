@@ -71,7 +71,7 @@
         - 0.5
         - 0.0
 
-## This is an example of subtractive synthesis (some frequencies are filtered out).
+# This is an example of subtractive synthesis (some frequencies are filtered out).
 - name: filtered_sawtooth
   partials:
     - wave:
@@ -90,7 +90,7 @@
           order: 10
   amplitude_scaling: 1.0
 
-## This is an example of more advanced subtractive synthesis (there is an envelope for filter).
+# This is an example of more advanced subtractive synthesis (there is an envelope for filter).
 - name: another_filtered_sawtooth
   partials:
     - wave:
