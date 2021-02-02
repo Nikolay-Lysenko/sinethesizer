@@ -8,8 +8,6 @@ Author: Nikolay Lysenko
 import os
 from typing import Any, Dict, List
 
-import numpy as np
-
 from sinethesizer.synth.core import Event
 from sinethesizer.utils.music_theory import convert_note_to_frequency
 
@@ -67,7 +65,16 @@ def convert_tsv_to_events(
     raw_events = set_types(raw_events)
 
     events = []
+    fields_to_use = [
+        'instrument',
+        'start_time',
+        'duration',
+        'frequency',
+        'velocity',
+        'effects'
+    ]
     for raw_event in raw_events:
+        raw_event = {k: v for k, v in raw_event.items() if k in fields_to_use}
         event = Event(frame_rate=settings['frame_rate'], **raw_event)
         events.append(event)
     return events
