@@ -16,7 +16,7 @@ py==1.8.0
 pyparsing==2.4.0
 pytest==4.6.3
 pytest-cov==2.7.1
-PyYAML==5.1.1
+PyYAML==5.4.1
 requests==2.22.0
 scipy==1.5.1
 six==1.12.0
