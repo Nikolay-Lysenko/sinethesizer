@@ -37,7 +37,7 @@ python -m sinethesizer \
     -o path/to/output.wav
 ```
 
-However, MIDI files do not carry information about source location and event-level effects. Here, TSV (Tab-Separated Values) files of special schema can be used as a more self-contained alternative to MIDI. To process such file, run:
+However, MIDI files do not carry information about source location and event-level effects. Here, TSV (Tab-Separated Values) files of special schema can be used as a more self-contained alternative to MIDI. To process such a file, run:
 ```bash
 python -m sinethesizer \
     -i path/to/track.tsv \

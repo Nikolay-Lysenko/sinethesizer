@@ -43,4 +43,4 @@ modulation_index_envelope_fn | [Function](https://github.com/Nikolay-Lysenko/sin
 phase | Phase shift of a wave (in radians) | No
 use_ring_modulation | Boolean indicator whether to use ring modulation instead of classical amplitude modulation; this field affects nothing if it is set for phase modulator | No
 
-All listed above parameters must be set inside of a YAML file of particular structure. Look at an [example](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/presets/demo.yml) of such file to see how it can be done.
+All listed above parameters must be set inside a YAML file of particular structure. Look at an [example](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/presets/demo.yml) of such file to see how it can be done.
