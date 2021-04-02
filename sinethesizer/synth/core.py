@@ -180,13 +180,11 @@ def introduce_quasiperiodicity(
     # such that instantaneous frequency is within the specified range.
     max_increment = 2 * np.pi * max_deviation_in_hz / frame_rate
 
-    n_breakpoints = n_frames / frame_rate / quasiperiodic_breakpoints_frequency
+    n_breakpoints = n_frames / frame_rate * quasiperiodic_breakpoints_frequency
     n_breakpoints = int(round(n_breakpoints))
     n_breakpoints = max(n_breakpoints, 3)  # Prevent border case failures.
     breakpoints = np.random.uniform(0, n_frames, n_breakpoints - 2).round()
-    breakpoints.sort()
-    breakpoints = np.insert(breakpoints, 0, 0)
-    breakpoints = np.insert(breakpoints, -1, n_frames - 1)
+    breakpoints = np.hstack((breakpoints, np.array([0, n_frames - 1])))
     breakpoints = breakpoints.reshape((-1, 1))
 
     slopes = np.random.uniform(-max_increment, max_increment, n_breakpoints)
