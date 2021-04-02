@@ -29,7 +29,8 @@ amplitude_envelope_fn | [Function](https://github.com/Nikolay-Lysenko/sinethesiz
 phase | Phase shift of a wave (in radians) | No 
 amplitude_modulator | Parameters of a wave that modulates amplitude of original wave (see below) | No
 phase_modulator | Parameters of a wave that modulates phase of original wave (see below) | No
-quasiperiodic_bandwidth | Bandwidth (in semitones) of instantaneous frequency random changes; these changes make output wave quasi-periodic and, hence, more natural| No
+quasiperiodic_bandwidth | Bandwidth (in semitones) of instantaneous frequency aperiodic changes; these changes make output wave quasi-periodic and, hence, more natural | No
+quasiperiodic_breakpoints_frequency | Expected frequency (in Hz) of random placing of time moments associated with aperiodic changes of instantaneous frequency | No
 
 Finally, a modulator is defined by these arguments:
 

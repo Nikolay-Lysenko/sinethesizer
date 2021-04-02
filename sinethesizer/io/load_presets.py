@@ -149,7 +149,12 @@ def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
         phase_modulator=convert_modulator(
             wave_data.get('phase_modulator')
         ),
-        quasiperiodic_bandwidth=wave_data.get('quasiperiodic_bandwidth', 0)
+        quasiperiodic_bandwidth=wave_data.get(
+            'quasiperiodic_bandwidth', 0
+        ),
+        quasiperiodic_breakpoints_frequency=wave_data.get(
+            'quasiperiodic_breakpoints_frequency', 10
+        )
     )
     return modulated_wave
 

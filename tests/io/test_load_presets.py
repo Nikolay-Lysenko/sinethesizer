@@ -55,7 +55,8 @@ from sinethesizer.envelopes.ahdsr import (
                                 phase=0,
                                 amplitude_modulator=None,
                                 phase_modulator=None,
-                                quasiperiodic_bandwidth=0
+                                quasiperiodic_bandwidth=0,
+                                quasiperiodic_breakpoints_frequency=10
                             ),
                             frequency_ratio=1.0,
                             amplitude_ratio=1.0,
@@ -116,7 +117,8 @@ from sinethesizer.envelopes.ahdsr import (
                                     use_ring_modulation=True
                                 ),
                                 phase_modulator=None,
-                                quasiperiodic_bandwidth=0
+                                quasiperiodic_bandwidth=0,
+                                quasiperiodic_breakpoints_frequency=10
                             ),
                             frequency_ratio=1.0,
                             amplitude_ratio=1.0,
@@ -216,7 +218,8 @@ from sinethesizer.envelopes.ahdsr import (
                                     phase=0,
                                     use_ring_modulation=False
                                 ),
-                                quasiperiodic_bandwidth=0
+                                quasiperiodic_bandwidth=0,
+                                quasiperiodic_breakpoints_frequency=10
                             ),
                             frequency_ratio=1.0,
                             amplitude_ratio=1.0,

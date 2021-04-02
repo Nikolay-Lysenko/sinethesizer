@@ -42,37 +42,34 @@ def test_adjust_envelope_duration(
 
 @pytest.mark.parametrize(
     "phase_modulator, n_frames, frame_rate, frequency,"
-    "quasiperiodic_bandwidth, lower_threshold, upper_threshold",
+    "quasiperiodic_bandwidth, quasiperiodic_breakpoints_frequency,"
+    "upper_threshold",
     [
         (
-            None, 30000, 10000, 100, 1,
-            0.95 * (2 ** (0.5 / 12) - 1), 1.05 * (2 ** (0.5 / 12) - 1)
+            None, 30000, 10000, 100, 1, 10, 2 ** (0.5 / 12) - 1
         ),
         (
             # In this test, `phase_modulator` can contain only zeros.
-            np.zeros(30000), 30000, 10000, 100, 1,
-            0.95 * (2 ** (0.5 / 12) - 1), 1.05 * (2 ** (0.5 / 12) - 1)
+            np.zeros(30000), 30000, 10000, 100, 1, 10, 2 ** (0.5 / 12) - 1
         ),
     ]
 )
 def test_introduce_quasiperiodicity(
         phase_modulator: np.ndarray, n_frames: int, frame_rate: int,
         frequency: float, quasiperiodic_bandwidth: float,
-        lower_threshold: float, upper_threshold: float
+        quasiperiodic_breakpoints_frequency: float, upper_threshold: float
 ) -> None:
     """Test `introduce_quasiperiodicity` function."""
     modulator = introduce_quasiperiodicity(
         phase_modulator, n_frames, frame_rate, frequency,
-        quasiperiodic_bandwidth
+        quasiperiodic_bandwidth, quasiperiodic_breakpoints_frequency
     )
     assert len(modulator) == n_frames
     derivative_of_modulator = np.diff(modulator) * frame_rate
     scaled_derivative = derivative_of_modulator / frequency / (2 * np.pi)
     scaled_derivative = np.abs(scaled_derivative)
-    quantile = 0.9973  # This value comes from the rule of three sigmas.
-    quantile_of_freq_deviation = np.quantile(scaled_derivative, quantile)
-    assert quantile_of_freq_deviation >= lower_threshold
-    assert quantile_of_freq_deviation <= upper_threshold
+    max_relative_deviation = np.max(scaled_derivative)
+    assert max_relative_deviation <= upper_threshold
 
 
 @pytest.mark.parametrize(
@@ -89,7 +86,8 @@ def test_introduce_quasiperiodicity(
                 ),
                 amplitude_modulator=None,
                 phase_modulator=None,
-                quasiperiodic_bandwidth=0
+                quasiperiodic_bandwidth=0,
+                quasiperiodic_breakpoints_frequency=10
             ),
             # `frequency`
             2,
@@ -140,7 +138,8 @@ def test_introduce_quasiperiodicity(
                     phase=0,
                     use_ring_modulation=False
                 ),
-                quasiperiodic_bandwidth=0
+                quasiperiodic_bandwidth=0,
+                quasiperiodic_breakpoints_frequency=10
             ),
             # `frequency`
             2,
@@ -196,7 +195,8 @@ def test_generate_modulated_wave(
                     ),
                     amplitude_modulator=None,
                     phase_modulator=None,
-                    quasiperiodic_bandwidth=0
+                    quasiperiodic_bandwidth=0,
+                    quasiperiodic_breakpoints_frequency=10
                 ),
                 frequency_ratio=2.0,
                 amplitude_ratio=0.5,
@@ -253,7 +253,8 @@ def test_generate_modulated_wave(
                     ),
                     amplitude_modulator=None,
                     phase_modulator=None,
-                    quasiperiodic_bandwidth=0
+                    quasiperiodic_bandwidth=0,
+                    quasiperiodic_breakpoints_frequency=10
                 ),
                 frequency_ratio=2.0,
                 amplitude_ratio=0.5,
@@ -344,7 +345,8 @@ def test_sum_two_sounds(
                                 phase=0,
                                 amplitude_modulator=None,
                                 phase_modulator=None,
-                                quasiperiodic_bandwidth=0
+                                quasiperiodic_bandwidth=0,
+                                quasiperiodic_breakpoints_frequency=10
                             ),
                             frequency_ratio=1.0,
                             amplitude_ratio=1.0,
@@ -398,7 +400,8 @@ def test_sum_two_sounds(
                                 phase=0,
                                 amplitude_modulator=None,
                                 phase_modulator=None,
-                                quasiperiodic_bandwidth=0
+                                quasiperiodic_bandwidth=0,
+                                quasiperiodic_breakpoints_frequency=10
                             ),
                             frequency_ratio=1.0,
                             amplitude_ratio=1.0,

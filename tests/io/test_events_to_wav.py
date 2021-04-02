@@ -54,7 +54,8 @@ from sinethesizer.synth.event_to_amplitude_factor import (
                                 phase=0,
                                 amplitude_modulator=None,
                                 phase_modulator=None,
-                                quasiperiodic_bandwidth=0
+                                quasiperiodic_bandwidth=0,
+                                quasiperiodic_breakpoints_frequency=10
                             ),
                             frequency_ratio=1.0,
                             amplitude_ratio=1.0,
@@ -135,7 +136,8 @@ def test_add_event_to_timeline(
                                     phase=0,
                                     amplitude_modulator=None,
                                     phase_modulator=None,
-                                    quasiperiodic_bandwidth=0
+                                    quasiperiodic_bandwidth=0,
+                                    quasiperiodic_breakpoints_frequency=10
                                 ),
                                 frequency_ratio=1.0,
                                 amplitude_ratio=1.0,

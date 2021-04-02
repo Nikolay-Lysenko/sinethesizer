@@ -100,8 +100,12 @@ class ModulatedWave(NamedTuple):
     :param phase_modulator:
         parameters of a phase modulating wave
     :param quasiperiodic_bandwidth:
-        bandwidth (in semitones) of instantaneous frequency random changes;
+        bandwidth (in semitones) of instantaneous frequency aperiodic changes;
         these changes make output wave quasi-periodic and, hence, more natural
+    :param quasiperiodic_breakpoints_frequency:
+        expected frequency (in Hz) of random breakpoints placing;
+        in this context, breakpoints are moments of time associated with
+        aperiodic changes of instantaneous frequency of modulated sound
     """
     waveform: str
     amplitude_envelope_fn: ENVELOPE_FN_TYPE
@@ -109,6 +113,7 @@ class ModulatedWave(NamedTuple):
     amplitude_modulator: Optional[Modulator]
     phase_modulator: Optional[Modulator]
     quasiperiodic_bandwidth: float
+    quasiperiodic_breakpoints_frequency: float
 
 
 def adjust_envelope_duration(
@@ -133,11 +138,13 @@ def adjust_envelope_duration(
 
 
 def introduce_quasiperiodicity(
-        phase_modulator: Optional[np.ndarray], n_frames: int, frame_rate: int,
-        frequency: float, quasiperiodic_bandwidth: float
+        phase_modulator: Optional[np.ndarray],
+        n_frames: int, frame_rate: int, frequency: float,
+        quasiperiodic_bandwidth: float,
+        quasiperiodic_breakpoints_frequency: float
 ) -> np.ndarray:
     """
-    Add non-periodic component (here, smoothed noise) to phase modulator.
+    Add non-periodic component to phase modulator.
 
     :param phase_modulator:
         phase modulator (if it exists)
@@ -148,42 +155,55 @@ def introduce_quasiperiodicity(
     :param frequency:
         perceived (in other words, central) frequency of output wave
     :param quasiperiodic_bandwidth:
-        bandwidth (in semitones) of instantaneous frequency random changes
+        maximum bandwidth (in semitones) of instantaneous frequency deviations
+    :param quasiperiodic_breakpoints_frequency:
+        expected frequency (in Hz) of random breakpoints placing;
+        in this context, breakpoints are moments of time associated with
+        aperiodic changes of instantaneous frequency of modulated sound
     :return:
         phase modulator that makes output wave quasi-periodic
     """
     if quasiperiodic_bandwidth == 0:
         return phase_modulator
+
     semitone = 2 ** (1 / 12)
     half_of_bandwidth = 0.5 * quasiperiodic_bandwidth
     max_deviation_in_hz = frequency * (semitone ** half_of_bandwidth - 1)
-    # Instantaneous frequency for PM is carrier frequency plus derivative of
-    # phase modulator (i.e., d(phase_modulator)/dt) divided by 2 * pi.
-    # If phase modulator is moving average of standard Gaussian noise,
-    # its derivative is a Gaussian random variable (with 0 mean and 2 ** 0.5
-    # standard deviation) divided by window size and multiplied by frame rate
-    # (loosely speaking, dt = 1 / frame_rate).
-    # Below `window_size` is set so that three standard deviations of
-    # (1 / (2 * pi)) * d(phase_modulator)/dt random variable are equal to
-    # `max_deviation_in_hz`.
-    n_sigmas = 3
-    std_of_sum = 2 ** 0.5
-    window_size = int(round(
-        n_sigmas * std_of_sum * frame_rate
-        / (2 * np.pi * max_deviation_in_hz)
-    ))
 
-    # Output of convolution with valid mode of two arrays of size N and M is
-    # max(M, N) - min(M, N) + 1. This output must be equal to `n_frames` and
-    # M = `window_size`. Let us solve it for N.
-    noise_len = n_frames + window_size - 1
-    noise = np.random.normal(0, 1, noise_len)
-    weights = np.ones(window_size) / window_size
-    smoothed_noise = np.convolve(noise, weights, mode='valid')
+    # Instantaneous frequency for PM is carrier frequency plus derivative of
+    # phase modulator divided by 2 * pi.
+    # Here, non-periodic modulator is created as sum of increments. If an
+    # increment equals to `delta`, then phase modulator derivative in this
+    # time moment is d(phase_modulator)/dt = delta * frame_rate, because,
+    # loosely speaking, dt = 1 / frame_rate.
+    # Taking this into account, let us find maximum absolute value of increment
+    # such that instantaneous frequency is within the specified range.
+    max_increment = 2 * np.pi * max_deviation_in_hz / frame_rate
+
+    n_breakpoints = n_frames / frame_rate / quasiperiodic_breakpoints_frequency
+    n_breakpoints = int(round(n_breakpoints))
+    n_breakpoints = max(n_breakpoints, 3)  # Prevent border case failures.
+    breakpoints = np.random.uniform(0, n_frames, n_breakpoints - 2).round()
+    breakpoints.sort()
+    breakpoints = np.insert(breakpoints, 0, 0)
+    breakpoints = np.insert(breakpoints, -1, n_frames - 1)
+    breakpoints = breakpoints.reshape((-1, 1))
+
+    slopes = np.random.uniform(-max_increment, max_increment, n_breakpoints)
+    slopes = slopes.reshape((-1, 1))
+
+    # Increments for phase modulator are weighted sums of slopes with weights
+    # inversely depending on distances to corresponding breakpoints.
+    stub = np.tile(np.arange(n_frames), (n_breakpoints, 1))
+    distances_to_breakpoints = np.abs(stub - breakpoints)
+    unnormalized_weights = 1 / (distances_to_breakpoints + 1e-5) ** 2
+    weights = unnormalized_weights / unnormalized_weights.sum(axis=0)
+    increments = np.sum(weights * slopes, axis=0)
+    non_periodic_modulator = np.cumsum(increments)
 
     if phase_modulator is None:
-        return smoothed_noise
-    return phase_modulator + smoothed_noise
+        return non_periodic_modulator
+    return phase_modulator + non_periodic_modulator
 
 
 def generate_modulated_wave(
@@ -232,8 +252,9 @@ def generate_modulated_wave(
         constant = int(not wave.amplitude_modulator.use_ring_modulation)
         modulators_as_arrays['amplitude_modulator'] += constant
     modulators_as_arrays['phase_modulator'] = introduce_quasiperiodicity(
-        modulators_as_arrays['phase_modulator'], n_frames, event.frame_rate,
-        frequency, wave.quasiperiodic_bandwidth
+        modulators_as_arrays['phase_modulator'],
+        n_frames, event.frame_rate, frequency,
+        wave.quasiperiodic_bandwidth, wave.quasiperiodic_breakpoints_frequency
     )
 
     result = generate_mono_wave(
