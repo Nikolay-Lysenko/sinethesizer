@@ -17,7 +17,7 @@ from sinethesizer.envelopes.misc import create_constant_envelope
 from sinethesizer.synth.core import (
     Event, Instrument, ModulatedWave, Modulator, Partial,
     adjust_envelope_duration, generate_modulated_wave, generate_partial,
-    introduce_quasiperiodicity, sum_two_sounds, synthesize
+    introduce_quasiperiodicity, synthesize
 )
 from sinethesizer.synth.event_to_amplitude_factor import (
     compute_amplitude_factor_as_power_of_velocity
@@ -291,29 +291,6 @@ def test_generate_partial(
 ) -> None:
     """Test `generate_partial` function."""
     result = generate_partial(partial, event)
-    np.testing.assert_almost_equal(result, expected)
-
-
-@pytest.mark.parametrize(
-    "first_sound, second_sound, expected",
-    [
-        (
-            np.array([[1, 2, 3], [2, 3, 4]]),
-            np.array([[7, 9], [8, 9]]),
-            np.array([[8, 11, 3], [10, 12, 4]])
-        ),
-        (
-            np.array([[7, 9], [8, 9]]),
-            np.array([[1, 2, 3], [2, 3, 4]]),
-            np.array([[8, 11, 3], [10, 12, 4]])
-        ),
-    ]
-)
-def test_sum_two_sounds(
-        first_sound: np.ndarray, second_sound: np.ndarray, expected: np.ndarray
-) -> None:
-    """Test `sum_two_sounds` function."""
-    result = sum_two_sounds(first_sound, second_sound)
     np.testing.assert_almost_equal(result, expected)
 
 
