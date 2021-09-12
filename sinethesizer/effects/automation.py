@@ -71,9 +71,7 @@ def apply_automated_effect(
     for break_point in break_points:
         index = int(round(break_point['relative_position'] * n_frames))
         indices.append(index)
-        effect_params = {
-            k: v for k, v in break_point.items() if k != 'relative_position'
-        }
+        effect_params = {k: v for k, v in break_point.items() if k != 'relative_position'}
         effects_params.append(effect_params)
     indices.insert(0, indices[0])
     indices.append(indices[-1])
@@ -83,9 +81,7 @@ def apply_automated_effect(
     zipped = zip(indices, indices[1:], indices[2:], effects_params)
     for start_index, center_index, end_index, effect_params in zipped:
         fragment = np.copy(sound[:, start_index:end_index])
-        processed_fragment = effect_fn(
-            fragment, event, **effect_params, **kwargs
-        )
+        processed_fragment = effect_fn(fragment, event, **effect_params, **kwargs)
         if center_index - start_index > 0:
             asc_weights = np.linspace(0, 1, center_index - start_index, False)
         else:

@@ -41,14 +41,11 @@ def apply_absolute_vibrato(
     # Ratio of above right sides is `highest_to_lowest_ratio`.
     # Let us solve it for `m` (`max_delay`).
     max_delay = (
-        (highest_to_lowest_ratio - 1)
-        / ((highest_to_lowest_ratio + 1) * 2 * np.pi * frequency)
+        (highest_to_lowest_ratio - 1) / ((highest_to_lowest_ratio + 1) * 2 * np.pi * frequency)
     )
 
     amplitude_envelope = max_delay * event.frame_rate * np.ones(sound.shape[1])
-    frequency_wave = generate_mono_wave(
-        waveform, frequency, amplitude_envelope, event.frame_rate
-    )
+    frequency_wave = generate_mono_wave(waveform, frequency, amplitude_envelope, event.frame_rate)
     time_indices = np.ones(sound.shape[1]).cumsum() - 1 + frequency_wave
 
     upper_indices = np.ceil(time_indices).astype(int)
@@ -113,7 +110,5 @@ def apply_vibrato(
     elif kind == 'relative':
         sound = apply_relative_vibrato(sound, event, *args, **kwargs)
     else:
-        raise ValueError(
-            f"Kind must be either 'absolute' or 'relative', but found: {kind}"
-        )
+        raise ValueError(f"Kind must be either 'absolute' or 'relative', but found: {kind}")
     return sound

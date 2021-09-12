@@ -36,8 +36,8 @@ def filter_absolute_frequencies(
         cutoff frequency for low-pass filtering (in Hz);
         there is no low-pass filtering by default
     :param invert:
-        if it is `True` and both `min_frequency` and `max_frequency`
-        are passed, band-stop filter is applied instead of band-pass filter
+        if it is `True` and both `min_frequency` and `max_frequency` are passed,
+        band-stop filter is applied instead of band-pass filter
     :param order:
         order of the filter; the higher it is, the steeper cutoff is
     :return:
@@ -77,9 +77,8 @@ def filter_relative_frequencies(
         ratio of cutoff frequency for low-pass filtering to fundamental
         frequency of the sound; there is no low-pass filtering by default
     :param invert:
-        if it is `True` and both `min_frequency_ratio` and
-        `max_frequency_ratio` are passed, band-stop filter is applied
-        instead of band-pass filter
+        if it is `True` and both `min_frequency_ratio` and `max_frequency_ratio` are passed,
+        band-stop filter is applied instead of band-pass filter
     :param order:
         order of the filter; the higher it is, the steeper cutoff is
     :return:
@@ -92,9 +91,7 @@ def filter_relative_frequencies(
     max_frequency = None
     if max_frequency_ratio is not None:
         max_frequency = max_frequency_ratio * fundamental_frequency
-    sound = filter_absolute_frequencies(
-        sound, event, min_frequency, max_frequency, invert, order
-    )
+    sound = filter_absolute_frequencies(sound, event, min_frequency, max_frequency, invert, order)
     return sound
 
 
@@ -144,24 +141,14 @@ def filter_absolute_frequencies_wrt_velocity(
     min_frequency = None
     if min_frequency_at_zero_velocity is not None:
         coef = event.velocity ** min_frequency_on_velocity_order
-        min_frequency = (
-            min_frequency_at_zero_velocity
-            + coef * (
-                min_frequency_at_max_velocity - min_frequency_at_zero_velocity
-            )
-        )
+        increment = coef * (min_frequency_at_max_velocity - min_frequency_at_zero_velocity)
+        min_frequency = min_frequency_at_zero_velocity + increment
     max_frequency = None
     if max_frequency_at_zero_velocity is not None:
         coef = event.velocity ** max_frequency_on_velocity_order
-        max_frequency = (
-            max_frequency_at_zero_velocity
-            + coef * (
-                max_frequency_at_max_velocity - max_frequency_at_zero_velocity
-            )
-        )
-    sound = filter_absolute_frequencies(
-        sound, event, min_frequency, max_frequency, invert, order
-    )
+        increment = coef * (max_frequency_at_max_velocity - max_frequency_at_zero_velocity)
+        max_frequency = max_frequency_at_zero_velocity + increment
+    sound = filter_absolute_frequencies(sound, event, min_frequency, max_frequency, invert, order)
     return sound
 
 
@@ -183,23 +170,23 @@ def filter_relative_frequencies_wrt_velocity(
     :param event:
         parameters of sound event for which this function is called
     :param min_frequency_ratio_at_zero_velocity:
-        ratio of cutoff frequency for high-pass filtering to fundamental
-        frequency of the sound at zero velocity;
+        ratio of cutoff frequency for high-pass filtering to
+        fundamental frequency of the sound at zero velocity;
         there is no high-pass filtering by default
     :param min_frequency_ratio_at_max_velocity:
-        ratio of cutoff frequency for high-pass filtering to fundamental
-        frequency of the sound at maximum velocity;
+        ratio of cutoff frequency for high-pass filtering to
+        fundamental frequency of the sound at maximum velocity;
         there is no high-pass filtering by default
     :param min_frequency_ratio_on_velocity_order:
         coefficient that defines dependence of cutoff frequency ratio
         for high-pass filtering on velocity
     :param max_frequency_ratio_at_zero_velocity:
-        ratio of cutoff frequency for low-pass filtering to fundamental
-        frequency of the sound at zero velocity;
+        ratio of cutoff frequency for low-pass filtering to
+        fundamental frequency of the sound at zero velocity;
         there is no low-pass filtering by default
     :param max_frequency_ratio_at_max_velocity:
-        ratio of cutoff frequency for low-pass filtering to fundamental
-        frequency of the sound at maximum velocity;
+        ratio of cutoff frequency for low-pass filtering to
+        fundamental frequency of the sound at maximum velocity;
         there is no low-pass filtering by default
     :param max_frequency_ratio_on_velocity_order:
         coefficient that defines dependence of cutoff frequency ratio
@@ -215,23 +202,19 @@ def filter_relative_frequencies_wrt_velocity(
     min_frequency_ratio = None
     if min_frequency_ratio_at_zero_velocity is not None:
         coef = event.velocity ** min_frequency_ratio_on_velocity_order
-        min_frequency_ratio = (
-            min_frequency_ratio_at_zero_velocity
-            + coef * (
-                min_frequency_ratio_at_max_velocity
-                - min_frequency_ratio_at_zero_velocity
-            )
+        increment = coef * (
+            min_frequency_ratio_at_max_velocity
+            - min_frequency_ratio_at_zero_velocity
         )
+        min_frequency_ratio = min_frequency_ratio_at_zero_velocity + increment
     max_frequency_ratio = None
     if max_frequency_ratio_at_zero_velocity is not None:
         coef = event.velocity ** max_frequency_ratio_on_velocity_order
-        max_frequency_ratio = (
-            max_frequency_ratio_at_zero_velocity
-            + coef * (
-                max_frequency_ratio_at_max_velocity
-                - max_frequency_ratio_at_zero_velocity
-            )
+        increment = coef * (
+            max_frequency_ratio_at_max_velocity
+            - max_frequency_ratio_at_zero_velocity
         )
+        max_frequency_ratio = max_frequency_ratio_at_zero_velocity + increment
     sound = filter_relative_frequencies(
         sound, event, min_frequency_ratio, max_frequency_ratio, invert, order
     )
@@ -259,13 +242,9 @@ def apply_frequency_filter(
     elif kind == 'relative':
         sound = filter_relative_frequencies(sound, event, *args, **kwargs)
     elif kind == 'absolute_wrt_velocity':
-        sound = filter_absolute_frequencies_wrt_velocity(
-            sound, event, *args, **kwargs
-        )
+        sound = filter_absolute_frequencies_wrt_velocity(sound, event, *args, **kwargs)
     elif kind == 'relative_wrt_velocity':
-        sound = filter_relative_frequencies_wrt_velocity(
-            sound, event, *args, **kwargs
-        )
+        sound = filter_relative_frequencies_wrt_velocity(sound, event, *args, **kwargs)
     else:
         raise ValueError(
             "Supported kinds are 'absolute', 'relative', "

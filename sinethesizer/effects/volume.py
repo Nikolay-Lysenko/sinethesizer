@@ -21,16 +21,13 @@ def apply_amplitude_normalization(
     :param event:
         parameters of sound event for which this function is called
     :param value_at_max_velocity:
-        new value of specified quantile of absolute pressure deviations
-        at maximum velocity
+        new value of specified quantile of absolute pressure deviations at maximum velocity
     :param quantile:
         quantile of absolute pressure deviations that is used for scaling
     :param value_on_velocity_order:
-        coefficient that determines dependence of amplitude quantile value
-        on velocity
+        coefficient that determines dependence of amplitude quantile value on velocity
     :param value_at_zero_velocity:
-        new value of specified quantile of absolute pressure deviations
-        at zero velocity
+        new value of specified quantile of absolute pressure deviations at zero velocity
     :return:
         sound with amplitude normalized to new value
     """

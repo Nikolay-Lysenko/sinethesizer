@@ -75,16 +75,12 @@ def main():
         events = convert_midi_to_events(cli_args.input_path, settings)
     else:
         raise ValueError(
-            "Only input files with extensions tsv, midi, and mid are "
-            f"allowed, but found: {extension}."
+            "Only input files with extensions tsv, midi, and mid are allowed, "
+            f"but found: {extension}."
         )
 
     timeline = convert_events_to_timeline(events, settings)
-    write_timeline_to_wav(
-        cli_args.output_path,
-        timeline,
-        settings['frame_rate']
-    )
+    write_timeline_to_wav(cli_args.output_path, timeline, settings['frame_rate'])
 
 
 if __name__ == '__main__':

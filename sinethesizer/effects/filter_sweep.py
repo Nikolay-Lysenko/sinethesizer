@@ -37,16 +37,9 @@ def oscillate_between_sounds(
     """
     thresholds = np.linspace(-1, 1, sounds.shape[0])
     weights = np.tile(thresholds.reshape((-1, 1)), (1, sounds.shape[2]))
-    wave = generate_mono_wave(
-        waveform,
-        frequency,
-        np.ones(sounds.shape[2]),
-        frame_rate
-    )
+    wave = generate_mono_wave(waveform, frequency, np.ones(sounds.shape[2]), frame_rate)
     step = 2 / (sounds.shape[0] - 1)
-    weights = (
-        (1 - np.abs(weights - wave) / step) * (np.abs(weights - wave) < step)
-    )
+    weights = (1 - np.abs(weights - wave) / step) * (np.abs(weights - wave) < step)
     weights = weights.reshape((weights.shape[0], 1, weights.shape[1]))
     sound = np.sum(sounds * weights, axis=0)
     return sound
@@ -88,25 +81,17 @@ def apply_filter_sweep(
     """
     bands = bands or [(None, None)]
     if len(bands) == 1:
-        sound = apply_frequency_filter(
-            sound, event, kind,
-            bands[0][0], bands[0][1], invert, order
-        )
+        sound = apply_frequency_filter(sound, event, kind, bands[0][0], bands[0][1], invert, order)
         return sound
     filtered_sounds = [
         apply_frequency_filter(
-            sound, event, kind,
-            min_cutoff_frequency, max_cutoff_frequency, invert, order
+            sound, event, kind, min_cutoff_frequency, max_cutoff_frequency, invert, order
         )
         for min_cutoff_frequency, max_cutoff_frequency in bands
     ]
-    filtered_sounds = [
-        x.reshape((1, x.shape[0], x.shape[1])) for x in filtered_sounds
-    ]
+    filtered_sounds = [x.reshape((1, x.shape[0], x.shape[1])) for x in filtered_sounds]
     filtered_sounds = np.concatenate(filtered_sounds)
-    sound = oscillate_between_sounds(
-        filtered_sounds, event.frame_rate, frequency, waveform
-    )
+    sound = oscillate_between_sounds(filtered_sounds, event.frame_rate, frequency, waveform)
     return sound
 
 
@@ -240,7 +225,5 @@ def apply_phaser(
     elif kind == 'relative':
         sound = apply_relative_phaser(sound, event, *args, **kwargs)
     else:
-        raise ValueError(
-            f"Kind must be either 'absolute' or 'relative', but found: {kind}"
-        )
+        raise ValueError(f"Kind must be either 'absolute' or 'relative', but found: {kind}")
     return sound

@@ -19,8 +19,7 @@ def create_constant_envelope(
 
     :param event:
         parameters of sound event for which this function is called;
-        this argument provides information about duration, frame rate,
-        and velocity
+        this argument provides information about duration, frame rate, and velocity
     :param value:
         value of the envelope
     :return:
@@ -48,23 +47,20 @@ def create_exponentially_decaying_envelope(
 
     :param event:
         parameters of sound event for which this function is called;
-        this argument provides information about duration, frame rate,
-        and velocity
+        this argument provides information about duration, frame rate, and velocity
     :param attack_to_ad_max_ratio:
-        maximum fraction of frames with attack amongst frames with attack
-        and decay
+        maximum fraction of frames with attack amongst frames with attack and decay
     :param max_attack_duration:
         maximum duration of attack in seconds
     :param attack_degree:
         degree of attack dynamic; if it is 1, attack is linear; if it is
-        greater than 1, attack is concave; if it is less than 1,
-        attack is convex
+        greater than 1, attack is concave; if it is less than 1, attack is convex
     :param decay_half_life:
         half-life of decay in seconds; if this argument is passed,
         `decay_half_life_ratio` is ignored
     :param decay_half_life_ratio:
         half-life of decay as ratio to decay duration; this argument is used
-        only if decay_half_life is not `None`
+        only if `decay_half_life` is `None`
     :param max_release_duration:
         maximum duration of release in seconds
     :param release_duration_on_velocity_order:
@@ -74,12 +70,10 @@ def create_exponentially_decaying_envelope(
         release duration
     :param release_degree:
         degree of release dynamic; if it is 1, release is linear; if it is
-        greater than 1, release is concave; if it is less than 1,
-        release is convex
+        greater than 1, release is concave; if it is less than 1, release is convex
     :param peak_value:
         peak envelope value given maximum velocity; usually, this argument
-        should be passed only if output envelope is used as modulation
-        index envelope
+        should be passed only if output envelope is used as modulation index envelope
     :param ratio_at_zero_velocity:
         ratio of envelope values at zero velocity to envelope values at maximum
         velocity; usually, this argument should be passed only if output

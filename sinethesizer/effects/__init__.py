@@ -7,6 +7,7 @@ Author: Nikolay Lysenko
 
 from . import (
     automation,
+    chorus,
     equalizer,
     filter,
     filter_sweep,
@@ -24,6 +25,7 @@ from .registry import EFFECT_FN_TYPE, get_effects_registry
 __all__ = [
     'EFFECT_FN_TYPE',
     'automation',
+    'chorus',
     'equalizer',
     'filter',
     'filter_sweep',

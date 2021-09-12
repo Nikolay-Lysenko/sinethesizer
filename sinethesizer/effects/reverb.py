@@ -47,14 +47,11 @@ def validate_inputs(
     if max_late_reflections_duration < late_reflections_duration + padding:
         raise ValueError(
             "Inconsistent parameters. "
-            "Increase either `diffusion_delay_factor` or "
-            "`early_reflections_delay` or decrease `decay_duration`."
+            "Increase either `diffusion_delay_factor` or `early_reflections_delay` "
+            "or decrease `decay_duration`."
         )
     if diffusion_delay_factor > 1:  # pragma: no cover
-        warnings.warn(
-            "If `diffusion_delay_factor` > 1, reverb is not realistic.",
-            UserWarning
-        )
+        warnings.warn("If `diffusion_delay_factor` > 1, reverb is not realistic.", UserWarning)
 
 
 def find_reflection_times(
@@ -80,8 +77,7 @@ def find_reflection_times(
     :param diffusion_delay_factor:
         exponential decay factor for time between successive late reflections
     :param diffusion_delay_random_range:
-        relative range where time between successive late reflections
-        can randomly vary
+        relative range where time between successive late reflections can randomly vary
     :param random_numbers_generator:
         random numbers generator
     :return:
@@ -139,16 +135,13 @@ def generate_impulse_response(
     :param diffusion_delay_factor:
         exponential decay factor for time between successive late reflections
     :param diffusion_delay_random_range:
-        relative range where time between successive late reflections
-        can randomly vary
+        relative range where time between successive late reflections can randomly vary
     :param late_reflections_decay_power:
         power of exponential decay of late reflections amplitude
     :param original_sound_gain:
-        fraction of amplitude of original sound that is kept
-        in resulting sound
+        fraction of amplitude of original sound that is kept in resulting sound
     :param reverberations_gain:
-        fraction of amplitude of reverberations sum that is kept
-        in resulting sound
+        fraction of amplitude of reverberations sum that is kept in resulting sound
     :param random_seed:
         seed for pseudo-random number generator
     :return:
@@ -172,8 +165,7 @@ def generate_impulse_response(
             ir_duration_in_frames - 1
         )
         amplitude = np.e ** -(
-            late_reflections_decay_power
-            * reflection_time / ir_duration_in_seconds
+            late_reflections_decay_power * reflection_time / ir_duration_in_seconds
         )
         amplitude *= reverberations_gain
         random_factor = 1 + random_numbers_generator.uniform(
@@ -219,22 +211,18 @@ def apply_reverb(
     :param diffusion_delay_factor:
         exponential decay factor for time between successive late reflections
     :param diffusion_delay_random_range:
-        relative range where time between successive late reflections
-        can randomly vary
+        relative range where time between successive late reflections can randomly vary
     :param late_reflections_decay_power:
         power of exponential decay of late reflections amplitude
     :param original_sound_gain:
-        fraction of amplitude of original sound that is kept
-        in resulting sound
+        fraction of amplitude of original sound that is kept  in resulting sound
     :param reverberations_gain:
-        fraction of amplitude of reverberations sum that is kept
-        in resulting sound
+        fraction of amplitude of reverberations sum that is kept in resulting sound
     :param random_seed:
         seed for pseudo-random number generator
     :param keep_peak_amplitude:
-        if it is set to `True`, processed sound is rescaled to maintain its
-        original peak amplitude which is usually changed due to
-        wave interference
+        if it is set to `True`, processed sound is rescaled to maintain its original peak amplitude
+        which is usually changed due to wave interference
     :return:
         reverberated sound
     """

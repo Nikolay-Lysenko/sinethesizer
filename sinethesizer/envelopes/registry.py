@@ -10,9 +10,7 @@ from typing import Callable, Dict
 import numpy as np
 
 from sinethesizer.envelopes.ahdsr import (
-    create_generic_ahdsr_envelope,
-    create_relative_ahdsr_envelope,
-    create_trapezoid_envelope
+    create_generic_ahdsr_envelope, create_relative_ahdsr_envelope, create_trapezoid_envelope
 )
 from sinethesizer.envelopes.misc import (
     create_constant_envelope, create_exponentially_decaying_envelope

@@ -14,9 +14,7 @@ import scipy.signal
 from sinethesizer.oscillators.analog import (
     generate_sawtooth_wave, generate_square_wave, generate_triangle_wave
 )
-from sinethesizer.oscillators.karplus_strong import (
-    generate_karplus_strong_wave
-)
+from sinethesizer.oscillators.karplus_strong import generate_karplus_strong_wave
 from sinethesizer.oscillators.noise import generate_power_law_noise
 
 
@@ -108,8 +106,7 @@ def generate_noise(
     Generate noise with constant amplitude envelope.
 
     :param waveform:
-        form of wave; it can be one of 'white_noise', 'pink_noise',
-        and 'brown_noise'
+        form of wave; it can be one of 'white_noise', 'pink_noise', and 'brown_noise'
     :param duration_in_frames:
         duration of output sound in frames
     :param frame_rate:
@@ -160,13 +157,10 @@ def generate_mono_wave(
     duration_in_frames = len(amplitude_envelope)
     if waveform in ANALOG_WAVEFORMS:
         wave = generate_analog_wave(
-            waveform, frequency, duration_in_frames, frame_rate,
-            phase, phase_modulator
+            waveform, frequency, duration_in_frames, frame_rate, phase, phase_modulator
         )
     elif waveform in MODEL_BASED_WAVEFORMS:
-        wave = generate_model_based_waveform(
-            waveform, frequency, duration_in_frames, frame_rate
-        )
+        wave = generate_model_based_waveform(waveform, frequency, duration_in_frames, frame_rate)
     elif waveform in NOISES:
         wave = generate_noise(waveform, duration_in_frames, frame_rate)
     else:

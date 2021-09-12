@@ -36,9 +36,7 @@ def apply_absolute_tremolo(
     if not (0 < amplitude <= 1):
         raise ValueError("Amplitude for tremolo must be between 0 and 1.")
     amplitude_envelope = amplitude * np.ones(sound.shape[1])
-    volume_wave = generate_mono_wave(
-        waveform, frequency, amplitude_envelope, event.frame_rate
-    )
+    volume_wave = generate_mono_wave(waveform, frequency, amplitude_envelope, event.frame_rate)
     volume_wave += 1
     sound *= volume_wave
     return sound
@@ -92,7 +90,5 @@ def apply_tremolo(
     elif kind == 'relative':
         sound = apply_relative_tremolo(sound, event, *args, **kwargs)
     else:
-        raise ValueError(
-            f"Kind must be either 'absolute' or 'relative', but found: {kind}"
-        )
+        raise ValueError(f"Kind must be either 'absolute' or 'relative', but found: {kind}")
     return sound

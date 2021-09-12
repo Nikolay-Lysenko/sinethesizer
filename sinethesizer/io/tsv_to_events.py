@@ -59,9 +59,7 @@ def convert_tsv_to_events(
     with open(input_path) as input_file:
         column_names = input_file.readline().rstrip(os.linesep).split('\t')
         for line in input_file.readlines():
-            raw_events.append(
-                dict(zip(column_names, line.rstrip(os.linesep).split('\t')))
-            )
+            raw_events.append(dict(zip(column_names, line.rstrip(os.linesep).split('\t'))))
     raw_events = set_types(raw_events)
 
     events = []

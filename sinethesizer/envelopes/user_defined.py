@@ -21,8 +21,7 @@ def create_user_defined_envelope(
 
     :param event:
         parameters of sound event for which this function is called;
-        this argument provides information about duration, frame rate,
-        and velocity
+        this argument provides information about duration, frame rate, and velocity
     :param parts:
         list of dictionaries representing successive parts of an envelope;
         there, 'values' key relates to envelope values at maximum velocity
@@ -53,9 +52,7 @@ def create_user_defined_envelope(
         )
 
         upsampling_ratio = (part_duration_in_frames - 1) / current_length
-        indices = [
-            int(round(i * upsampling_ratio)) for i in range(current_length + 1)
-        ]
+        indices = [int(round(i * upsampling_ratio)) for i in range(current_length + 1)]
         all_indices = np.linspace(
             0, part_duration_in_frames, part_duration_in_frames, dtype=np.int32
         )

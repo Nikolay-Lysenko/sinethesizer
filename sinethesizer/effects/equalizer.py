@@ -30,18 +30,15 @@ def equalize_with_absolute_frequencies(
     :param event:
         parameters of sound event for which this function is called
     :param breakpoint_frequencies:
-        frequencies (in Hz) that correspond to breaks in frequency response
-        of equalizer
+        frequencies (in Hz) that correspond to breaks in frequency response of equalizer
     :param gains:
-        relative gains at corresponding breakpoint frequencies; a gain at an
-        intermediate frequency is linearly interpolated
+        relative gains at corresponding breakpoint frequencies; a gain at an intermediate frequency
+        is linearly interpolated
     :return:
         sound with altered frequency balance
     """
     nyquist_frequency = 0.5 * event.frame_rate
-    breakpoint_frequencies = [
-        min(x / nyquist_frequency, 1) for x in breakpoint_frequencies
-    ]
+    breakpoint_frequencies = [min(x / nyquist_frequency, 1) for x in breakpoint_frequencies]
     gains = [x for x in gains]  # Copy it to prevent modifying original list.
     if breakpoint_frequencies[0] != 0:
         breakpoint_frequencies.insert(0, 0)
@@ -72,18 +69,16 @@ def equalize_with_relative_frequencies(
     :param event:
         parameters of sound event for which this function is called
     :param breakpoint_frequencies_ratios:
-        frequencies (represented as ratios to fundamental frequency) that
-        correspond to breaks in frequency response of equalizer
+        frequencies (represented as ratios to fundamental frequency) that correspond to breaks in
+        frequency response of equalizer
     :param gains:
-        relative gains at corresponding breakpoint frequencies; a gain at an
-        intermediate frequency is linearly interpolated
+        relative gains at corresponding breakpoint frequencies; a gain at an intermediate frequency
+        is linearly interpolated
     :return:
         sound with altered frequency balance
     """
     fundamental_frequency = event.frequency
-    breakpoint_frequencies = [
-        x * fundamental_frequency for x in breakpoint_frequencies_ratios
-    ]
+    breakpoint_frequencies = [x * fundamental_frequency for x in breakpoint_frequencies_ratios]
     sound = equalize_with_absolute_frequencies(
         sound, event, breakpoint_frequencies, gains, **kwargs
     )
@@ -107,15 +102,9 @@ def apply_equalizer(
         sound with altered frequency balance
     """
     if kind == 'absolute':
-        sound = equalize_with_absolute_frequencies(
-            sound, event, *args, **kwargs
-        )
+        sound = equalize_with_absolute_frequencies(sound, event, *args, **kwargs)
     elif kind == 'relative':
-        sound = equalize_with_relative_frequencies(
-            sound, event, *args, **kwargs
-        )
+        sound = equalize_with_relative_frequencies(sound, event, *args, **kwargs)
     else:
-        raise ValueError(
-            f"Supported kinds are 'absolute' and 'relative', but found: {kind}"
-        )
+        raise ValueError(f"Supported kinds are 'absolute' and 'relative', but found: {kind}")
     return sound

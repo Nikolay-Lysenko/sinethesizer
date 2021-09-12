@@ -34,8 +34,7 @@ def create_generic_ahdsr_envelope(
 
     :param event:
         parameters of sound event for which this function is called;
-        this argument provides information about duration, frame rate,
-        and velocity
+        this argument provides information about duration, frame rate, and velocity
     :param attack_to_ahds_max_ratio:
         maximum fraction of frames with attack amongst frames with attack,
         hold, decay, and sustain
@@ -43,22 +42,19 @@ def create_generic_ahdsr_envelope(
         maximum duration of attack in seconds
     :param attack_degree:
         degree of attack dynamic; if it is 1, attack is linear; if it is
-        greater than 1, attack is concave; if it is less than 1,
-        attack is convex
+        greater than 1, attack is concave; if it is less than 1, attack is convex
     :param hold_to_hds_max_ratio:
         maximum fraction of frames with hold amongst frames with hold, decay,
         and sustain
     :param max_hold_duration:
         maximum duration of hold in seconds
     :param decay_to_ds_max_ratio:
-        maximum fraction of frames with decay amongst frames with decay and
-        sustain
+        maximum fraction of frames with decay amongst frames with decay and sustain
     :param max_decay_duration:
         maximum duration of decay in seconds
     :param decay_degree:
         degree of decay dynamic; if it is 1, decay is linear; if it is
-        greater than 1, decay is concave; if it is less than 1,
-        decay is convex
+        greater than 1, decay is concave; if it is less than 1, decay is convex
     :param sustain_level:
         amplitude level at sustain stage; a float between 0 and 1 where 1 is
         the peak level (i.e., level at the end of attack)
@@ -73,12 +69,10 @@ def create_generic_ahdsr_envelope(
         release duration
     :param release_degree:
         degree of release dynamic; if it is 1, release is linear; if it is
-        greater than 1, release is concave; if it is less than 1,
-        release is convex
+        greater than 1, release is concave; if it is less than 1, release is convex
     :param peak_value:
         peak envelope value given maximum velocity; usually, this argument
-        should be passed only if output envelope is used as modulation
-        index envelope
+        should be passed only if output envelope is used as modulation index envelope
     :param ratio_at_zero_velocity:
         ratio of envelope values at zero velocity to envelope values at maximum
         velocity; usually, this argument should be passed only if output
@@ -169,15 +163,13 @@ def create_relative_ahdsr_envelope(
 
     :param event:
         parameters of sound event for which this function is called;
-        this argument provides information about duration, frame rate,
-        and velocity
+        this argument provides information about duration, frame rate, and velocity
     :param attack_to_ahds_ratio:
         fraction of frames with attack amongst frames with attack, hold,
         decay, and sustain
     :param attack_degree:
         degree of attack dynamic; if it is 1, attack is linear; if it is
-        greater than 1, attack is concave; if it is less than 1,
-        attack is convex
+        greater than 1, attack is concave; if it is less than 1, attack is convex
     :param hold_to_ahds_ratio:
         fraction of frames with hold amongst frames with attack, hold,
         decay, and sustain
@@ -186,8 +178,7 @@ def create_relative_ahdsr_envelope(
         decay, and sustain
     :param decay_degree:
         degree of decay dynamic; if it is 1, decay is linear; if it is
-        greater than 1, decay is concave; if it is less than 1,
-        decay is convex
+        greater than 1, decay is concave; if it is less than 1, decay is convex
     :param sustain_level:
         amplitude level at sustain stage; a float between 0 and 1 where 1 is
         the peak level (i.e., level at the end of attack)
@@ -200,12 +191,10 @@ def create_relative_ahdsr_envelope(
         release duration
     :param release_degree:
         degree of release dynamic; if it is 1, release is linear; if it is
-        greater than 1, release is concave; if it is less than 1,
-        release is convex
+        greater than 1, release is concave; if it is less than 1, release is convex
     :param peak_value:
         peak envelope value given maximum velocity; usually, this argument
-        should be passed only if output envelope is used as modulation
-        index envelope
+        should be passed only if output envelope is used as modulation index envelope
     :param ratio_at_zero_velocity:
         ratio of envelope values at zero velocity to envelope values at maximum
         velocity; usually, this argument should be passed only if output
@@ -222,9 +211,7 @@ def create_relative_ahdsr_envelope(
     frame_rate = event.frame_rate
     ahds_duration_in_frames = ceil(event.duration * frame_rate)
 
-    n_frames_with_attack = floor(
-        attack_to_ahds_ratio * ahds_duration_in_frames
-    )
+    n_frames_with_attack = floor(attack_to_ahds_ratio * ahds_duration_in_frames)
     if n_frames_with_attack > 0:
         xs = np.linspace(1, 0, n_frames_with_attack)
         attack = 1 - xs ** attack_degree
@@ -243,9 +230,7 @@ def create_relative_ahdsr_envelope(
     else:
         decay = np.array([])
 
-    n_frames_with_sustain = (
-        ahds_duration_in_frames - len(attack) - len(hold) - len(decay)
-    )
+    n_frames_with_sustain = ahds_duration_in_frames - len(attack) - len(hold) - len(decay)
     if n_frames_with_sustain > 0:
         sustain = sustain_level * np.ones(n_frames_with_sustain)
     else:
@@ -282,24 +267,20 @@ def create_trapezoid_envelope(
 
     :param event:
         parameters of sound event for which this function is called;
-        this argument provides information about duration, frame rate,
-        and velocity
+        this argument provides information about duration, frame rate, and velocity
     :param attack_share:
         fraction of frames with attack amongst all frames
     :param attack_degree:
         degree of attack dynamic; if it is 1, attack is linear; if it is
-        greater than 1, attack is concave; if it is less than 1,
-        attack is convex
+        greater than 1, attack is concave; if it is less than 1, attack is convex
     :param decay_share:
         fraction of frames with decay amongst all frames
     :param decay_degree:
         degree of decay dynamic; if it is 1, decay is linear; if it is
-        greater than 1, decay is concave; if it is less than 1,
-        decay is convex
+        greater than 1, decay is concave; if it is less than 1, decay is convex
     :param peak_value:
         peak envelope value given maximum velocity; usually, this argument
-        should be passed only if output envelope is used as modulation
-        index envelope
+        should be passed only if output envelope is used as modulation index envelope
     :param ratio_at_zero_velocity:
         ratio of envelope values at zero velocity to envelope values at maximum
         velocity; usually, this argument should be passed only if output

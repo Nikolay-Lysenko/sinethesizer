@@ -14,9 +14,7 @@ import yaml
 
 from sinethesizer.effects import EFFECT_FN_TYPE, get_effects_registry
 from sinethesizer.envelopes import ENVELOPE_FN_TYPE, get_envelopes_registry
-from sinethesizer.synth.core import (
-    Instrument, ModulatedWave, Modulator, Partial
-)
+from sinethesizer.synth.core import Instrument, ModulatedWave, Modulator, Partial
 from sinethesizer.synth.event_to_amplitude_factor import (
     EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE,
     get_event_to_amplitude_factor_functions_registry
@@ -102,10 +100,7 @@ def compute_frequency_ratios(
         carrier_frequency_ratio = 1
         modulator_frequency_ratio = numerator / denominator
         if frequency_scaling <= max_threshold:  # pragma: no cover
-            warnings.warn(
-                'Problems with missing fundamental may happen.',
-                UserWarning
-            )
+            warnings.warn('Problems with missing fundamental may happen.', UserWarning)
     return carrier_frequency_ratio, modulator_frequency_ratio
 
 
@@ -128,8 +123,8 @@ def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
     for key, enabled in zip(keys, enabledness):
         if not enabled:
             continue
-        carrier_frequency_ratio, modulator_frequency_ratio = (
-            compute_frequency_ratios(wave_data[key])
+        carrier_frequency_ratio, modulator_frequency_ratio = compute_frequency_ratios(
+            wave_data[key]
         )
         carrier_frequency_ratio *= factor
         modulator_frequency_ratio *= factor
@@ -139,19 +134,11 @@ def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
 
     modulated_wave = ModulatedWave(
         waveform=wave_data['waveform'],
-        amplitude_envelope_fn=create_envelope_fn(
-            wave_data['amplitude_envelope_fn']
-        ),
+        amplitude_envelope_fn=create_envelope_fn(wave_data['amplitude_envelope_fn']),
         phase=wave_data.get('phase', 0),
-        amplitude_modulator=convert_modulator(
-            wave_data.get('amplitude_modulator')
-        ),
-        phase_modulator=convert_modulator(
-            wave_data.get('phase_modulator')
-        ),
-        quasiperiodic_bandwidth=wave_data.get(
-            'quasiperiodic_bandwidth', 0
-        ),
+        amplitude_modulator=convert_modulator(wave_data.get('amplitude_modulator')),
+        phase_modulator=convert_modulator(wave_data.get('phase_modulator')),
+        quasiperiodic_bandwidth=wave_data.get('quasiperiodic_bandwidth', 0),
         quasiperiodic_breakpoints_frequency=wave_data.get(
             'quasiperiodic_breakpoints_frequency', 10
         )
@@ -262,8 +249,6 @@ def create_instruments_registry(input_path: str) -> Dict[str, Any]:
         instruments_registry[instrument_data['name']] = Instrument(
             partials=convert_partials(instrument_data['partials']),
             amplitude_scaling=instrument_data['amplitude_scaling'],
-            effects=create_list_of_effect_fns(
-                instrument_data.get('effects', [])
-            )
+            effects=create_list_of_effect_fns(instrument_data.get('effects', []))
         )
     return instruments_registry

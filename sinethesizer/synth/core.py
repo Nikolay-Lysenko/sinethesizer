@@ -13,9 +13,7 @@ import numpy as np
 
 from sinethesizer.effects import EFFECT_FN_TYPE, get_effects_registry
 from sinethesizer.envelopes import ENVELOPE_FN_TYPE
-from sinethesizer.synth.event_to_amplitude_factor import (
-    EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE
-)
+from sinethesizer.synth.event_to_amplitude_factor import EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE
 from sinethesizer.oscillators import generate_mono_wave
 from sinethesizer.utils.misc import sum_two_sounds
 
@@ -34,9 +32,8 @@ class Event(NamedTuple):
     :param frequency:
         fundamental frequency of a sound to be synthesized
     :param velocity:
-        force of sound generation; it can be likened to force of piano key
-        pressing; it is a float between 0 and 1; it can affect volume and
-        frequency spectrum
+        force of sound generation; it can be likened to force of piano key pressing;
+        it is a float between 0 and 1; it can affect volume and frequency spectrum
     :param effects:
         JSON string representing list of effects that should be applied to
         resulting sound
@@ -251,8 +248,7 @@ def generate_modulated_wave(
         constant = int(not wave.amplitude_modulator.use_ring_modulation)
         modulators_as_arrays['amplitude_modulator'] += constant
     modulators_as_arrays['phase_modulator'] = introduce_quasiperiodicity(
-        modulators_as_arrays['phase_modulator'],
-        n_frames, event.frame_rate, frequency,
+        modulators_as_arrays['phase_modulator'], n_frames, event.frame_rate, frequency,
         wave.quasiperiodic_bandwidth, wave.quasiperiodic_breakpoints_frequency
     )
 

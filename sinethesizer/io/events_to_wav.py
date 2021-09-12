@@ -79,13 +79,10 @@ def convert_events_to_timeline(
     :return:
         pressure deviations timeline
     """
-    timeline = create_empty_timeline(
-        events, settings['frame_rate'], settings['trailing_silence']
-    )
+    timeline = create_empty_timeline(events, settings['frame_rate'], settings['trailing_silence'])
     for event in events:
         timeline = add_event_to_timeline(
-            timeline, event, settings['instruments_registry'],
-            settings['frame_rate']
+            timeline, event, settings['instruments_registry'], settings['frame_rate']
         )
     return timeline
 
