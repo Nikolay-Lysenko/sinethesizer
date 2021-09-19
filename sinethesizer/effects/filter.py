@@ -15,6 +15,8 @@ from typing import Optional
 import numpy as np
 from scipy.signal import butter, sosfilt
 
+from sinethesizer.utils.misc import mix_with_original_sound
+
 
 def filter_absolute_frequencies(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
@@ -221,6 +223,7 @@ def filter_relative_frequencies_wrt_velocity(
     return sound
 
 
+@mix_with_original_sound
 def apply_frequency_filter(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         kind: str = 'absolute', *args, **kwargs

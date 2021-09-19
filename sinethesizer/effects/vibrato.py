@@ -10,6 +10,7 @@ Author: Nikolay Lysenko
 import numpy as np
 
 from sinethesizer.oscillators import generate_mono_wave
+from sinethesizer.utils.misc import mix_with_original_sound
 
 
 def apply_absolute_vibrato(
@@ -89,6 +90,7 @@ def apply_relative_vibrato(
     return sound
 
 
+@mix_with_original_sound
 def apply_vibrato(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         kind: str = 'absolute', *args, **kwargs

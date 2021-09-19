@@ -15,6 +15,7 @@ import numpy as np
 
 from sinethesizer.effects.filter import apply_frequency_filter
 from sinethesizer.oscillators import generate_mono_wave
+from sinethesizer.utils.misc import mix_with_original_sound
 
 
 def oscillate_between_sounds(
@@ -45,6 +46,7 @@ def oscillate_between_sounds(
     return sound
 
 
+@mix_with_original_sound
 def apply_filter_sweep(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         kind: str = 'absolute',
@@ -196,6 +198,7 @@ def apply_relative_phaser(
     return sound
 
 
+@mix_with_original_sound
 def apply_phaser(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         kind: str = 'absolute', *args, **kwargs

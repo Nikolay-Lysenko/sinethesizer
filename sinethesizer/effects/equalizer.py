@@ -16,6 +16,8 @@ from typing import List
 import numpy as np
 from scipy.signal import convolve, firwin2
 
+from sinethesizer.utils.misc import mix_with_original_sound
+
 
 def equalize_with_absolute_frequencies(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
@@ -85,6 +87,7 @@ def equalize_with_relative_frequencies(
     return sound
 
 
+@mix_with_original_sound
 def apply_equalizer(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         kind: str = 'absolute', *args, **kwargs

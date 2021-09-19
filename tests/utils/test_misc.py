@@ -8,7 +8,25 @@ Author: Nikolay Lysenko
 import numpy as np
 import pytest
 
-from sinethesizer.utils.misc import sum_two_sounds
+from sinethesizer.utils.misc import mix_with_original_sound, sum_two_sounds
+
+
+@pytest.mark.parametrize(
+    "sound, factor, original_sound_weight, expected",
+    [
+        (np.array([1.0, 2, 3]), 2, 0.25, np.array([1.75, 3.5, 5.25])),
+    ]
+)
+def test_mix_with_original_sound(
+        sound: np.ndarray, factor: float, original_sound_weight: float, expected: np.ndarray
+) -> None:
+    """Test `mix_with_original_sound` decorator."""
+    @mix_with_original_sound
+    def multiply(sound: np.ndarray, factor: float, **kwargs) -> np.ndarray:
+        return factor * sound
+
+    result = multiply(sound, factor, original_sound_weight=original_sound_weight)
+    np.testing.assert_almost_equal(result, expected)
 
 
 @pytest.mark.parametrize(
