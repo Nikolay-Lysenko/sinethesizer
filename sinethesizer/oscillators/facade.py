@@ -12,7 +12,7 @@ import numpy as np
 import scipy.signal
 
 from sinethesizer.oscillators.analog import (
-    generate_sawtooth_wave, generate_square_wave, generate_triangle_wave
+    generate_pulse_wave, generate_sawtooth_wave, generate_triangle_wave
 )
 from sinethesizer.oscillators.karplus_strong import generate_karplus_strong_wave
 from sinethesizer.oscillators.noise import generate_power_law_noise
@@ -20,7 +20,9 @@ from sinethesizer.oscillators.noise import generate_power_law_noise
 
 TWO_PI = 2 * np.pi
 PLAIN_ANALOG_WAVEFORMS = ['sine', 'raw_sawtooth', 'raw_square', 'raw_triangle']
-BANDLIMITED_ANALOG_WAVEFORMS = ['sawtooth', 'square', 'triangle']
+DUTY_CYCLES = [0.1, 0.2, 0.3, 0.4]
+PULSE_WAVEFORMS = [f'pulse_{int(round(100 * duty_cycle))}' for duty_cycle in DUTY_CYCLES]
+BANDLIMITED_ANALOG_WAVEFORMS = ['sawtooth', 'square', 'triangle'] + PULSE_WAVEFORMS
 ANALOG_WAVEFORMS = PLAIN_ANALOG_WAVEFORMS + BANDLIMITED_ANALOG_WAVEFORMS
 NOISES = ['white_noise', 'pink_noise', 'brown_noise']
 MODEL_BASED_WAVEFORMS = ['karplus_strong']
@@ -35,8 +37,10 @@ def generate_analog_wave(
     Generate wave from an analog synthesizer with constant amplitude envelope.
 
     :param waveform:
-        form of wave; it can be one of 'sine', 'sawtooth', 'square',
-        'triangle', 'raw_sawtooth', 'raw_square', and 'raw_triangle'
+        form of wave;
+        it can be one of 'sine', 'sawtooth', 'square', 'triangle',
+        'pulse_10', 'pulse_20', 'pulse_30', 'pulse_40',
+        'raw_sawtooth', 'raw_square', and 'raw_triangle'
     :param frequency:
         frequency of wave (in Hz)
     :param duration_in_frames:
@@ -53,12 +57,17 @@ def generate_analog_wave(
     name_to_waveform = {
         'sine': np.sin,
         'sawtooth': generate_sawtooth_wave,
-        'square': generate_square_wave,
+        'square': generate_pulse_wave,
         'triangle': generate_triangle_wave,
         'raw_sawtooth': scipy.signal.sawtooth,
         'raw_square': scipy.signal.square,
         'raw_triangle': partial(scipy.signal.sawtooth, width=0.5),
     }
+    name_to_waveform_for_pulse_waves = {
+        name: partial(generate_pulse_wave, duty_cycle=duty_cycle)
+        for name, duty_cycle in zip(PULSE_WAVEFORMS, DUTY_CYCLES)
+    }
+    name_to_waveform.update(name_to_waveform_for_pulse_waves)
     wave_fn = name_to_waveform[waveform]
 
     moments_in_seconds = np.arange(duration_in_frames) / frame_rate
@@ -136,8 +145,10 @@ def generate_mono_wave(
     Generate wave with exactly one channel.
 
     :param waveform:
-        form of wave; it can be one of 'sine', 'sawtooth', 'square',
-        'triangle', 'raw_sawtooth', 'raw_square', 'raw_triangle',
+        form of wave;
+        it can be one of 'sine', 'sawtooth', 'square', 'triangle',
+        'pulse_10', 'pulse_20', 'pulse_30', 'pulse_40',
+        'raw_sawtooth', 'raw_square', 'raw_triangle',
         'white_noise', 'pink_noise', 'brown_noise', and 'karplus_strong'
     :param frequency:
         frequency of wave (in Hz)

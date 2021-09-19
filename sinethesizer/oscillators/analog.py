@@ -12,6 +12,56 @@ import scipy.signal
 TWO_PI = 2 * np.pi
 
 
+def generate_pulse_wave(xs: np.ndarray, xs_step: float, duty_cycle: float = 0.5) -> np.ndarray:
+    """
+    Generate band-limited pulse wave.
+
+    PolyBLEP method is applied to remove aliasing. It involves a polynomial
+    approximation of BLEP (Band-Limited Heavyside Step function). Values at
+    points that are close enough to points of discontinuity, are modified
+    based on this approximation. The method works, because discontinuity is
+    the thing that brings high-frequency content to pulse wave.
+
+    :param xs:
+        angles (in radians) at which to compute pulse wave values
+    :param xs_step:
+        step of regular phase increments with frequency and frame rate of
+        `xs` and regardless any frequency/phase modulations in `xs`;
+        this value is known as phase step or phase increment
+    :param duty_cycle:
+        fraction of one period in which wave values are equal to +1;
+        by default, it is equal to 0.5 and so square wave is generated
+    :return:
+        square wave
+    """
+    mod_xs = np.mod(xs, TWO_PI)
+    duty_end = TWO_PI * duty_cycle
+    poly_blep_residual = np.zeros_like(xs)
+
+    to_the_left_of_zero = mod_xs > TWO_PI - xs_step
+    curr_xs = (mod_xs[to_the_left_of_zero] - TWO_PI) / xs_step
+    curr_residual = curr_xs ** 2 + 2 * curr_xs + 1
+    np.place(poly_blep_residual, to_the_left_of_zero, curr_residual)
+
+    to_the_left_of_duty_end = ((duty_end - xs_step < mod_xs) & (mod_xs < duty_end))
+    curr_xs = (mod_xs[to_the_left_of_duty_end] - duty_end) / xs_step
+    curr_residual = -(curr_xs ** 2 + 2 * curr_xs + 1)
+    np.place(poly_blep_residual, to_the_left_of_duty_end, curr_residual)
+
+    to_the_right_of_zero = mod_xs < xs_step
+    curr_xs = mod_xs[to_the_right_of_zero] / xs_step
+    curr_residual = -(curr_xs ** 2 - 2 * curr_xs + 1)
+    np.place(poly_blep_residual, to_the_right_of_zero, curr_residual)
+
+    to_the_right_of_duty_end = ((duty_end <= mod_xs) & (mod_xs < duty_end + xs_step))
+    curr_xs = (mod_xs[to_the_right_of_duty_end] - duty_end) / xs_step
+    curr_residual = curr_xs ** 2 - 2 * curr_xs + 1
+    np.place(poly_blep_residual, to_the_right_of_duty_end, curr_residual)
+
+    square_wave = scipy.signal.square(xs, duty_cycle) + poly_blep_residual
+    return square_wave
+
+
 def generate_sawtooth_wave(xs: np.ndarray, xs_step: float) -> np.ndarray:
     """
     Generate band-limited sawtooth wave.
@@ -46,52 +96,6 @@ def generate_sawtooth_wave(xs: np.ndarray, xs_step: float) -> np.ndarray:
 
     sawtooth_wave = scipy.signal.sawtooth(xs) + poly_blep_residual
     return sawtooth_wave
-
-
-def generate_square_wave(xs: np.ndarray, xs_step: float) -> np.ndarray:
-    """
-    Generate band-limited square wave.
-
-    PolyBLEP method is applied to remove aliasing. It involves a polynomial
-    approximation of BLEP (Band-Limited Heavyside Step function). Values at
-    points that are close enough to points of discontinuity, are modified
-    based on this approximation. The method works, because discontinuity is
-    the thing that brings high-frequency content to square wave.
-
-    :param xs:
-        angles (in radians) at which to compute square wave values
-    :param xs_step:
-        step of regular phase increments with frequency and frame rate of
-        `xs` and regardless any frequency/phase modulations in `xs`;
-        this value is known as phase step or phase increment
-    :return:
-        square wave
-    """
-    mod_xs = np.mod(xs, TWO_PI)
-    poly_blep_residual = np.zeros_like(xs)
-
-    to_the_left_of_zero = mod_xs > TWO_PI - xs_step
-    curr_xs = (mod_xs[to_the_left_of_zero] - TWO_PI) / xs_step
-    curr_residual = curr_xs ** 2 + 2 * curr_xs + 1
-    np.place(poly_blep_residual, to_the_left_of_zero, curr_residual)
-
-    to_the_left_of_pi = ((np.pi - xs_step < mod_xs) & (mod_xs < np.pi))
-    curr_xs = (mod_xs[to_the_left_of_pi] - np.pi) / xs_step
-    curr_residual = -(curr_xs ** 2 + 2 * curr_xs + 1)
-    np.place(poly_blep_residual, to_the_left_of_pi, curr_residual)
-
-    to_the_right_of_zero = mod_xs < xs_step
-    curr_xs = mod_xs[to_the_right_of_zero] / xs_step
-    curr_residual = -(curr_xs ** 2 - 2 * curr_xs + 1)
-    np.place(poly_blep_residual, to_the_right_of_zero, curr_residual)
-
-    to_the_right_of_pi = ((np.pi <= mod_xs) & (mod_xs < np.pi + xs_step))
-    curr_xs = (mod_xs[to_the_right_of_pi] - np.pi) / xs_step
-    curr_residual = curr_xs ** 2 - 2 * curr_xs + 1
-    np.place(poly_blep_residual, to_the_right_of_pi, curr_residual)
-
-    square_wave = scipy.signal.square(xs) + poly_blep_residual
-    return square_wave
 
 
 def generate_triangle_wave(xs: np.ndarray, xs_step: float) -> np.ndarray:
