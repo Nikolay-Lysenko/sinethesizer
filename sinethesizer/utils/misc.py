@@ -27,7 +27,7 @@ def mix_with_original_sound(fn):
         if 'original_sound_weight' not in kwargs:
             return fn(*args, **kwargs)
         original_sound_weight = kwargs.pop('original_sound_weight')
-        if not 0 < original_sound_weight < 1:
+        if not 0 <= original_sound_weight <= 1:
             raise ValueError("Weight of original sound weight must be between 0 and 1.")
         original_sound = args[0] if args else kwargs['sound']
         processed_sound = fn(*args, **kwargs)
