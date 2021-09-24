@@ -12,15 +12,14 @@ from setuptools import setup, find_packages
 current_dir = os.path.abspath(os.path.dirname(__file__))
 
 description = (
-   'A standalone synthesizer that is controlled through text files '
-   'in an extendable way.'
+   'A standalone synthesizer that is controlled through text files in an extendable way.'
 )
 with open(os.path.join(current_dir, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
     name='sinethesizer',
-    version='0.5.2',
+    version='0.5.3',
     description=description,
     long_description=long_description,
     long_description_content_type='text/markdown',
