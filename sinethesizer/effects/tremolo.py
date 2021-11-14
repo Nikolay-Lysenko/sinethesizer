@@ -15,7 +15,7 @@ from sinethesizer.utils.misc import mix_with_original_sound
 
 def apply_absolute_tremolo(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        frequency: float = 6, amplitude: float = 0.5,
+        frequency: float = 6, amplitude: float = 0.5, phase: float = 0.0,
         waveform: str = 'sine'
 ) -> np.ndarray:
     """
@@ -29,6 +29,8 @@ def apply_absolute_tremolo(
         frequency of volume oscillations (in Hz)
     :param amplitude:
         relative amplitude of volume oscillations, must be between 0 and 1
+    :param phase:
+        phase shift of volume oscillations (in radians)
     :param waveform:
         form of volume oscillations wave
     :return:
@@ -37,7 +39,9 @@ def apply_absolute_tremolo(
     if not (0 < amplitude <= 1):
         raise ValueError("Amplitude for tremolo must be between 0 and 1.")
     amplitude_envelope = amplitude * np.ones(sound.shape[1])
-    volume_wave = generate_mono_wave(waveform, frequency, amplitude_envelope, event.frame_rate)
+    volume_wave = generate_mono_wave(
+        waveform, frequency, amplitude_envelope, event.frame_rate, phase
+    )
     volume_wave += 1
     sound *= volume_wave
     return sound
@@ -45,7 +49,7 @@ def apply_absolute_tremolo(
 
 def apply_relative_tremolo(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        frequency_ratio: float = 0.02, amplitude: float = 0.5,
+        frequency_ratio: float = 0.02, amplitude: float = 0.5, phase: float = 0.0,
         waveform: str = 'sine'
 ) -> np.ndarray:
     """
@@ -60,20 +64,22 @@ def apply_relative_tremolo(
         of the sound
     :param amplitude:
         relative amplitude of volume oscillations, must be between 0 and 1
+    :param phase:
+        phase shift of volume oscillations (in radians)
     :param waveform:
         form of volume oscillations wave
     :return:
         sound with vibrating volume
     """
     frequency = frequency_ratio * event.frequency
-    sound = apply_absolute_tremolo(sound, event, frequency, amplitude, waveform)
+    sound = apply_absolute_tremolo(sound, event, frequency, amplitude, phase, waveform)
     return sound
 
 
 @mix_with_original_sound
 def apply_tremolo(
-        sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        kind: str = 'absolute', *args, **kwargs
+        sound: np.ndarray, event: 'sinethesizer.synth.core.Event', kind: str = 'absolute',
+        *args, **kwargs
 ) -> np.ndarray:
     """
     Make sound volume vibrating.

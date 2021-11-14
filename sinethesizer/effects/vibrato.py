@@ -15,7 +15,7 @@ from sinethesizer.utils.misc import mix_with_original_sound
 
 def apply_absolute_vibrato(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        frequency: float = 4, width: float = 0.2,
+        frequency: float = 4, width: float = 0.2, phase: float = 0.0,
         waveform: str = 'sine'
 ) -> np.ndarray:
     """
@@ -28,25 +28,28 @@ def apply_absolute_vibrato(
     :param frequency:
         frequency of sound's frequency oscillations (in Hz)
     :param width:
-        difference between the highest frequency of oscillating sound
-        and the lowest frequency of oscillating sound (in semitones)
+        difference between the highest instantaneous frequency of oscillating sound
+        and the lowest instantaneous frequency of oscillating sound (in semitones)
+    :param phase:
+        phase shift of pitch oscillations (in radians)
     :param waveform:
         form of frequency oscillations wave
     :return:
         sound with vibrating frequency
     """
     semitone = 2 ** (1 / 12)
-    highest_to_lowest_ratio = semitone ** width
+    max_ratio = semitone ** width
     # If x = 0, d(x + m * sin(2 * \pi * f * x))/dx = 1 + 2 * \pi * f * m.
     # If x = \pi, d(x + m * sin(2 * \pi * f * x))/dx = 1 - 2 * \pi * f * m.
-    # Ratio of above right sides is `highest_to_lowest_ratio`.
+    # Ratio of above right sides is `max_ratio` (ratio of the highest instantaneous frequency to
+    # the lowest instantaneous frequency).
     # Let us solve it for `m` (`max_delay`).
-    max_delay = (
-        (highest_to_lowest_ratio - 1) / ((highest_to_lowest_ratio + 1) * 2 * np.pi * frequency)
-    )
+    max_delay = (max_ratio - 1) / ((max_ratio + 1) * 2 * np.pi * frequency)
 
     amplitude_envelope = max_delay * event.frame_rate * np.ones(sound.shape[1])
-    frequency_wave = generate_mono_wave(waveform, frequency, amplitude_envelope, event.frame_rate)
+    frequency_wave = generate_mono_wave(
+        waveform, frequency, amplitude_envelope, event.frame_rate, phase
+    )
     time_indices = np.ones(sound.shape[1]).cumsum() - 1 + frequency_wave
 
     upper_indices = np.ceil(time_indices).astype(int)
@@ -64,7 +67,7 @@ def apply_absolute_vibrato(
 
 def apply_relative_vibrato(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        frequency_ratio: float = 0.05, width: float = 0.2,
+        frequency_ratio: float = 0.05, width: float = 0.2, phase: float = 0.0,
         waveform: str = 'sine'
 ) -> np.ndarray:
     """
@@ -80,20 +83,22 @@ def apply_relative_vibrato(
     :param width:
         difference between the highest frequency of oscillating sound
         and the lowest frequency of oscillating sound (in semitones)
+    :param phase:
+        phase shift of pitch oscillations (in radians)
     :param waveform:
         form of frequency oscillations wave
     :return:
         sound with vibrating frequency
     """
     frequency = frequency_ratio * event.frequency
-    sound = apply_absolute_vibrato(sound, event, frequency, width, waveform)
+    sound = apply_absolute_vibrato(sound, event, frequency, width, phase, waveform)
     return sound
 
 
 @mix_with_original_sound
 def apply_vibrato(
-        sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        kind: str = 'absolute', *args, **kwargs
+        sound: np.ndarray, event: 'sinethesizer.synth.core.Event', kind: str = 'absolute',
+        *args, **kwargs
 ) -> np.ndarray:
     """
     Make sound frequency (i.e., pitch) vibrating.
