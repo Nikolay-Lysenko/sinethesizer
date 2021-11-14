@@ -13,17 +13,15 @@ from typing import Dict, List
 @lru_cache(maxsize=1)
 def get_list_of_notes() -> List[str]:
     """
-    Get list of all notes in letter notation.
+    Get list of all notes in alphanumeric notation.
 
     :return:
-        list of all notes
+        list of all notes from the range of standard piano keyboard
     """
-    order_of_letters = {
-        'C': 1, 'C#': 2, 'D': 3, 'D#': 4, 'E': 5, 'F': 6, 'F#': 7,
-        'G': 8, 'G#': 9, 'A': 10, 'A#': 11, 'B': 12
-    }
-    notes = list(itertools.product(order_of_letters.keys(), range(0, 9)))
-    notes = sorted(notes, key=lambda x: (x[1], order_of_letters[x[0]]))
+    sorted_pitch_classes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+    pitch_class_to_precedence = {x: i for i, x in enumerate(sorted_pitch_classes)}
+    notes = list(itertools.product(sorted_pitch_classes, range(0, 9)))
+    notes = sorted(notes, key=lambda x: (x[1], pitch_class_to_precedence[x[0]]))
     notes = notes[9:-11]
     notes = [f'{x[0]}{x[1]}' for x in notes]
     return notes
@@ -47,9 +45,9 @@ def standardize_note(note: str) -> str:
     Replace note with equivalent note that has 0 or 1 sharps and no flats.
 
     :param note:
-        any valid note in letter notation
+        any valid note in alphanumeric notation
     :return:
-        note in letter notation without flats and with not more than 1 sharp
+        note in alphanumeric notation without flats and with not more than 1 sharp
     """
     note_to_position = get_note_to_position_mapping()
     pivot_note = note.replace('#', '').replace('b', '')
@@ -67,10 +65,10 @@ def convert_note_to_frequency(note: str) -> float:
     Convert note to its frequency in Hz.
 
     Supported notes can contain any number of sharps ('#') and flats ('b'),
-    but must be in range of standard piano keyboard.
+    but must be in the range of standard piano keyboard.
 
     :param note:
-        note in letter notation
+        note in alphanumeric notation
     :return:
         frequency in Hz
     """
