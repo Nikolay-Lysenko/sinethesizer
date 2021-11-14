@@ -11,6 +11,7 @@ from typing import Any, Dict, List
 
 import numpy as np
 
+from sinethesizer.effects.chorus import apply_chorus
 from sinethesizer.effects.equalizer import apply_equalizer
 from sinethesizer.effects.filter import apply_frequency_filter
 from sinethesizer.effects.filter_sweep import apply_filter_sweep, apply_phaser
@@ -19,11 +20,13 @@ from sinethesizer.effects.reverb import apply_reverb
 from sinethesizer.effects.stereo import apply_haas_effect, apply_panning
 from sinethesizer.effects.tremolo import apply_tremolo
 from sinethesizer.effects.vibrato import apply_vibrato
-from sinethesizer.effects.volume import apply_amplitude_normalization
+from sinethesizer.effects.volume import apply_amplitude_normalization, apply_compressor
 
 
 REGISTRY_OF_AUTOMATABLE_EFFECTS = {
     'amplitude_normalization': apply_amplitude_normalization,
+    'chorus': apply_chorus,
+    'compressor': apply_compressor,
     'equalizer': apply_equalizer,
     'filter': apply_frequency_filter,
     'filter_sweep': apply_filter_sweep,
