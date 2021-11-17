@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Optional
+from typing import Optional, Sequence
 
 import numpy as np
 import pytest
@@ -19,7 +19,7 @@ from sinethesizer.synth.core import Event
     "amplitude_random_range, n_early_reflections, early_reflections_delay, "
     "diffusion_delay_factor, diffusion_delay_random_range, "
     "late_reflections_decay_power, original_sound_gain, reverberations_gain, "
-    "random_seed, keep_peak_volume, expected",
+    "random_seeds, keep_peak_volume, expected",
     [
         (
             # `sound`
@@ -57,8 +57,8 @@ from sinethesizer.synth.core import Event
             1.0,
             # `reverberations_gain`
             1.0,
-            # `random_seed`
-            0,
+            # `random_seeds`
+            (0, 0),
             # `keep_peak_volume`
             False,
             # `expected`
@@ -115,8 +115,8 @@ from sinethesizer.synth.core import Event
             1.0,
             # `reverberations_gain`
             1.0,
-            # `random_seed`
-            0,
+            # `random_seeds`
+            (0, 0),
             # `keep_peak_volume`
             True,
             # `expected`
@@ -152,7 +152,7 @@ def test_apply_reverb(
         original_sound_gain: float,
         reverberations_gain: float,
         keep_peak_volume: bool,
-        random_seed: Optional[int],
+        random_seeds: Sequence[Optional[int]],
         expected: np.ndarray
 ) -> None:
     """Test `apply_reverb` function."""
@@ -161,7 +161,6 @@ def test_apply_reverb(
         amplitude_random_range, n_early_reflections, early_reflections_delay,
         diffusion_delay_factor, diffusion_delay_random_range,
         late_reflections_decay_power, original_sound_gain, reverberations_gain,
-        random_seed, keep_peak_volume
+        random_seeds, keep_peak_volume
     )
-    print(result)
     np.testing.assert_almost_equal(result, expected)

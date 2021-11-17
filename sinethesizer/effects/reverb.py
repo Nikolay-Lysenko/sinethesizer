@@ -8,7 +8,7 @@ Author: Nikolay Lysenko
 import random
 import warnings
 from math import ceil
-from typing import List, Optional
+from typing import List, Optional, Sequence
 
 import numpy as np
 from scipy.signal import convolve
@@ -188,7 +188,7 @@ def apply_reverb(
         late_reflections_decay_power: float = 10,
         original_sound_gain: float = 0.8,
         reverberations_gain: float = 0.2,
-        random_seed: Optional[int] = None,
+        random_seeds: Sequence[Optional[int]] = (None, None),
         keep_peak_amplitude: bool = False
 ) -> np.ndarray:
     """
@@ -218,8 +218,9 @@ def apply_reverb(
         fraction of amplitude of original sound that is kept  in resulting sound
     :param reverberations_gain:
         fraction of amplitude of reverberations sum that is kept in resulting sound
-    :param random_seed:
-        seed for pseudo-random number generator
+    :param random_seeds:
+        seeds for pseudo-random number generator; one is used for the left channel and another one
+        is used for the right channel
     :param keep_peak_amplitude:
         if it is set to `True`, processed sound is rescaled to maintain its original peak amplitude
         which is usually changed due to wave interference
@@ -234,13 +235,13 @@ def apply_reverb(
         event, first_reflection_delay, decay_duration, amplitude_random_range,
         n_early_reflections, early_reflections_delay, diffusion_delay_factor,
         diffusion_delay_random_range, late_reflections_decay_power,
-        original_sound_gain, reverberations_gain, random_seed
+        original_sound_gain, reverberations_gain, random_seeds[0]
     )
     right_ir = generate_impulse_response(
         event, first_reflection_delay, decay_duration, amplitude_random_range,
         n_early_reflections, early_reflections_delay, diffusion_delay_factor,
         diffusion_delay_random_range, late_reflections_decay_power,
-        original_sound_gain, reverberations_gain, random_seed
+        original_sound_gain, reverberations_gain, random_seeds[1]
     )
     original_peak_amplitude = np.max(np.abs(sound))
     sound = np.vstack((
