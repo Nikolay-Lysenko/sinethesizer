@@ -84,6 +84,8 @@ def convert_events_to_timeline(
         timeline = add_event_to_timeline(
             timeline, event, settings['instruments_registry'], settings['frame_rate']
         )
+    if settings.get('peak_amplitude') is not None:
+        timeline /= (np.max(np.abs(timeline)) / settings['peak_amplitude'])
     return timeline
 
 

@@ -5,3 +5,8 @@ frame_rate: 48000
 
 # Duration (in seconds) of silence added to the end of a track.
 trailing_silence: 2
+
+# Maximum amplitude of resulting output as ratio to the maximum level that can be played
+# without clipping (sometimes, this level is referred to as '0 dB').
+# Do not add this field or set its value to `null` if no amplitude adjustment is needed.
+peak_amplitude: 1

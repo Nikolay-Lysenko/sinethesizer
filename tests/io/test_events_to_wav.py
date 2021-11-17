@@ -161,6 +161,71 @@ def test_add_event_to_timeline(
                 [0, 0, 0, 0, 0, 0.5, 0, -0.5, 0, 1.0, 0, -1.0, 0, 0, 0, 0]
             ])
         ),
+        (
+            # `events`
+            [
+                Event(
+                    instrument='sine',
+                    start_time=1.0,
+                    duration=1.0,
+                    frequency=1.0,
+                    velocity=0.5,
+                    effects='',
+                    frame_rate=4
+                ),
+                Event(
+                    instrument='sine',
+                    start_time=2.0,
+                    duration=1.0,
+                    frequency=1.0,
+                    velocity=1.0,
+                    effects='',
+                    frame_rate=4
+                ),
+            ],
+            # `settings`
+            {
+                'frame_rate': 4,
+                'trailing_silence': 1,
+                'peak_amplitude': 0.7,
+                'instruments_registry': {
+                    'sine': Instrument(
+                        partials=[
+                            Partial(
+                                wave=ModulatedWave(
+                                    waveform='sine',
+                                    amplitude_envelope_fn=functools.partial(
+                                        create_constant_envelope,
+                                        value=1
+                                    ),
+                                    phase=0,
+                                    amplitude_modulator=None,
+                                    phase_modulator=None,
+                                    quasiperiodic_bandwidth=0,
+                                    quasiperiodic_breakpoints_frequency=10
+                                ),
+                                frequency_ratio=1.0,
+                                amplitude_ratio=1.0,
+                                event_to_amplitude_factor_fn=functools.partial(
+                                    compute_amplitude_factor_as_power_of_velocity,
+                                    power=1
+                                ),
+                                detuning_to_amplitude={0.0: 1.0},
+                                random_detuning_range=0.0,
+                                effects=[]
+                            )
+                        ],
+                        amplitude_scaling=1.0,
+                        effects=[]
+                    )
+                }
+            },
+            # `expected`
+            np.array([
+                [0, 0, 0, 0, 0, 0.35, 0, -0.35, 0, 0.7, 0, -0.7, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0.35, 0, -0.35, 0, 0.7, 0, -0.7, 0, 0, 0, 0]
+            ])
+        ),
     ]
 )
 def test_convert_events_to_timeline(
