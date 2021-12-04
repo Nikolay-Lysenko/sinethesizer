@@ -12,7 +12,7 @@ from typing import Dict
 import numpy as np
 import pytest
 
-from sinethesizer.effects.stereo import apply_haas_effect
+from sinethesizer.effects.stereo import apply_stereo_delay
 from sinethesizer.envelopes.misc import create_constant_envelope
 from sinethesizer.synth.core import (
     Event, Instrument, ModulatedWave, Modulator, Partial,
@@ -206,12 +206,7 @@ def test_generate_modulated_wave(
                 ),
                 detuning_to_amplitude={0.0: 1.0},
                 random_detuning_range=0.0,
-                effects=[
-                    functools.partial(
-                        apply_haas_effect,
-                        location=-1, max_channel_delay=0.1
-                    )
-                ]
+                effects=[functools.partial(apply_stereo_delay, delay=-0.1)]
             ),
             # `event`
             Event(
@@ -264,12 +259,7 @@ def test_generate_modulated_wave(
                 ),
                 detuning_to_amplitude={0.0: 1.0},
                 random_detuning_range=0.0,
-                effects=[
-                    functools.partial(
-                        apply_haas_effect,
-                        location=-1, max_channel_delay=0.1
-                    )
-                ]
+                effects=[functools.partial(apply_stereo_delay, delay=-0.1)]
             ),
             # `event`
             Event(
@@ -360,7 +350,7 @@ def test_generate_partial(
                 duration=0.5,
                 frequency=1.0,
                 velocity=1.0,
-                effects='[{"name": "haas", "location": -1, "max_channel_delay": 0.05}]',
+                effects='[{"name": "stereo_delay", "delay": -0.05}]',
                 frame_rate=20,
             ),
             # `instruments_registry`
