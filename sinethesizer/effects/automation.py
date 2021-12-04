@@ -16,7 +16,7 @@ from sinethesizer.effects.equalizer import apply_equalizer
 from sinethesizer.effects.filter import apply_frequency_filter
 from sinethesizer.effects.filter_sweep import apply_filter_sweep, apply_phaser
 from sinethesizer.effects.overdrive import apply_overdrive
-from sinethesizer.effects.reverb import apply_reverb
+from sinethesizer.effects.reverb import apply_artificial_reverb, apply_room_reverb
 from sinethesizer.effects.stereo import apply_haas_effect, apply_panning
 from sinethesizer.effects.tremolo import apply_tremolo
 from sinethesizer.effects.vibrato import apply_vibrato
@@ -25,6 +25,7 @@ from sinethesizer.effects.volume import apply_amplitude_normalization, apply_com
 
 REGISTRY_OF_AUTOMATABLE_EFFECTS = {
     'amplitude_normalization': apply_amplitude_normalization,
+    'artificial_reverb': apply_artificial_reverb,
     'chorus': apply_chorus,
     'compressor': apply_compressor,
     'equalizer': apply_equalizer,
@@ -34,7 +35,7 @@ REGISTRY_OF_AUTOMATABLE_EFFECTS = {
     'overdrive': apply_overdrive,
     'panning': apply_panning,
     'phaser': apply_phaser,
-    'reverb': apply_reverb,
+    'room_reverb': apply_room_reverb,
     'tremolo': apply_tremolo,
     'vibrato': apply_vibrato,
 }

@@ -15,7 +15,7 @@ from sinethesizer.effects.equalizer import apply_equalizer
 from sinethesizer.effects.filter import apply_frequency_filter
 from sinethesizer.effects.filter_sweep import apply_filter_sweep, apply_phaser
 from sinethesizer.effects.overdrive import apply_overdrive
-from sinethesizer.effects.reverb import apply_reverb
+from sinethesizer.effects.reverb import apply_artificial_reverb, apply_room_reverb
 from sinethesizer.effects.stereo import apply_haas_effect, apply_panning
 from sinethesizer.effects.tremolo import apply_tremolo
 from sinethesizer.effects.vibrato import apply_vibrato
@@ -37,6 +37,7 @@ def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
     """
     registry = {
         'amplitude_normalization': apply_amplitude_normalization,
+        'artificial_reverb': apply_artificial_reverb,
         'automation': apply_automated_effect,
         'chorus': apply_chorus,
         'compressor': apply_compressor,
@@ -46,8 +47,8 @@ def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
         'haas': apply_haas_effect,
         'overdrive': apply_overdrive,
         'panning': apply_panning,
+        'room_reverb': apply_room_reverb,
         'phaser': apply_phaser,
-        'reverb': apply_reverb,
         'tremolo': apply_tremolo,
         'vibrato': apply_vibrato,
     }
