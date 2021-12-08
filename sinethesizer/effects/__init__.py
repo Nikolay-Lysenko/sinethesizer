@@ -6,6 +6,7 @@ Author: Nikolay Lysenko
 
 
 from . import (
+    amplitude,
     automation,
     chorus,
     equalizer,
@@ -17,13 +18,13 @@ from . import (
     stereo,
     tremolo,
     vibrato,
-    volume,
 )
 from .registry import EFFECT_FN_TYPE, get_effects_registry
 
 
 __all__ = [
     'EFFECT_FN_TYPE',
+    'amplitude',
     'automation',
     'chorus',
     'equalizer',
@@ -36,5 +37,4 @@ __all__ = [
     'stereo',
     'tremolo',
     'vibrato',
-    'volume',
 ]

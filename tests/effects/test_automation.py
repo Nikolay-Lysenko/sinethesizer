@@ -41,23 +41,23 @@ from sinethesizer.oscillators import generate_mono_wave
             [
                 {
                     'relative_position': 0,
-                    'left_volume_ratio': 1.0,
-                    'right_volume_ratio': 1.0,
+                    'left_amplitude_ratio': 1.0,
+                    'right_amplitude_ratio': 1.0,
                 },
                 {
                     'relative_position': 0.25,
-                    'left_volume_ratio': 0.25,
-                    'right_volume_ratio': 1.0,
+                    'left_amplitude_ratio': 0.25,
+                    'right_amplitude_ratio': 1.0,
                 },
                 {
                     'relative_position': 0.5,
-                    'left_volume_ratio': 0.5,
-                    'right_volume_ratio': 1.0,
+                    'left_amplitude_ratio': 0.5,
+                    'right_amplitude_ratio': 1.0,
                 },
                 {
                     'relative_position': 1,
-                    'left_volume_ratio': 1.0,
-                    'right_volume_ratio': 1.0,
+                    'left_amplitude_ratio': 1.0,
+                    'right_amplitude_ratio': 1.0,
                 },
             ],
             # `expected`

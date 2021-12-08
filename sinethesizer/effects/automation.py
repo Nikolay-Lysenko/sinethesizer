@@ -11,6 +11,9 @@ from typing import Any, Dict, List
 
 import numpy as np
 
+from sinethesizer.effects.amplitude import (
+    apply_amplitude_normalization, apply_compressor, apply_envelope_shaper
+)
 from sinethesizer.effects.chorus import apply_chorus
 from sinethesizer.effects.equalizer import apply_equalizer
 from sinethesizer.effects.filter import apply_frequency_filter
@@ -20,7 +23,6 @@ from sinethesizer.effects.reverb import apply_artificial_reverb, apply_room_reve
 from sinethesizer.effects.stereo import apply_panning, apply_stereo_delay
 from sinethesizer.effects.tremolo import apply_tremolo
 from sinethesizer.effects.vibrato import apply_vibrato
-from sinethesizer.effects.volume import apply_amplitude_normalization, apply_compressor
 
 
 REGISTRY_OF_AUTOMATABLE_EFFECTS = {
@@ -28,6 +30,7 @@ REGISTRY_OF_AUTOMATABLE_EFFECTS = {
     'artificial_reverb': apply_artificial_reverb,
     'chorus': apply_chorus,
     'compressor': apply_compressor,
+    'envelope_shaper': apply_envelope_shaper,
     'equalizer': apply_equalizer,
     'filter': apply_frequency_filter,
     'filter_sweep': apply_filter_sweep,

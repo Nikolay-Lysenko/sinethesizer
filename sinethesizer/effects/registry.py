@@ -9,6 +9,9 @@ from typing import Callable, Dict
 
 import numpy as np
 
+from sinethesizer.effects.amplitude import (
+    apply_amplitude_normalization, apply_compressor, apply_envelope_shaper
+)
 from sinethesizer.effects.automation import apply_automated_effect
 from sinethesizer.effects.chorus import apply_chorus
 from sinethesizer.effects.equalizer import apply_equalizer
@@ -19,7 +22,6 @@ from sinethesizer.effects.reverb import apply_artificial_reverb, apply_room_reve
 from sinethesizer.effects.stereo import apply_panning, apply_stereo_delay
 from sinethesizer.effects.tremolo import apply_tremolo
 from sinethesizer.effects.vibrato import apply_vibrato
-from sinethesizer.effects.volume import apply_amplitude_normalization, apply_compressor
 
 
 EFFECT_FN_TYPE = Callable[
@@ -41,6 +43,7 @@ def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
         'automation': apply_automated_effect,
         'chorus': apply_chorus,
         'compressor': apply_compressor,
+        'envelope_shaper': apply_envelope_shaper,
         'equalizer': apply_equalizer,
         'filter': apply_frequency_filter,
         'filter_sweep': apply_filter_sweep,

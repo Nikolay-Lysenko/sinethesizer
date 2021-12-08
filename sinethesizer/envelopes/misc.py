@@ -83,7 +83,7 @@ def create_exponentially_decaying_envelope(
         given non-maximum positive velocity, the higher it is, the lower
         envelope values are; if it is 0, velocity does not affect envelope;
         usually, this argument should be passed only if output envelope is
-        used as modulation index envelope
+        used as modulation index envelope or if the function is called by envelope shaper
     :return:
         envelope
     """
