@@ -45,7 +45,7 @@ def apply_amplitude_normalization(
 
 def apply_compressor(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        threshold: float, chunk_size_in_cycles: float = 3
+        threshold: float, quantile: float = 1, chunk_size_in_cycles: float = 3
 ) -> np.ndarray:
     """
     Limit maximum amplitude of the sound.
@@ -57,6 +57,8 @@ def apply_compressor(
     :param threshold:
         ratio of maximum output amplitude to maximum possible amplitude that is not clipped by
         playing devices
+    :param quantile:
+        quantile of absolute pressure deviations that is used for scaling
     :param chunk_size_in_cycles:
         size of one window to be processed independently (in number of fundamental frequency's
         periods); the higher it is, the less probable artifacts are, but also the slower
@@ -69,8 +71,8 @@ def apply_compressor(
     chunk_size_in_frames = chunk_size_in_cycles * event.frame_rate / event.frequency
     n_chunks = int(round(sound.shape[1] / chunk_size_in_frames))
     for chunk in np.array_split(sound, n_chunks, axis=1):
-        current_max = np.max(np.abs(chunk))
-        current_ratio = min(threshold / current_max, 1)
+        current_value = np.quantile(np.abs(chunk), quantile)
+        current_ratio = min(threshold / current_value, 1)
         current_scaling_coefs = np.linspace(previous_ratio, current_ratio, chunk.shape[1], False)
         scaling_coefs.append(current_scaling_coefs)
         previous_ratio = current_ratio
@@ -81,7 +83,7 @@ def apply_compressor(
 
 def apply_envelope_shaper(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        envelope_params: Dict[str, Any], chunk_size_in_cycles: float = 3,
+        envelope_params: Dict[str, Any], quantile: float = 1, chunk_size_in_cycles: float = 3,
         initial_rescaling_ratio: float = 0, forced_fading_ratio: float = 0
 ) -> np.ndarray:
     """
@@ -100,6 +102,8 @@ def apply_envelope_shaper(
         parameters of sound event for which this function is called
     :param envelope_params:
         name of envelope generating function and its arguments
+    :param quantile:
+        quantile of absolute pressure deviations that is used for scaling
     :param chunk_size_in_cycles:
         size of one window to be processed independently (in number of fundamental frequency's
         periods); the higher it is, the less probable artifacts are, but also the higher deviations
@@ -130,8 +134,8 @@ def apply_envelope_shaper(
     split_sound = np.array_split(sound, n_chunks, axis=1)
     split_envelope = np.array_split(envelope, n_chunks, axis=0)
     for sound_chunk, envelope_chunk in zip(split_sound, split_envelope):
-        current_max = np.max(np.abs(sound_chunk))
-        current_ratio = np.mean(envelope_chunk) / current_max
+        current_value = np.quantile(np.abs(sound_chunk), quantile)
+        current_ratio = np.mean(envelope_chunk) / current_value
         current_scaling_coefs = np.linspace(
             previous_ratio, current_ratio, sound_chunk.shape[1], False
         )

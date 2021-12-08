@@ -67,7 +67,7 @@ def test_apply_amplitude_normalization(
 
 
 @pytest.mark.parametrize(
-    "sound, frame_rate, frequency, threshold, chunk_size_in_cycles, expected",
+    "sound, frame_rate, frequency, threshold, quantile, chunk_size_in_cycles, expected",
     [
         (
             # `sound`
@@ -81,6 +81,8 @@ def test_apply_amplitude_normalization(
             3,
             # `threshold`
             0.7,
+            # `quantile`
+            1,
             # `chunk_size_in_cycles`
             1,
             # `expected`
@@ -92,7 +94,7 @@ def test_apply_amplitude_normalization(
     ]
 )
 def test_apply_compressor(
-        sound: np.ndarray, frame_rate: int, frequency: float, threshold: float,
+        sound: np.ndarray, frame_rate: int, frequency: float, threshold: float, quantile: float,
         chunk_size_in_cycles: float, expected: np.ndarray
 ) -> None:
     """Test `apply_compressor` function."""
@@ -105,12 +107,12 @@ def test_apply_compressor(
         effects='',
         frame_rate=frame_rate
     )
-    result = apply_compressor(sound, event, threshold, chunk_size_in_cycles)
+    result = apply_compressor(sound, event, threshold, quantile, chunk_size_in_cycles)
     np.testing.assert_almost_equal(result, expected)
 
 
 @pytest.mark.parametrize(
-    "sound, frame_rate, frequency, envelope_params, chunk_size_in_cycles, "
+    "sound, frame_rate, frequency, envelope_params, quantile, chunk_size_in_cycles, "
     "initial_rescaling_ratio, forced_fading_ratio, expected",
     [
         (
@@ -132,6 +134,8 @@ def test_apply_compressor(
                 'decay_degree': 1.0,
                 'peak_value': 1.0,
             },
+            # `quantile`
+            1,
             # `chunk_size_in_cycles`
             2,
             # `initial_rescaling_ratio`
@@ -163,6 +167,8 @@ def test_apply_compressor(
                 'decay_degree': 1.0,
                 'peak_value': 1.0,
             },
+            # `quantile`
+            1,
             # `chunk_size_in_cycles`
             2,
             # `initial_rescaling_ratio`
@@ -179,8 +185,8 @@ def test_apply_compressor(
 )
 def test_apply_envelope_shaper(
         sound: np.ndarray, frame_rate: int, frequency: float, envelope_params: Dict[str, Any],
-        chunk_size_in_cycles: float, initial_rescaling_ratio: float, forced_fading_ratio: float,
-        expected: np.ndarray
+        quantile: float, chunk_size_in_cycles: float, initial_rescaling_ratio: float,
+        forced_fading_ratio: float, expected: np.ndarray
 ) -> None:
     """Test `apply_envelope_shaper` function."""
     event = Event(
@@ -193,7 +199,7 @@ def test_apply_envelope_shaper(
         frame_rate=frame_rate
     )
     result = apply_envelope_shaper(
-        sound, event, envelope_params, chunk_size_in_cycles,
+        sound, event, envelope_params, quantile, chunk_size_in_cycles,
         initial_rescaling_ratio, forced_fading_ratio
     )
     np.testing.assert_almost_equal(result, expected)
