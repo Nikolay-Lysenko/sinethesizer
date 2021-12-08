@@ -13,7 +13,7 @@ from sinethesizer.synth.core import Event
 
 
 @pytest.mark.parametrize(
-    "sound, event, left_volume_ratio, right_volume_ratio, expected",
+    "sound, event, left_amplitude_ratio, right_amplitude_ratio, expected",
     [
         (
             # `sound`
@@ -31,9 +31,9 @@ from sinethesizer.synth.core import Event
                 effects='',
                 frame_rate=20
             ),
-            # `left_volume_ratio`
+            # `left_amplitude_ratio`
             0.5,
-            # `right_volume_ratio`
+            # `right_amplitude_ratio`
             0.1,
             # `expected`
             np.array([
@@ -45,11 +45,11 @@ from sinethesizer.synth.core import Event
 )
 def test_apply_panning(
         sound: np.ndarray, event: Event,
-        left_volume_ratio: float, right_volume_ratio: float,
+        left_amplitude_ratio: float, right_amplitude_ratio: float,
         expected: np.ndarray
 ) -> None:
     """Test `apply_panning` function."""
-    result = apply_panning(sound, event, left_volume_ratio, right_volume_ratio)
+    result = apply_panning(sound, event, left_amplitude_ratio, right_amplitude_ratio)
     np.testing.assert_almost_equal(result, expected)
 
 

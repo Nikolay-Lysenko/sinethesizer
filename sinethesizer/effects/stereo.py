@@ -14,25 +14,25 @@ import numpy as np
 
 def apply_panning(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        left_volume_ratio: float, right_volume_ratio: float
+        left_amplitude_ratio: float, right_amplitude_ratio: float
 ) -> np.ndarray:
     """
-    Modify volumes of two channels independently.
+    Modify amplitudes of two channels independently.
 
     :param sound:
         sound to be modified
     :param event:
         an argument that is not used by this function;
         it is added, because all effect functions must have it
-    :param left_volume_ratio:
+    :param left_amplitude_ratio:
         ratio of new volume of left channel to its initial volume
-    :param right_volume_ratio:
+    :param right_amplitude_ratio:
         ratio of new volume of right channel to its initial volume
     :return:
         sound with changed volume
     """
     _ = event  # This argument is ignored.
-    sound *= np.array([[left_volume_ratio], [right_volume_ratio]])
+    sound *= np.array([[left_amplitude_ratio], [right_amplitude_ratio]])
     return sound
 
 

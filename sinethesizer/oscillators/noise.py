@@ -23,7 +23,7 @@ def generate_power_law_noise(
     :param frame_rate:
         number of frames per second
     :param psd_decay_order:
-        order of intensity (i.e., power, not amplitude) decay with frequency
+        order of power spectral density's decay with frequency
     :param exponential_step:
         exponential step for defining filter parameters
     :return:
