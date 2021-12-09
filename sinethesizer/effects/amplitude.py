@@ -94,7 +94,7 @@ def apply_envelope_shaper(
        this effect can restore it;
     2) To have uniform overdrive, the overdrive effect should be applied to
        sound with constant envelope and then this effect can be applied
-       in order to set desired envelope
+       in order to set desired envelope.
 
     :param sound:
         sound to be modified

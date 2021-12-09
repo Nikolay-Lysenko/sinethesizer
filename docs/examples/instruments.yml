@@ -47,7 +47,7 @@
       amplitude_ratio: 0.5
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
-        power: 1.1  # The lower velocity is, the more quiet than fundamental this partial is.
+        power: 1.1  # The lower velocity is, the lower ratio of this partial amplitude to amplitude of fundamental is.
       random_detuning_range: 0.005
     - wave:
         waveform: sine

@@ -5,7 +5,7 @@ This tool is based on a representation of a sound produced by an instrument as a
 Parameter | Description | Required
 :-------: | :---------: | :------:
 partials | List of partials (see below how they are defined) | Yes
-amplitude_scaling | Float number selected to prevent clipping by audio playing devices; if clipping happens, decrease it | Yes
+amplitude_scaling | Float number that allows adjusting amplitudes over instruments; it might be set to 1 and then increased if the instrument is softer than other instruments, or decreased if the instrument is louder than other instruments | Yes
 effects | [Effects](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/sinethesizer/effects/registry.py) (e.g., overdrive) that are always applied to sum of partials | No
 
 Each partial depends on these arguments:
