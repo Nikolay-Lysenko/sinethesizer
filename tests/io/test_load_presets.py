@@ -6,6 +6,7 @@ Author: Nikolay Lysenko
 
 
 import functools
+import os.path
 from typing import List, Dict
 
 import numpy as np
@@ -244,15 +245,164 @@ from sinethesizer.envelopes.ahdsr import (
         ),
     ]
 )
-def test_create_instruments_registry(
+def test_create_instruments_registry_with_file(
         path_to_tmp_file: str, yaml_content: List[str],
         expected: Dict[str, Instrument]
 ) -> None:
-    """Test `create_instruments_registry` function."""
+    """Test `create_instruments_registry` function with single file."""
     with open(path_to_tmp_file, 'w') as tmp_yml_file:
         for line in yaml_content:
             tmp_yml_file.write(line + '\n')
     result = create_instruments_registry(path_to_tmp_file)
+
+    velocities = [0.25, 0.5, 1.0]
+    for instrument_name, instrument in expected.items():
+        events = [
+            Event(
+                instrument=instrument_name,
+                start_time=0.0,
+                duration=1.0,
+                frequency=440,
+                velocity=velocity,
+                effects='',
+                frame_rate=8000
+            )
+            for velocity in velocities
+        ]
+        for event in events:
+            resulting_sound = synthesize(event, result)
+            expected_sound = synthesize(event, expected)
+            np.testing.assert_allclose(resulting_sound, expected_sound)
+
+
+@pytest.mark.parametrize(
+    "yaml_contents, expected",
+    [
+        (
+            # `yaml_contents`
+            [
+                [
+                    "---",
+                    "- name: sine",
+                    "  partials:",
+                    "    - wave:",
+                    "        waveform: sine",
+                    "        amplitude_envelope_fn:",
+                    "          name: trapezoid",
+                    "      frequency_ratio: 1.0",
+                    "      amplitude_ratio: 1.0",
+                    "      detuning_to_amplitude:",
+                    "        0.0: 1.0",
+                    "      random_detuning_range: 0.0",
+                    "  amplitude_scaling: 1.0",
+                ],
+                [
+                    "---",
+                    "- name: modulated_sine",
+                    "  partials:",
+                    "    - wave:",
+                    "        waveform: sine",
+                    "        amplitude_envelope_fn:",
+                    "          name: trapezoid",
+                    "        amplitude_modulator:",
+                    "          waveform: sine",
+                    "          frequency_ratio_numerator: 99",
+                    "          frequency_ratio_denominator: 100",
+                    "          modulation_index_envelope_fn:",
+                    "            name: trapezoid",
+                    "          use_ring_modulation: true",
+                    "      frequency_ratio: 1.0",
+                    "      amplitude_ratio: 1.0",
+                    "      event_to_amplitude_factor_fn:",
+                    "        name: power_fn_of_velocity",
+                    "        power: 1.0",
+                    "      detuning_to_amplitude:",
+                    "        0.0: 1.0",
+                    "      random_detuning_range: 0.0",
+                    "  amplitude_scaling: 1.0",
+                ],
+            ],
+            # `expected`
+            {
+                'sine': Instrument(
+                    partials=[
+                        Partial(
+                            wave=ModulatedWave(
+                                waveform='sine',
+                                amplitude_envelope_fn=create_trapezoid_envelope,
+                                phase=0,
+                                amplitude_modulator=None,
+                                phase_modulator=None,
+                                quasiperiodic_bandwidth=0,
+                                quasiperiodic_breakpoints_frequency=10
+                            ),
+                            frequency_ratio=1.0,
+                            amplitude_ratio=1.0,
+                            event_to_amplitude_factor_fn=functools.partial(
+                                compute_amplitude_factor_as_power_of_velocity,
+                                power=1
+                            ),
+                            detuning_to_amplitude={0.0: 1.0},
+                            random_detuning_range=0.0,
+                            effects=[]
+                        )
+                    ],
+                    amplitude_scaling=1.0,
+                    effects=[]
+                ),
+                'modulated_sine': Instrument(
+                    partials=[
+                        Partial(
+                            wave=ModulatedWave(
+                                waveform='sine',
+                                amplitude_envelope_fn=create_trapezoid_envelope,
+                                phase=0,
+                                amplitude_modulator=Modulator(
+                                    waveform='sine',
+                                    carrier_frequency_ratio=1,
+                                    modulator_frequency_ratio=0.99,
+                                    modulation_index_envelope_fn=create_trapezoid_envelope,
+                                    phase=0,
+                                    use_ring_modulation=True
+                                ),
+                                phase_modulator=None,
+                                quasiperiodic_bandwidth=0,
+                                quasiperiodic_breakpoints_frequency=10
+                            ),
+                            frequency_ratio=1.0,
+                            amplitude_ratio=1.0,
+                            event_to_amplitude_factor_fn=functools.partial(
+                                compute_amplitude_factor_as_power_of_velocity,
+                                power=1
+                            ),
+                            detuning_to_amplitude={0.0: 1.0},
+                            random_detuning_range=0.0,
+                            effects=[]
+                        )
+                    ],
+                    amplitude_scaling=1.0,
+                    effects=[]
+                )
+            }
+        ),
+    ]
+)
+def test_create_instruments_registry_with_directory(
+        path_to_tmp_dir: str, yaml_contents: List[List[str]],
+        expected: Dict[str, Instrument]
+) -> None:
+    """Test `create_instruments_registry` function with directory."""
+    for i, yaml_content in enumerate(yaml_contents):
+        path_to_file = os.path.join(path_to_tmp_dir, f"{i}.yml")
+        with open(path_to_file, 'w') as yml_file:
+            for line in yaml_content:
+                yml_file.write(line + '\n')
+
+    path_to_file = os.path.join(path_to_tmp_dir, "non_yaml.txt")
+    with open(path_to_file, 'w') as non_yml_file:
+        non_yml_file.write('abc')
+
+    result = create_instruments_registry(path_to_tmp_dir)
 
     velocities = [0.25, 0.5, 1.0]
     for instrument_name, instrument in expected.items():

@@ -1,0 +1,48 @@
+---
+- name: fm_bass
+  partials:
+    - wave:
+        waveform: sine
+        amplitude_envelope_fn:
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.05
+          max_attack_duration: 0.025
+          attack_degree: 2.0
+          decay_half_life_ratio: 0.2
+          max_release_duration: 0.05
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+        phase_modulator:
+          waveform: sine
+          frequency_ratio_numerator: 2
+          frequency_ratio_denominator: 1
+          modulation_index_envelope_fn:
+            name: exponentially_decaying
+            attack_to_ad_max_ratio: 0.05
+            max_attack_duration: 0.025
+            attack_degree: 2.0
+            decay_half_life_ratio: 0.2
+            max_release_duration: 0.05
+            release_duration_on_velocity_order: 0.0
+            release_degree: 1.0
+            peak_value: 5.0
+            ratio_at_zero_velocity: 0.5
+            envelope_values_on_velocity_order: 0.5
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      detuning_to_amplitude:
+        -0.1: 0.25
+        0: 0.5
+        0.1: 0.25
+      random_detuning_range: 0.001
+  amplitude_scaling: 1.0
+  effects:
+    - name: equalizer
+      breakpoint_frequencies:
+        - 3000
+        - 8000
+        - 21000
+      gains:
+        - 1.0
+        - 0.7
+        - 0.0

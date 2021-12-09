@@ -7,6 +7,7 @@ Author: Nikolay Lysenko
 
 import functools
 import math
+import os
 import warnings
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -233,22 +234,44 @@ def convert_partials(partials_data: List[Dict[str, Any]]) -> List[Partial]:
     return partials
 
 
+def create_list_of_yaml_paths(input_path: str) -> List[str]:
+    """
+    Create list of paths to YAML files with presets.
+
+    :param input_path:
+        path to YAML file with definitions of instruments or to directory with such files
+    :return:
+        list of paths to YAML files
+    """
+    file_paths = []
+    if os.path.isdir(input_path):
+        for file_name in os.listdir(input_path):
+            if not file_name.endswith('.yml') and not file_name.endswith('.yaml'):
+                continue
+            file_paths.append(os.path.join(input_path, file_name))
+    else:
+        file_paths = [input_path]
+    return file_paths
+
+
 def create_instruments_registry(input_path: str) -> Dict[str, Any]:
     """
     Create mapping from instrument names to their representations.
 
     :param input_path:
-        path to YAML file with definitions of instruments
+        path to YAML file with definitions of instruments or to directory with such files
     :return:
         instruments registry
     """
-    with open(input_path) as input_file:
-        input_data = yaml.safe_load(input_file)
+    file_paths = create_list_of_yaml_paths(input_path)
     instruments_registry = {}
-    for instrument_data in input_data:
-        instruments_registry[instrument_data['name']] = Instrument(
-            partials=convert_partials(instrument_data['partials']),
-            amplitude_scaling=instrument_data['amplitude_scaling'],
-            effects=create_list_of_effect_fns(instrument_data.get('effects', []))
-        )
+    for file_path in file_paths:
+        with open(file_path) as input_file:
+            input_data = yaml.safe_load(input_file)
+        for instrument_data in input_data:
+            instruments_registry[instrument_data['name']] = Instrument(
+                partials=convert_partials(instrument_data['partials']),
+                amplitude_scaling=instrument_data['amplitude_scaling'],
+                effects=create_list_of_effect_fns(instrument_data.get('effects', []))
+            )
     return instruments_registry

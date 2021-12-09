@@ -1,0 +1,28 @@
+---
+- name: plucked_string
+  partials:
+    - wave:
+        waveform: karplus_strong
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.0
+          max_attack_duration: 0.0
+          hold_to_hds_max_ratio: 1.0
+          max_hold_duration: 100.0
+          decay_to_ds_max_ratio: 0.0
+          max_decay_duration: 0.0
+          sustain_level: 1.0
+          max_sustain_duration: 0.0
+          max_release_duration: 0.25
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      effects:
+        - name: filter
+          kind: relative_wrt_velocity
+          max_frequency_ratio_at_zero_velocity: 5
+          max_frequency_ratio_at_max_velocity: 50
+          max_frequency_ratio_on_velocity_order: 1.5
+          order: 3
+  amplitude_scaling: 0.95

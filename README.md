@@ -32,7 +32,7 @@ For a MIDI file, it can be done with the following command:
 ```bash
 python -m sinethesizer \
     -i path/to/track.midi \
-    -p path/to/presets.yml \
+    -p path/to/presets.yml \  # Or -p path/to/dir_with_presets
     -m path/to/mapping.yml \
     -o path/to/output.wav
 ```
@@ -41,7 +41,7 @@ However, MIDI files are binary and, thus, quite opaque. Also, integration betwee
 ```bash
 python -m sinethesizer \
     -i path/to/track.tsv \
-    -p path/to/presets.yml \
+    -p path/to/presets.yml \  # Or -p path/to/dir_with_presets
     -o path/to/output.wav
 ```
 
@@ -50,7 +50,7 @@ Below table provides links to detailed information about input files that are re
 Option | Description | Example
 :----: | :---------: | :-----:
 -i path/to/track.tsv | [Track definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/track_definition.md) | [Scale](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/scale.tsv)
--p path/to/presets.yml | [Instruments definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/instruments_creation.md) | [Demo instruments](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/presets/demo.yml)
+-p path/to/presets.yml | [Instruments definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/instruments_creation.md) | [Demo instruments](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/instruments.yml)
 -m path/to/mapping.yml | Mapping from MIDI instrument IDs to instruments from the presets | [Demo mapping](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/mapping.yml)
 
 If something is still unclear, you can read the source code — it is structured and has built-in documentation. Also your questions are welcome.

@@ -1,0 +1,95 @@
+---
+- name: pad
+  partials:
+    - wave:
+        waveform: square
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.325
+          max_attack_duration: 1.0
+          attack_degree: 0.9
+          hold_to_hds_max_ratio: 0.1
+          max_hold_duration: 0.05
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 1.0
+          decay_degree: 1.2
+          sustain_level: 0.7
+          max_sustain_duration: 10.0
+          max_release_duration: 0.5
+          release_duration_on_velocity_order: 1.0
+          release_degree: 1.2
+        quasiperiodic_bandwidth: 0.04
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.002
+      effects:
+        - name: tremolo
+          frequency: 4
+          amplitude: 0.15
+    - wave:
+        waveform: triangle
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.325
+          max_attack_duration: 1.0
+          attack_degree: 0.9
+          hold_to_hds_max_ratio: 0.1
+          max_hold_duration: 0.05
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 1.0
+          decay_degree: 1.2
+          sustain_level: 0.7
+          max_sustain_duration: 10.0
+          max_release_duration: 0.5
+          release_duration_on_velocity_order: 1.0
+          release_degree: 1.2
+        quasiperiodic_bandwidth: 0.04
+      frequency_ratio: 1.2
+      amplitude_ratio: 1.0
+      phase: 1.5
+      random_detuning_range: 0.002
+      effects:
+        - name: tremolo
+          frequency: 4
+          amplitude: 0.15
+          phase: 3.1415926
+  amplitude_scaling: 0.45
+  effects:
+    - name: automation
+      automated_effect_name: equalizer
+      breakpoint_frequencies:
+        - 0
+        - 700
+        - 1400
+        - 2800
+        - 5600
+        - 11200
+        - 21000
+      gains:
+        - 1.0
+        - 1.0
+        - 0.36
+        - 0.1296
+        - 0.046656
+        - 0.0168
+        - 0
+      break_points:
+        - relative_position: 0.0
+          original_sound_weight: 1.0
+        - relative_position: 0.1
+          original_sound_weight: 0.25
+        - relative_position: 0.5
+          original_sound_weight: 0.0
+        - relative_position: 0.75
+          original_sound_weight: 0.25
+        - relative_position: 1.0
+          original_sound_weight: 0.0
+    - name: equalizer
+      breakpoint_frequencies:
+        - 3000
+        - 8000
+        - 21000
+      gains:
+        - 1.0
+        - 0.7
+        - 0.0

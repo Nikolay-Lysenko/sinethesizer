@@ -12,14 +12,14 @@
       amplitude_ratio: 1.0
   amplitude_scaling: 1.0
 
-# It is a richer sine wave.
+# It is a less artificial sine wave.
 - name: quasiperiodic_sine
   partials:
     - wave:
         waveform: sine
         amplitude_envelope_fn:
           name: trapezoid
-        quasiperiodic_bandwidth: 0.75
+        quasiperiodic_bandwidth: 0.5
         quasiperiodic_breakpoints_frequency: 10
       frequency_ratio: 1.0
       amplitude_ratio: 1.0

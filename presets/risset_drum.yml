@@ -1,0 +1,95 @@
+---
+- name: risset_drum
+  partials:
+    - wave:
+        waveform: sine
+        amplitude_envelope_fn:
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.03
+          max_attack_duration: 0.015
+          attack_degree: 2.0
+          decay_half_life_ratio: 0.125
+          max_release_duration: 0.05
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.002
+    - wave:
+        waveform: sine
+        amplitude_envelope_fn:
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.03
+          max_attack_duration: 0.015
+          attack_degree: 2.0
+          decay_half_life_ratio: 0.0625
+          max_release_duration: 0.05
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 1.0
+      amplitude_ratio: 0.17
+      random_detuning_range: 0.002
+    - wave:
+        waveform: sine
+        amplitude_envelope_fn:
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.03
+          max_attack_duration: 0.015
+          attack_degree: 2.0
+          decay_half_life_ratio: 0.0625
+          max_release_duration: 0.05
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 1.6
+      amplitude_ratio: 0.255
+      random_detuning_range: 0.002
+    - wave:
+        waveform: sine
+        amplitude_envelope_fn:
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.03
+          max_attack_duration: 0.015
+          attack_degree: 2.0
+          decay_half_life_ratio: 0.0625
+          max_release_duration: 0.05
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 2.2
+      amplitude_ratio: 0.34
+      random_detuning_range: 0.002
+    - wave:
+        waveform: sine
+        amplitude_envelope_fn:
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.03
+          max_attack_duration: 0.015
+          attack_degree: 2.0
+          decay_half_life_ratio: 0.0625
+          max_release_duration: 0.05
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 2.3
+      amplitude_ratio: 0.255
+      random_detuning_range: 0.002
+    - wave:
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: exponentially_decaying
+          attack_to_ad_max_ratio: 0.03
+          max_attack_duration: 0.015
+          attack_degree: 2.0
+          decay_half_life_ratio: 0.0625
+          max_release_duration: 0.05
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 5.0  # This value affects nothing, because noise has no frequency.
+      amplitude_ratio: 0.02  # This value affects nothing, because it is changed by effects.
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 3
+          max_frequency_ratio: 7
+          order: 1
+        - name: amplitude_normalization
+          value_at_max_velocity: 0.02
+  amplitude_scaling: 0.49

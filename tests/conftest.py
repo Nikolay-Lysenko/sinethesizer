@@ -5,9 +5,16 @@ Author: Nikolay Lysenko
 """
 
 
-from tempfile import NamedTemporaryFile
+from tempfile import NamedTemporaryFile, TemporaryDirectory
 
 import pytest
+
+
+@pytest.fixture()
+def path_to_tmp_dir() -> str:
+    """Get path to empty temporary directory."""
+    with TemporaryDirectory() as path_to_tmp_dir:
+        yield path_to_tmp_dir
 
 
 @pytest.fixture()
