@@ -73,10 +73,12 @@ def create_generic_ahdsr_envelope(
     :param peak_value:
         peak envelope value given maximum velocity; usually, this argument
         should be passed only if output envelope is used as modulation index envelope
+        or if the function is called by envelope shaper
     :param ratio_at_zero_velocity:
         ratio of envelope values at zero velocity to envelope values at maximum
         velocity; usually, this argument should be passed only if output
-        envelope is used as modulation index envelope
+        envelope is used as modulation index envelope or if the function is called by
+        envelope shaper
     :param envelope_values_on_velocity_order:
         coefficient that determines dependence of envelope values on velocity;
         given non-maximum positive velocity, the higher it is, the lower
@@ -195,10 +197,12 @@ def create_relative_ahdsr_envelope(
     :param peak_value:
         peak envelope value given maximum velocity; usually, this argument
         should be passed only if output envelope is used as modulation index envelope
+        or if the function is called by envelope shaper
     :param ratio_at_zero_velocity:
         ratio of envelope values at zero velocity to envelope values at maximum
         velocity; usually, this argument should be passed only if output
-        envelope is used as modulation index envelope
+        envelope is used as modulation index envelope or if the function is called by
+        envelope shaper
     :param envelope_values_on_velocity_order:
         coefficient that determines dependence of envelope values on velocity;
         given non-maximum positive velocity, the higher it is, the lower
@@ -281,10 +285,12 @@ def create_trapezoid_envelope(
     :param peak_value:
         peak envelope value given maximum velocity; usually, this argument
         should be passed only if output envelope is used as modulation index envelope
+        or if the function is called by envelope shaper
     :param ratio_at_zero_velocity:
         ratio of envelope values at zero velocity to envelope values at maximum
         velocity; usually, this argument should be passed only if output
-        envelope is used as modulation index envelope
+        envelope is used as modulation index envelope or if the function is called by
+        envelope shaper
     :param envelope_values_on_velocity_order:
         coefficient that determines dependence of envelope values on velocity;
         given non-maximum positive velocity, the higher it is, the lower
