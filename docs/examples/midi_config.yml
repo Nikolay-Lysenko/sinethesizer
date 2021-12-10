@@ -1,0 +1,32 @@
+# This is an example of MIDI interpretation config.
+
+# Below section defines mapping from MIDI track names to `sinethesizer` instruments that play them.
+# This section is optional, but either it or `program_to_instrument` section must be included.
+# If both of them are present, only this section is used.
+track_name_to_instrument:
+  '1': additive_bright_pipe  # If a track is named `1`, it is played as `additive_bright_pipe`.
+  guitar: plucked_string  # If a track is named `guitar`, it is played as `plucked_string`.
+# If above section is set and a track is absent there, attempt to process the MIDI file will fail.
+
+# Below section maps track names to effects that are applied to each of their events.
+# In particular, this might be needed to properly locate corresponding sound sources.
+# This section is optional. It is used only if `track_name_to_instrument` section is included.
+track_name_to_effects:
+  '1': '{["name": "panning", "left_amplitude_ratio": 0.5, "right_amplitude_ratio": 1.0]}'
+  guitar: '{["name": "panning", "left_amplitude_ratio": 1.0, "right_amplitude_ratio": 0.0]}'
+
+# Below section defines mapping from MIDI programs to corresponding `sinethesizer` instruments.
+# This section is optional, but either it or `track_name_to_instrument` section must be included.
+# If both of them are present, only `track_name_to_instrument` section is used.
+program_to_instrument:
+  0: fm_bass  # So 'Acoustic Grand Piano' is played as `fm_bass`.
+  41: bowed_string  # So 'Cello' is played as 'bowed_string'.
+# If above section is used, but a program used in a MIDI file is absent in above mapping,
+# attempt to process the MIDI file will fail.
+
+# Below section maps MIDI programs to effects that are applied to each of their events.
+# In particular, this might be needed to properly locate corresponding sound sources.
+# This section is optional. It is used only if `track_name_to_instrument` section is not included.
+program_to_effects:
+  0: '{["name": "panning", "left_amplitude_ratio": 0.5, "right_amplitude_ratio": 1.0]}'
+  41: '{["name": "panning", "left_amplitude_ratio": 1.0, "right_amplitude_ratio": 0.0]}'

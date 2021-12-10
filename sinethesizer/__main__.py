@@ -40,9 +40,8 @@ def parse_cli_args() -> argparse.Namespace:
         help='path to output WAV file'
     )
     parser.add_argument(
-        '-m', '--instruments_mapping_path', type=str, default=None,
-        help='path to YAML file where MIDI instruments are mapped to '
-             'instruments from the presets'
+        '-m', '--midi_config_path', type=str, default=None,
+        help='path to YAML file that defines how to interpret MIDI file'
     )
     parser.add_argument(
         '-c', '--config_path', type=str, default=None,
@@ -64,9 +63,9 @@ def main():
     instruments_registry = create_instruments_registry(cli_args.presets_path)
     settings['instruments_registry'] = instruments_registry
 
-    if cli_args.instruments_mapping_path is not None:
-        with open(cli_args.instruments_mapping_path) as mapping_file:
-            settings['midi_mapping'] = yaml.safe_load(mapping_file)
+    if cli_args.midi_config_path is not None:
+        with open(cli_args.midi_config_path) as midi_config_file:
+            settings['midi'] = yaml.safe_load(midi_config_file)
 
     extension = cli_args.input_path.split('.')[-1].lower()
     if extension == 'tsv':

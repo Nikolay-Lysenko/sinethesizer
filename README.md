@@ -33,7 +33,7 @@ For a MIDI file, it can be done with the following command:
 python -m sinethesizer \
     -i path/to/track.midi \
     -p path/to/presets.yml \  # Or -p path/to/dir_with_presets
-    -m path/to/mapping.yml \
+    -m path/to/midi_config.yml \
     -o path/to/output.wav
 ```
 
@@ -51,6 +51,6 @@ Option | Description | Example
 :----: | :---------: | :-----:
 -i path/to/track.tsv | [Track definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/track_definition.md) | [Scale](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/scale.tsv)
 -p path/to/presets.yml | [Instruments definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/instruments_creation.md) | [Demo instruments](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/instruments.yml)
--m path/to/mapping.yml | Mapping from MIDI instrument IDs to instruments from the presets | [Demo mapping](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/mapping.yml)
+-m path/to/midi_config.yml | Settings of MIDI file interpretation | [Demo MIDI config](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/midi_config.yml)
 
 If something is still unclear, you can read the source code — it is structured and has built-in documentation. Also your questions are welcome.

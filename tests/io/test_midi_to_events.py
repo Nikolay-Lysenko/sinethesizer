@@ -15,21 +15,23 @@ from sinethesizer.synth.core import Event
 
 
 @pytest.mark.parametrize(
-    "midi_events, program, settings, expected",
+    "midi_instrument, midi_events, settings, expected",
     [
         (
+            # `midi_instrument`
+            {'program': 0, 'name': '1'},
             # `midi_events`
             [
                 {'start': 1, 'end': 2, 'pitch': 21, 'velocity': 127},
                 {'start': 2, 'end': 3, 'pitch': 25, 'velocity': 127},
             ],
-            # `program`
-            0,
             # `settings`
             {
                 'frame_rate': 4,
                 'trailing_silence': 1,
-                'midi_mapping': {0: 'sine'},
+                'midi': {
+                    'program_to_instrument': {0: 'sine'}
+                },
             },
             # `expected`
             [
@@ -53,16 +55,55 @@ from sinethesizer.synth.core import Event
                 ),
             ]
         ),
+        (
+            # `midi_instrument`
+            {'program': 0, 'name': '1'},
+            # `midi_events`
+            [
+                {'start': 1, 'end': 2, 'pitch': 21, 'velocity': 127},
+                {'start': 2, 'end': 3, 'pitch': 25, 'velocity': 127},
+            ],
+            # `settings`
+            {
+                'frame_rate': 4,
+                'trailing_silence': 1,
+                'midi': {
+                    'track_name_to_instrument': {'1': 'woodwind'},
+                    'track_name_to_effects': {'1': '"name": "artificial_reverb"'},
+                    'program_to_instrument': {0: 'sine'},
+                    'program_to_effects': {0: '"name": "vibrato"'},
+                },
+            },
+            # `expected`
+            [
+                Event(
+                    instrument='woodwind',
+                    start_time=1.0,
+                    duration=1.0,
+                    frequency=27.5,  # A0
+                    velocity=1.0,
+                    effects='"name": "artificial_reverb"',
+                    frame_rate=4
+                ),
+                Event(
+                    instrument='woodwind',
+                    start_time=2.0,
+                    duration=1.0,
+                    frequency=34.64782887210901,  # C#1
+                    velocity=1.0,
+                    effects='"name": "artificial_reverb"',
+                    frame_rate=4
+                ),
+            ]
+        ),
     ]
 )
 def test_convert_midi_to_timeline(
-        path_to_tmp_file: str,
-        midi_events: List[Dict[str, Any]], program: int,
-        settings: Dict[str, Any],
-        expected: List[Event]
+        path_to_tmp_file: str, midi_instrument: Dict[str, Any], midi_events: List[Dict[str, Any]],
+        settings: Dict[str, Any], expected: List[Event]
 ) -> None:
     """Test `convert_midi_to_timeline` function."""
-    pretty_midi_instrument = pretty_midi.Instrument(program)
+    pretty_midi_instrument = pretty_midi.Instrument(**midi_instrument)
     for event in midi_events:
         note = pretty_midi.Note(**event)
         pretty_midi_instrument.notes.append(note)

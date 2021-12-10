@@ -28,11 +28,23 @@ def convert_midi_to_events(
     :return:
         sound events
     """
+    midi_settings = settings['midi']
+    if 'track_name_to_instrument' in midi_settings:
+        instruments_mapping = midi_settings['track_name_to_instrument']
+        effects_mapping = midi_settings.get('track_name_to_effects', {})
+        key_fn = lambda instrument: instrument.name
+    elif 'program_to_instrument' in midi_settings:
+        instruments_mapping = midi_settings['program_to_instrument']
+        effects_mapping = midi_settings.get('program_to_effects', {})
+        key_fn = lambda instrument: instrument.program
+    else:
+        raise RuntimeError("MIDI config file lacks required sections.")
+
     midi_data = pretty_midi.PrettyMIDI(midi_path)
     events = []
     for pretty_midi_instrument in midi_data.instruments:
-        program = pretty_midi_instrument.program
-        sinethesizer_instrument = settings['midi_mapping'][program]
+        key = key_fn(pretty_midi_instrument)
+        sinethesizer_instrument = instruments_mapping[key]
         for note in pretty_midi_instrument.notes:
             event = Event(
                 instrument=sinethesizer_instrument,
@@ -40,7 +52,7 @@ def convert_midi_to_events(
                 duration=note.end - note.start,
                 frequency=pretty_midi.note_number_to_hz(note.pitch),
                 velocity=note.velocity / MAX_MIDI_VALUE,
-                effects='',
+                effects=effects_mapping.get(key, ''),
                 frame_rate=settings['frame_rate']
             )
             events.append(event)
