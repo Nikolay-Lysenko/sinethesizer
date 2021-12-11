@@ -25,7 +25,7 @@ class Event(NamedTuple):
     :param instrument:
         name of instrument that is used for synthesis
     :param start_time:
-        start time (in seconds) of sound from beginning of its track
+        start time (in seconds) of sound from the beginning of its track
     :param duration:
         duration of a sound (in seconds) not including its release;
         in terms of MIDI, it is time between 'NOTE ON' and 'NOTE OFF' events

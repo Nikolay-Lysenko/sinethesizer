@@ -47,10 +47,10 @@ python -m sinethesizer \
 
 Below table provides links to detailed information about input files that are required from a user.
 
-Option | Description | Example
-:----: | :---------: | :-----:
--i path/to/track.tsv | [Track definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/track_definition.md) | [Scale](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/scale.tsv)
--p path/to/presets.yml | [Instruments definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/instruments_creation.md) | [Demo instruments](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/instruments.yml)
--m path/to/midi_config.yml | Settings of MIDI file interpretation | [Demo MIDI config](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/midi_config.yml)
+|           Option           |                                                    Description                                                     |                                                    Example                                                    |
+|:--------------------------:|:------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------:|
+|    -i path/to/track.tsv    |      [Track definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/track_definition.md)      |         [Scale](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/scale.tsv)          |
+|   -p path/to/presets.yml   | [Instruments definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/instruments_creation.md) | [Demo instruments](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/instruments.yml) |
+| -m path/to/midi_config.yml |                                        Settings of MIDI file interpretation                                        | [Demo MIDI config](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/midi_config.yml) |
 
 If something is still unclear, you can read the source code — it is structured and has built-in documentation. Also your questions are welcome.

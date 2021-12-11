@@ -51,7 +51,7 @@ def convert_tsv_to_events(
     :param input_path:
         path to TSV file with rows representing events
     :param settings:
-        global settings for the track
+        global settings for the output track
     :return:
         sound events
     """

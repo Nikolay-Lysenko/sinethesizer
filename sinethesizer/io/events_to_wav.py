@@ -66,16 +66,14 @@ def add_event_to_timeline(
     return timeline
 
 
-def convert_events_to_timeline(
-        events: List[Event], settings: Dict[str, Any]
-) -> np.ndarray:
+def convert_events_to_timeline(events: List[Event], settings: Dict[str, Any]) -> np.ndarray:
     """
     Convert events to array with pressure deviations timeline.
 
     :param events:
         sound events
     :param settings:
-        global settings for the track
+        global settings for the output track
     :return:
         pressure deviations timeline
     """
@@ -89,9 +87,7 @@ def convert_events_to_timeline(
     return timeline
 
 
-def write_timeline_to_wav(
-        output_path: str, timeline: np.ndarray, frame_rate: int
-) -> None:
+def write_timeline_to_wav(output_path: str, timeline: np.ndarray, frame_rate: int) -> None:
     """
     Write pressure deviations timeline to WAV file.
 

@@ -24,7 +24,7 @@ def convert_midi_to_events(
     :param midi_path:
         path to source MIDI file
     :param settings:
-        global settings for the track
+        global settings for the output track
     :return:
         sound events
     """
