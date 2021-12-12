@@ -21,7 +21,7 @@ from sinethesizer.oscillators import generate_mono_wave
 
 
 @pytest.mark.parametrize(
-    "frequencies, frame_rate, kind, bands, invert, order, frequency, waveform,"
+    "frequencies, frame_rate, kind, bands, invert, order, frequency, phase, waveform,"
     "spectrogram_params, expected",
     [
         (
@@ -39,6 +39,8 @@ from sinethesizer.oscillators import generate_mono_wave
             10,
             # `frequency`
             5,
+            # `phase`
+            0.0,
             # `waveform`
             'sine',
             # `spectrogram_params`
@@ -68,6 +70,8 @@ from sinethesizer.oscillators import generate_mono_wave
             10,
             # `frequency`
             5,
+            # `phase`
+            0.0,
             # `waveform`
             'sine',
             # `spectrogram_params`
@@ -97,6 +101,8 @@ from sinethesizer.oscillators import generate_mono_wave
             10,
             # `frequency`
             5,
+            # `phase`
+            0.0,
             # `waveform`
             'sine',
             # `spectrogram_params`
@@ -126,6 +132,8 @@ from sinethesizer.oscillators import generate_mono_wave
             10,
             # `frequency`
             5,
+            # `phase`
+            0.0,
             # `waveform`
             'sine',
             # `spectrogram_params`
@@ -145,7 +153,7 @@ from sinethesizer.oscillators import generate_mono_wave
 def test_apply_filter_sweep(
         frequencies: List[float], frame_rate: int, kind: str,
         bands: List[Tuple[Optional[float], Optional[float]]],
-        invert: bool, order: int, frequency: float, waveform: str,
+        invert: bool, order: int, frequency: float, phase: float, waveform: str,
         spectrogram_params: Dict[str, Any], expected: np.ndarray
 ) -> None:
     """Test `apply_filter_sweep` function."""
@@ -167,7 +175,7 @@ def test_apply_filter_sweep(
         frame_rate=frame_rate
     )
     sound = apply_filter_sweep(
-        sound, event, kind, bands, invert, order, frequency, waveform
+        sound, event, kind, bands, invert, order, frequency, phase, waveform
     )
     spc = spectrogram(sound[0], frame_rate, **spectrogram_params)[2]
     result = spc.sum(axis=1)[:len(expected)]
@@ -201,7 +209,7 @@ def test_apply_phaser(frequency: float, frame_rate: int, kind: str) -> None:
 
 
 @pytest.mark.parametrize(
-    "sounds, frame_rate, frequency, waveform, expected",
+    "sounds, frame_rate, frequency, phase, waveform, expected",
     [
         (
             # `sounds`
@@ -215,6 +223,8 @@ def test_apply_phaser(frequency: float, frame_rate: int, kind: str) -> None:
             4,
             # `frequency`
             1,
+            # `phase`
+            0.0,
             # `waveform`
             'sine',
             # `expected`
@@ -234,6 +244,8 @@ def test_apply_phaser(frequency: float, frame_rate: int, kind: str) -> None:
             4,
             # `frequency`
             0.5,
+            # `phase`
+            0.0,
             # `waveform`
             'raw_triangle',
             # `expected`
@@ -265,6 +277,8 @@ def test_apply_phaser(frequency: float, frame_rate: int, kind: str) -> None:
             4,
             # `frequency`
             0.5,
+            # `phase`
+            0.0,
             # `waveform`
             'raw_triangle',
             # `expected`
@@ -276,9 +290,9 @@ def test_apply_phaser(frequency: float, frame_rate: int, kind: str) -> None:
     ]
 )
 def test_oscillate_between_sounds(
-        sounds: np.ndarray, frame_rate: int, frequency: float,
-        waveform: str, expected: np.ndarray
+        sounds: np.ndarray, frame_rate: int, frequency: float, phase: float, waveform: str,
+        expected: np.ndarray
 ) -> None:
     """Test `oscillate_between_sounds` function."""
-    result = oscillate_between_sounds(sounds, frame_rate, frequency, waveform)
+    result = oscillate_between_sounds(sounds, frame_rate, frequency, phase, waveform)
     np.testing.assert_almost_equal(result, expected)

@@ -20,7 +20,7 @@ from sinethesizer.utils.misc import mix_with_original_sound
 
 def oscillate_between_sounds(
         sounds: np.ndarray, frame_rate: int, frequency: float,
-        waveform: str = 'sine'
+        phase: float = 0.0, waveform: str = 'sine'
 ) -> np.ndarray:
     """
     Combine multiple sounds into one sound by oscillating between them.
@@ -31,14 +31,16 @@ def oscillate_between_sounds(
         number of frames per second
     :param frequency:
         frequency of oscillations between sound sources
+    :param phase:
+        phase shift of oscillations (in radians)
     :param waveform:
         form of oscillations wave
     :return:
-        sound composed from input sounds
+        sound composed of input sounds
     """
     thresholds = np.linspace(-1, 1, sounds.shape[0])
     weights = np.tile(thresholds.reshape((-1, 1)), (1, sounds.shape[2]))
-    wave = generate_mono_wave(waveform, frequency, np.ones(sounds.shape[2]), frame_rate)
+    wave = generate_mono_wave(waveform, frequency, np.ones(sounds.shape[2]), frame_rate, phase)
     step = 2 / (sounds.shape[0] - 1)
     weights = (1 - np.abs(weights - wave) / step) * (np.abs(weights - wave) < step)
     weights = weights.reshape((weights.shape[0], 1, weights.shape[1]))
@@ -52,7 +54,7 @@ def apply_filter_sweep(
         kind: str = 'absolute',
         bands: List[Tuple[Optional[float], Optional[float]]] = None,
         invert: bool = False, order: int = 25,
-        frequency: float = 6, waveform: str = 'sine'
+        frequency: float = 6, phase: float = 0.0, waveform: str = 'sine'
 ) -> np.ndarray:
     """
     Filter some frequencies with oscillating cutoffs.
@@ -76,6 +78,8 @@ def apply_filter_sweep(
         order of filters; the higher it is, the steeper cutoffs are
     :param frequency:
         frequency of oscillations between filtered sounds (in Hz)
+    :param phase:
+        phase shift of sweeping band oscillations (in radians)
     :param waveform:
         form of wave that specifies oscillations between filtered sounds
     :return:
@@ -93,7 +97,7 @@ def apply_filter_sweep(
     ]
     filtered_sounds = [x.reshape((1, x.shape[0], x.shape[1])) for x in filtered_sounds]
     filtered_sounds = np.concatenate(filtered_sounds)
-    sound = oscillate_between_sounds(filtered_sounds, event.frame_rate, frequency, waveform)
+    sound = oscillate_between_sounds(filtered_sounds, event.frame_rate, frequency, phase, waveform)
     return sound
 
 
@@ -101,7 +105,7 @@ def apply_absolute_phaser(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         min_center: float = 220, max_center: float = 880,
         band_width: float = 20, n_bands: int = 10, order: int = 25,
-        frequency: float = 5, waveform: str = 'sine',
+        frequency: float = 5, phase: float = 0.0, waveform: str = 'sine',
         original_share: float = 0.75, wahwah: bool = False
 ) -> np.ndarray:
     """
@@ -126,6 +130,8 @@ def apply_absolute_phaser(
     :param frequency:
         frequency of sweeping band oscillations;
         the higher it is, the more input sound is distorted
+    :param phase:
+        phase shift of sweeping band oscillations (in radians)
     :param waveform:
         form of wave of sweeping band oscillations
     :param original_share:
@@ -142,7 +148,7 @@ def apply_absolute_phaser(
     ]
     invert = not wahwah
     filtered_sound = apply_filter_sweep(
-        sound, event, 'absolute', bands, invert, order, frequency, waveform
+        sound, event, 'absolute', bands, invert, order, frequency, phase, waveform
     )
     sound = original_share * sound + (1 - original_share) * filtered_sound
     return sound
@@ -152,7 +158,7 @@ def apply_relative_phaser(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         min_center_ratio: float = 1.0, max_center_ratio: float = 4.0,
         relative_band_width: float = 0.1, n_bands: int = 10, order: int = 25,
-        frequency: float = 5, waveform: str = 'sine',
+        frequency: float = 5, phase: float = 0.0, waveform: str = 'sine',
         original_share: float = 0.75, wahwah: bool = False
 ) -> np.ndarray:
     """
@@ -177,6 +183,8 @@ def apply_relative_phaser(
     :param frequency:
         frequency of sweeping band oscillations;
         the higher it is, the more input sound is distorted
+    :param phase:
+        phase shift of sweeping band oscillations (in radians)
     :param waveform:
         form of wave of sweeping band oscillations
     :param original_share:
@@ -193,7 +201,7 @@ def apply_relative_phaser(
     band_width = relative_band_width * fundamental_frequency
     sound = apply_absolute_phaser(
         sound, event, min_center, max_center, band_width,
-        n_bands, order, frequency, waveform, original_share, wahwah
+        n_bands, order, frequency, phase, waveform, original_share, wahwah
     )
     return sound
 
