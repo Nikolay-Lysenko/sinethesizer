@@ -6,8 +6,8 @@
 track_name_to_instrument:
   '1': additive_bright_pipe  # If a track is named `1`, it is played as `additive_bright_pipe`.
   guitar: plucked_string  # If a track is named `guitar`, it is played as `plucked_string`.
-# If above section is set, but a track from a MIDI file is absent there,
-# attempt to process the MIDI file will fail.
+# If above section is set, but a track from a MIDI file is not mentioned there,
+# this track will be skipped.
 
 # Below section maps track names to effects that are applied to each of their events.
 # In particular, this might be needed to properly locate corresponding sound sources.
@@ -23,7 +23,7 @@ program_to_instrument:
   0: fm_bass  # So 'Acoustic Grand Piano' is played as `fm_bass`.
   41: bowed_string  # So 'Cello' is played as `bowed_string`.
 # If above section is used, but a program used in a MIDI file is absent in above mapping,
-# attempt to process the MIDI file will fail.
+# all events related to this program will be skipped.
 
 # Below section maps MIDI programs to effects that are applied to each of their events.
 # In particular, this might be needed to properly locate corresponding sound sources.

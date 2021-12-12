@@ -44,7 +44,9 @@ def convert_midi_to_events(
     events = []
     for pretty_midi_instrument in midi_data.instruments:
         key = key_fn(pretty_midi_instrument)
-        sinethesizer_instrument = instruments_mapping[key]
+        sinethesizer_instrument = instruments_mapping.get(key)
+        if sinethesizer_instrument is None:
+            continue
         for note in pretty_midi_instrument.notes:
             event = Event(
                 instrument=sinethesizer_instrument,

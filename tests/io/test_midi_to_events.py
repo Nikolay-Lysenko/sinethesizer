@@ -96,6 +96,28 @@ from sinethesizer.synth.core import Event
                 ),
             ]
         ),
+        (
+            # `midi_instrument`
+            {'program': 0, 'name': '1'},
+            # `midi_events`
+            [
+                {'start': 1, 'end': 2, 'pitch': 21, 'velocity': 127},
+                {'start': 2, 'end': 3, 'pitch': 25, 'velocity': 127},
+            ],
+            # `settings`
+            {
+                'frame_rate': 4,
+                'trailing_silence': 1,
+                'midi': {
+                    'track_name_to_instrument': {'2': 'woodwind'},
+                    'track_name_to_effects': {'1': '"name": "artificial_reverb"'},
+                    'program_to_instrument': {0: 'sine'},
+                    'program_to_effects': {0: '"name": "vibrato"'},
+                },
+            },
+            # `expected`
+            []
+        ),
     ]
 )
 def test_convert_midi_to_timeline(
