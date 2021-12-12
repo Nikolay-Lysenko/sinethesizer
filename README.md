@@ -37,7 +37,7 @@ python -m sinethesizer \
     -o path/to/output.wav
 ```
 
-However, MIDI files are binary and, thus, quite opaque. Also, integration between them and this synth is not complete: for example, control changes are ignored and event-level effects can not be applied. Here, TSV (Tab-Separated Values) files of special schema can be used as a native and more transparent alternative to MIDI. To process such a file, run:
+However, MIDI files are binary and, therefore, quite opaque. Also, integration between them and this synth is not complete: for example, control changes are ignored and event-level effects can not be applied. Here, TSV (Tab-Separated Values) files of special schema can be used as a native and more transparent alternative to MIDI. To process such a file, run:
 ```bash
 python -m sinethesizer \
     -i path/to/track.tsv \

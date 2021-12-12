@@ -25,11 +25,11 @@ def apply_panning(
         an argument that is not used by this function;
         it is added, because all effect functions must have it
     :param left_amplitude_ratio:
-        ratio of new volume of left channel to its initial volume
+        ratio of new amplitude of left channel to its initial amplitude
     :param right_amplitude_ratio:
-        ratio of new volume of right channel to its initial volume
+        ratio of new amplitude of right channel to its initial amplitude
     :return:
-        sound with changed volume
+        sound with changed channel amplitudes
     """
     _ = event  # This argument is ignored.
     sound *= np.array([[left_amplitude_ratio], [right_amplitude_ratio]])
