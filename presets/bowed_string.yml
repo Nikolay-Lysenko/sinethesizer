@@ -18,7 +18,7 @@
           max_release_duration: 0.3
           release_duration_on_velocity_order: 0.0
           release_degree: 0.8
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
     - wave:
@@ -38,7 +38,7 @@
           max_release_duration: 0.3
           release_duration_on_velocity_order: 0.0
           release_degree: 0.8
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
   amplitude_scaling: 0.45

@@ -52,7 +52,7 @@
             name: constant
             value: 0.25
           phase: 0.9
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
       event_to_amplitude_factor_fn:
@@ -110,7 +110,7 @@
             name: constant
             value: 0.25
           phase: 2.95
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 3.0
       amplitude_ratio: 0.662
       event_to_amplitude_factor_fn:
@@ -134,7 +134,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.7
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 5.0
       amplitude_ratio: 0.206
       event_to_amplitude_factor_fn:
@@ -166,7 +166,7 @@
             name: constant
             value: 0.25
           phase: 1.7
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 7.0
       amplitude_ratio: 0.04
       event_to_amplitude_factor_fn:
@@ -190,7 +190,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.625
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 9.0
       amplitude_ratio: 0.064
       event_to_amplitude_factor_fn:
@@ -214,7 +214,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.6
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 11.0
       amplitude_ratio: 0.018
       event_to_amplitude_factor_fn:
@@ -238,7 +238,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.575
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 13.0
       amplitude_ratio: 0.023
       event_to_amplitude_factor_fn:
@@ -262,7 +262,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.57
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 15.0
       amplitude_ratio: 0.019
       event_to_amplitude_factor_fn:
@@ -286,7 +286,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.57
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 17.0
       amplitude_ratio: 0.005
       event_to_amplitude_factor_fn:
@@ -310,7 +310,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.55
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 19.0
       amplitude_ratio: 0.004
       event_to_amplitude_factor_fn:
@@ -334,7 +334,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.525
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 21.0
       amplitude_ratio: 0.005
       event_to_amplitude_factor_fn:
@@ -358,7 +358,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.5
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 23.0
       amplitude_ratio: 0.008
       event_to_amplitude_factor_fn:

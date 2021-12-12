@@ -18,7 +18,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 100.0
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
         frequency_ratio: 1.0
         amplitude_ratio: 1.0
         event_to_amplitude_factor_fn:
@@ -26,7 +26,7 @@
           power: 1.0
         random_detuning_range: 0.005
       frequency_ratio: 1.1
-      amplitude_ratio: 1.0  # This value affects nothing.
+      amplitude_ratio: 1.0  # This value affects nothing because of `envelope_shaper` effect.
       event_to_amplitude_factor_fn:
         name: power_fn_of_velocity
         power: 1.0
@@ -72,7 +72,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.9
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 1.0
       amplitude_ratio: 1.0
       event_to_amplitude_factor_fn:
@@ -84,7 +84,10 @@
         amplitude_envelope_fn:
           name: trapezoid
       frequency_ratio: 1.0
-      amplitude_ratio: 1.0  # This value affects nothing.
+      amplitude_ratio: 1.0  # This value affects nothing because of `filter_sweep` effect.
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.0
       effects:
         - name: filter_sweep
           kind: relative
@@ -132,7 +135,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.85
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 2.0
       amplitude_ratio: 0.2
       event_to_amplitude_factor_fn:
@@ -150,6 +153,9 @@
           name: trapezoid
       frequency_ratio: 2.0
       amplitude_ratio: 1.0  # This value affects nothing.
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.1
       effects:
         - name: filter_sweep
           kind: relative
@@ -201,7 +207,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.8
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 3.0
       amplitude_ratio: 0.3
       event_to_amplitude_factor_fn:
@@ -219,6 +225,9 @@
           name: trapezoid
       frequency_ratio: 3.0
       amplitude_ratio: 1.0  # This value affects nothing.
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.2
       effects:
         - name: filter_sweep
           kind: relative
@@ -270,7 +279,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.75
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 4.0
       amplitude_ratio: 0.35
       event_to_amplitude_factor_fn:
@@ -288,6 +297,9 @@
           name: trapezoid
       frequency_ratio: 4.0
       amplitude_ratio: 1.0  # This value affects nothing.
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.3
       effects:
         - name: filter_sweep
           kind: relative
@@ -339,7 +351,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.7
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 5.0
       amplitude_ratio: 0.1
       event_to_amplitude_factor_fn:
@@ -357,6 +369,9 @@
           name: trapezoid
       frequency_ratio: 5.0
       amplitude_ratio: 1.0  # This value affects nothing.
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.3
       effects:
         - name: filter_sweep
           kind: relative
@@ -408,7 +423,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.65
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 6.0
       amplitude_ratio: 0.08
       event_to_amplitude_factor_fn:
@@ -426,6 +441,9 @@
           name: trapezoid
       frequency_ratio: 6.0
       amplitude_ratio: 1.0  # This value affects nothing.
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.4
       effects:
         - name: filter_sweep
           kind: relative
@@ -477,7 +495,7 @@
           max_release_duration: 0.2
           release_duration_on_velocity_order: 0.0
           release_degree: 0.6
-        quasiperiodic_bandwidth: 0.25
+        quasiperiodic_bandwidth: 0.0625
       frequency_ratio: 7.0
       amplitude_ratio: 0.06
       event_to_amplitude_factor_fn:
@@ -495,6 +513,9 @@
           name: trapezoid
       frequency_ratio: 7.0
       amplitude_ratio: 1.0  # This value affects nothing.
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.45
       effects:
         - name: filter_sweep
           kind: relative

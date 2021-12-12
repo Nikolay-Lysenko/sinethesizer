@@ -1,5 +1,5 @@
 ---
-- name: pad
+- name: metallic_pad
   partials:
     - wave:
         waveform: square
