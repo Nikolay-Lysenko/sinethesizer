@@ -80,6 +80,7 @@ def apply_stereo_to_mono_conversion(
     :return:
         sound with identical channels
     """
+    _ = event  # This argument is ignored.
     sound = np.mean(sound, axis=0)
     sound = np.tile(sound, (2, 1))
     return sound
