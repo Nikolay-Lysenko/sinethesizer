@@ -64,3 +64,22 @@ def apply_stereo_delay(
             np.hstack((silence, sound[1]))
         ))
     return result
+
+
+def apply_stereo_to_mono_conversion(
+        sound: np.ndarray, event: 'sinethesizer.synth.core.Event'
+) -> np.ndarray:
+    """
+    Convert from stereo to mono.
+
+    :param sound:
+        sound to be modified
+    :param event:
+        an argument that is not used by this function;
+        it is added, because all effect functions must have it
+    :return:
+        sound with identical channels
+    """
+    sound = np.mean(sound, axis=0)
+    sound = np.tile(sound, (2, 1))
+    return sound

@@ -8,7 +8,9 @@ Author: Nikolay Lysenko
 import numpy as np
 import pytest
 
-from sinethesizer.effects.stereo import apply_panning, apply_stereo_delay
+from sinethesizer.effects.stereo import (
+    apply_panning, apply_stereo_delay, apply_stereo_to_mono_conversion
+)
 from sinethesizer.synth.core import Event
 
 
@@ -111,4 +113,23 @@ def test_apply_stereo_delay(
 ) -> None:
     """Test `apply_stereo_delay` function."""
     result = apply_stereo_delay(sound, event, delay)
+    np.testing.assert_equal(result, expected)
+
+
+@pytest.mark.parametrize(
+    "sound, expected",
+    [
+        (
+            # `sound`
+            np.array([[1, 2, 3, 4], [-1, 2, -1, 0]]),
+            # `expected`
+            np.array([[0, 2, 1, 2], [0, 2, 1, 2]])
+        ),
+    ]
+)
+def test_apply_stereo_to_mono_conversion(
+        sound: np.ndarray, expected: np.ndarray
+) -> None:
+    """Test `apply_stereo_to_mono_conversion` function."""
+    result = apply_stereo_to_mono_conversion(sound, None)
     np.testing.assert_equal(result, expected)

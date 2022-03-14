@@ -19,7 +19,9 @@ from sinethesizer.effects.filter import apply_frequency_filter
 from sinethesizer.effects.filter_sweep import apply_filter_sweep, apply_phaser
 from sinethesizer.effects.overdrive import apply_overdrive
 from sinethesizer.effects.reverb import apply_artificial_reverb, apply_room_reverb
-from sinethesizer.effects.stereo import apply_panning, apply_stereo_delay
+from sinethesizer.effects.stereo import (
+    apply_panning, apply_stereo_delay, apply_stereo_to_mono_conversion
+)
 from sinethesizer.effects.tremolo import apply_tremolo
 from sinethesizer.effects.vibrato import apply_vibrato
 
@@ -52,6 +54,7 @@ def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
         'phaser': apply_phaser,
         'room_reverb': apply_room_reverb,
         'stereo_delay': apply_stereo_delay,
+        'stereo_to_mono_conversion': apply_stereo_to_mono_conversion,
         'tremolo': apply_tremolo,
         'vibrato': apply_vibrato,
     }
