@@ -1,5 +1,5 @@
 -c constraints.txt
-numpy==1.19.5
+numpy==1.21.0
 pretty-midi==0.2.9
 PyYAML==5.4.1
 scipy==1.5.4
