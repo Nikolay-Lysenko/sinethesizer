@@ -7,7 +7,10 @@
 
 ## Overview
 
-It is a digital synthesizer that has no GUI and is controlled through text files instead. Thus, some things might be done much faster and some things might be completely automated.
+It is a digital synthesizer that is based on some design principles:
+* Control via text files facilitates automation and so GUI is absent.
+* Although low-level and OS-specific dependencies improve performance, they reduce reliability, portability, and transparency, so they are avoided here. This standalone synth depends only on Python and some its packages.
+* Since performance is not a merit of this synth, it is better to trade off speedups for sound quality. In particular, wavetables are not used at all and full waves are generated. Also, noise is generated from scratch every time it is needed.
 
 The list of implemented and planned features is as follows:
 - [x] Balance between freedom for user and simplicity of input formats
@@ -53,4 +56,4 @@ Below table provides links to detailed information about input files that are re
 |   -p path/to/presets.yml   | [Instruments definition](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/instruments_creation.md) | [Demo instruments](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/instruments.yml) |
 | -m path/to/midi_config.yml |                                        Settings of MIDI file interpretation                                        | [Demo MIDI config](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/midi_config.yml) |
 
-If something is still unclear, you can read the source code — it is structured and has built-in documentation. Also your questions are welcome.
+If something is still unclear, you can read the source code — it is structured and has built-in documentation. Also, your questions are welcome.
