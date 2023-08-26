@@ -57,3 +57,7 @@ Below table provides links to detailed information about input files that are re
 | -m path/to/midi_config.yml |                                        Settings of MIDI file interpretation                                        | [Demo MIDI config](https://github.com/Nikolay-Lysenko/sinethesizer/blob/master/docs/examples/midi_config.yml) |
 
 If something is still unclear, you can read the source code — it is structured and has built-in documentation. Also, your questions are welcome.
+
+## See also
+
+To turn Jupyter notebook into a simple DAW, [PyMixer](https://github.com/Nikolay-Lysenko/pymixer) can be used. It is a Python library having good integration with [Sine]thesizer. Together they form a small ecosystem of audio tools which are oriented to text-based control.
