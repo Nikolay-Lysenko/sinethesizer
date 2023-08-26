@@ -8,7 +8,7 @@
 ## Overview
 
 It is a digital synthesizer that is based on some design principles:
-* Control via text files facilitates automation and so GUI is absent.
+* Control via text files facilitates automation and boosts reproducibility, so GUI is absent.
 * Although low-level and OS-specific dependencies improve performance, they reduce reliability, portability, and transparency, so they are avoided here. This standalone synth depends only on Python and some its packages.
 * Since performance is not a merit of this synth, it is better to trade off speedups for sound quality. In particular, wavetables are not used at all and full waves are generated. Also, noise is generated from scratch every time it is needed.
 
