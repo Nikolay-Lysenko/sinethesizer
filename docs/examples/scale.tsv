@@ -1,9 +1,9 @@
 instrument	start_time	duration	frequency	velocity	effects
-oboe	1	1	C4	1	
-oboe	2	1	D4	1	
-oboe	3	1	E4	1	
-oboe	4	1	F4	1	[{"name": "panning", "left_volume_ratio": 1.0, "right_volume_ratio": 0.25}]
-oboe	5	1	G4	1	[{"name": "panning", "left_volume_ratio": 0.25, "right_volume_ratio": 1.0}]
-oboe	6	1	A4	1	[{"name": "tremolo", "frequency": 6, "amplitude": 0.05}]
-oboe	7	1	B4	1	
-oboe	8	1	C5	1	
+quasiperiodic_sine	1	1	C4	1	
+quasiperiodic_sine	2	1	D4	1	
+quasiperiodic_sine	3	1	E4	1	
+quasiperiodic_sine	4	1	F4	1	[{"name": "panning", "left_amplitude_ratio": 1.0, "right_amplitude_ratio": 0.25}]
+quasiperiodic_sine	5	1	G4	1	[{"name": "panning", "left_amplitude_ratio": 0.25, "right_amplitude_ratio": 1.0}]
+quasiperiodic_sine	6	1	A4	1	[{"name": "tremolo", "frequency": 6, "amplitude": 0.1}]
+quasiperiodic_sine	7	1	B4	1	
+quasiperiodic_sine	8	1	C5	1	
