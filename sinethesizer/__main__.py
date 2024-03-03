@@ -6,7 +6,7 @@ Author: Nikolay Lysenko
 
 
 import argparse
-from pkg_resources import resource_filename
+import importlib.resources
 
 import yaml
 
@@ -55,7 +55,7 @@ def main():
     """Run all necessary code."""
     cli_args = parse_cli_args()
 
-    default_config_path = resource_filename(__name__, 'default_config.yml')
+    default_config_path = importlib.resources.files("sinethesizer") / "default_config.yml"
     config_path = cli_args.config_path or default_config_path
     with open(config_path) as config_file:
         settings = yaml.safe_load(config_file)
