@@ -6,7 +6,7 @@ Author: Nikolay Lysenko
 
 
 import math
-from typing import Dict, Optional, Sequence, Tuple
+from typing import Optional, Sequence
 
 import numpy as np
 import pytest
@@ -465,7 +465,7 @@ def test_generate_room_impulse_response(
 )
 def test_generate_tiling(
         room: Room, listener: Listener, n_reflections: int,
-        expected: Dict[int,  Dict[Tuple[float, ...], np.ndarray]]
+        expected: dict[int,  dict[tuple[float, ...], np.ndarray]]
 ) -> None:
     """Test `generate_tiling` function."""
     result = generate_tiling(room, listener, n_reflections)

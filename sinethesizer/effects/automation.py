@@ -7,7 +7,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 
@@ -46,7 +46,7 @@ REGISTRY_OF_AUTOMATABLE_EFFECTS = {
 
 def apply_automated_effect(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        automated_effect_name: str, break_points: List[Dict[str, Any]],
+        automated_effect_name: str, break_points: list[dict[str, Any]],
         **kwargs
 ) -> np.ndarray:
     """

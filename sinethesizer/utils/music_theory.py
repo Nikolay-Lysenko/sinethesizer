@@ -7,11 +7,10 @@ Author: Nikolay Lysenko
 
 import itertools
 from functools import lru_cache
-from typing import Dict, List
 
 
 @lru_cache(maxsize=1)
-def get_list_of_notes() -> List[str]:
+def get_list_of_notes() -> list[str]:
     """
     Get list of all notes in alphanumeric notation.
 
@@ -28,7 +27,7 @@ def get_list_of_notes() -> List[str]:
 
 
 @lru_cache(maxsize=1)
-def get_note_to_position_mapping() -> Dict[str, int]:
+def get_note_to_position_mapping() -> dict[str, int]:
     """
     Get mapping from note to its position on standard piano keyboard.
 

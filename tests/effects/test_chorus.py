@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 import pytest
@@ -42,7 +42,7 @@ from sinethesizer.synth.core import Event
 )
 def test_apply_chorus(
         sound: np.ndarray, frame_rate: int, original_sound_gain: float,
-        copies_params: List[Dict[str, Any]], expected: np.ndarray
+        copies_params: list[dict[str, Any]], expected: np.ndarray
 ) -> None:
     """Test `apply_chorus` function."""
     event = Event(

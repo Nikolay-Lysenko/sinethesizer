@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 
@@ -15,7 +15,7 @@ from sinethesizer.utils.misc import sum_two_sounds
 
 def apply_chorus(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        original_sound_gain: float, copies_params: List[Dict[str, Any]]
+        original_sound_gain: float, copies_params: list[dict[str, Any]]
 ) -> np.ndarray:
     """
     Apply chorus effect (or flanger effect if delay times are small enough).

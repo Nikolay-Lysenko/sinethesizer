@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 import numpy as np
 import pytest
@@ -151,10 +151,10 @@ from sinethesizer.oscillators import generate_mono_wave
     ]
 )
 def test_apply_filter_sweep(
-        frequencies: List[float], frame_rate: int, kind: str,
-        bands: List[Tuple[Optional[float], Optional[float]]],
+        frequencies: list[float], frame_rate: int, kind: str,
+        bands: list[tuple[Optional[float], Optional[float]]],
         invert: bool, order: int, frequency: float, phase: float, waveform: str,
-        spectrogram_params: Dict[str, Any], expected: np.ndarray
+        spectrogram_params: dict[str, Any], expected: np.ndarray
 ) -> None:
     """Test `apply_filter_sweep` function."""
     waves = [

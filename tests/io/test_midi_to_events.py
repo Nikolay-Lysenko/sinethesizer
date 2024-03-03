@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict, List
+from typing import Any
 
 import pretty_midi
 import pytest
@@ -121,8 +121,8 @@ from sinethesizer.synth.core import Event
     ]
 )
 def test_convert_midi_to_timeline(
-        path_to_tmp_file: str, midi_instrument: Dict[str, Any], midi_events: List[Dict[str, Any]],
-        settings: Dict[str, Any], expected: List[Event]
+        path_to_tmp_file: str, midi_instrument: dict[str, Any], midi_events: list[dict[str, Any]],
+        settings: dict[str, Any], expected: list[Event]
 ) -> None:
     """Test `convert_midi_to_timeline` function."""
     pretty_midi_instrument = pretty_midi.Instrument(**midi_instrument)

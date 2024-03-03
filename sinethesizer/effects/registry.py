@@ -5,7 +5,7 @@ Author: Nikolay Lysenko.
 """
 
 
-from typing import Callable, Dict
+from typing import Callable
 
 import numpy as np
 
@@ -32,7 +32,7 @@ EFFECT_FN_TYPE = Callable[
 ]
 
 
-def get_effects_registry() -> Dict[str, EFFECT_FN_TYPE]:
+def get_effects_registry() -> dict[str, EFFECT_FN_TYPE]:
     """
     Get mapping from effect names to functions that apply effects.
 

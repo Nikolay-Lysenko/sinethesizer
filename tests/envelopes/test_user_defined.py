@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 import pytest
@@ -132,7 +132,7 @@ from sinethesizer.synth.core import Event
 )
 def test_create_user_defined_envelope(
         duration: float, velocity: float, frame_rate: int,
-        parts: List[Dict[str, Any]], ratio_at_zero_velocity: float,
+        parts: list[dict[str, Any]], ratio_at_zero_velocity: float,
         envelope_values_on_velocity_order: float, expected: np.ndarray
 ) -> None:
     """Test `create_user_defined_envelope` function."""

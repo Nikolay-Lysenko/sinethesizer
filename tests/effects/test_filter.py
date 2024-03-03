@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import numpy as np
 import pytest
@@ -140,8 +140,8 @@ from sinethesizer.oscillators import generate_mono_wave
     ]
 )
 def test_apply_frequency_filter(
-        frequencies: List[float], frame_rate: int, kind: str,
-        kwargs: Dict[str, Any], spectrogram_params: Dict[str, Any],
+        frequencies: list[float], frame_rate: int, kind: str,
+        kwargs: dict[str, Any], spectrogram_params: dict[str, Any],
         expected: np.ndarray
 ) -> None:
     """Test `apply_frequency_filter` function."""
@@ -275,9 +275,9 @@ def test_apply_frequency_filter(
     ]
 )
 def test_filter_absolute_frequencies(
-        frequencies: List[float], frame_rate: int,
+        frequencies: list[float], frame_rate: int,
         min_frequency: float, max_frequency: float, invert: bool, order: int,
-        spectrogram_params: Dict[str, Any], expected: np.ndarray
+        spectrogram_params: dict[str, Any], expected: np.ndarray
 ) -> None:
     """Test `filter_absolute_frequencies` function."""
     waves = [
@@ -387,14 +387,14 @@ def test_filter_absolute_frequencies(
     ]
 )
 def test_filter_absolute_frequencies_wrt_velocity(
-        frequencies: List[float], velocity: float, frame_rate: int,
+        frequencies: list[float], velocity: float, frame_rate: int,
         min_frequency_at_zero_velocity: Optional[float],
         min_frequency_at_max_velocity: Optional[float],
         min_frequency_on_velocity_order: Optional[float],
         max_frequency_at_zero_velocity: Optional[float],
         max_frequency_at_max_velocity: Optional[float],
         max_frequency_on_velocity_order: Optional[float],
-        invert: bool, order: int, spectrogram_params: Dict[str, Any],
+        invert: bool, order: int, spectrogram_params: dict[str, Any],
         expected: np.ndarray
 ) -> None:
     """Test `filter_absolute_frequencies_wrt_velocity` function."""
@@ -485,9 +485,9 @@ def test_filter_absolute_frequencies_wrt_velocity(
     ]
 )
 def test_filter_relative_frequencies(
-        frequencies: List[float], frame_rate: int,
+        frequencies: list[float], frame_rate: int,
         min_frequency_ratio: float, max_frequency_ratio: float,
-        invert: bool, order: int, spectrogram_params: Dict[str, Any],
+        invert: bool, order: int, spectrogram_params: dict[str, Any],
         expected: np.ndarray
 ) -> None:
     """Test `filter_relative_frequencies` function."""
@@ -598,14 +598,14 @@ def test_filter_relative_frequencies(
     ]
 )
 def test_filter_relative_frequencies_wrt_velocity(
-        frequencies: List[float], velocity: float, frame_rate: int,
+        frequencies: list[float], velocity: float, frame_rate: int,
         min_frequency_ratio_at_zero_velocity: Optional[float],
         min_frequency_ratio_at_max_velocity: Optional[float],
         min_frequency_ratio_on_velocity_order: Optional[float],
         max_frequency_ratio_at_zero_velocity: Optional[float],
         max_frequency_ratio_at_max_velocity: Optional[float],
         max_frequency_ratio_on_velocity_order: Optional[float],
-        invert: bool, order: int, spectrogram_params: Dict[str, Any],
+        invert: bool, order: int, spectrogram_params: dict[str, Any],
         expected: np.ndarray
 ) -> None:
     """Test `filter_relative_frequencies_wrt_velocity` function."""

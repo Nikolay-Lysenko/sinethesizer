@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict, List
+from typing import Any
 
 import pretty_midi
 
@@ -16,8 +16,8 @@ MAX_MIDI_VALUE = 127
 
 
 def convert_midi_to_events(
-        midi_path: str, settings: Dict[str, Any]
-) -> List[Event]:
+        midi_path: str, settings: dict[str, Any]
+) -> list[Event]:
     """
     Collect sound events (loosely speaking, played notes) from a MIDI file.
 

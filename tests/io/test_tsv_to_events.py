@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict, List
+from typing import Any
 
 import pytest
 
@@ -81,8 +81,8 @@ from sinethesizer.synth.core import Event
     ]
 )
 def test_convert_tsv_to_timeline(
-        path_to_tmp_file: str, tsv_content: List[str],
-        settings: Dict[str, Any], expected: List[Event]
+        path_to_tmp_file: str, tsv_content: list[str],
+        settings: dict[str, Any], expected: list[Event]
 ) -> None:
     """Test `convert_tsv_to_timeline` function."""
     with open(path_to_tmp_file, 'w') as tmp_tsv_file:

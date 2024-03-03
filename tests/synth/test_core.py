@@ -7,7 +7,6 @@ Author: Nikolay Lysenko
 
 import functools
 import math
-from typing import Dict
 
 import numpy as np
 import pytest
@@ -400,8 +399,7 @@ def test_generate_partial(
     ]
 )
 def test_synthesize(
-        event: Event, instruments_registry: Dict[str, Instrument],
-        expected: np.ndarray
+        event: Event, instruments_registry: dict[str, Instrument], expected: np.ndarray
 ) -> None:
     """Test `synthesize` function."""
     result = synthesize(event, instruments_registry)

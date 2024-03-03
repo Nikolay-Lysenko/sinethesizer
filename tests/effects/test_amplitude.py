@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict
+from typing import Any
 
 import numpy as np
 import pytest
@@ -184,7 +184,7 @@ def test_apply_compressor(
     ]
 )
 def test_apply_envelope_shaper(
-        sound: np.ndarray, frame_rate: int, frequency: float, envelope_params: Dict[str, Any],
+        sound: np.ndarray, frame_rate: int, frequency: float, envelope_params: dict[str, Any],
         quantile: float, chunk_size_in_cycles: float, initial_rescaling_ratio: float,
         forced_fading_ratio: float, expected: np.ndarray
 ) -> None:

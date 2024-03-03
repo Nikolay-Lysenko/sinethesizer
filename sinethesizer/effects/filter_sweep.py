@@ -9,7 +9,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import List, Optional, Tuple
+from typing import Optional
 
 import numpy as np
 
@@ -52,7 +52,7 @@ def oscillate_between_sounds(
 def apply_filter_sweep(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
         kind: str = 'absolute',
-        bands: List[Tuple[Optional[float], Optional[float]]] = None,
+        bands: list[tuple[Optional[float], Optional[float]]] = None,
         invert: bool = False, order: int = 25,
         frequency: float = 6, phase: float = 0.0, waveform: str = 'sine'
 ) -> np.ndarray:

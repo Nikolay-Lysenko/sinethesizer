@@ -7,7 +7,7 @@ Author: Nikolay Lysenko
 
 import json
 import random
-from typing import Dict, List, NamedTuple, Optional
+from typing import NamedTuple, Optional
 
 import numpy as np
 
@@ -294,8 +294,8 @@ class Partial(NamedTuple):
     amplitude_ratio: float
     event_to_amplitude_factor_fn: EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE
     random_detuning_range: float
-    detuning_to_amplitude: Dict[float, float]
-    effects: List[EFFECT_FN_TYPE]
+    detuning_to_amplitude: dict[float, float]
+    effects: list[EFFECT_FN_TYPE]
 
 
 def generate_partial(partial: Partial, event: Event) -> np.ndarray:
@@ -349,9 +349,9 @@ class Instrument(NamedTuple):
     :param effects:
         sound effects that should be applied to outputs of the instrument
     """
-    partials: List[Partial]
+    partials: list[Partial]
     amplitude_scaling: float
-    effects: List[EFFECT_FN_TYPE]
+    effects: list[EFFECT_FN_TYPE]
 
 
 def apply_event_level_effects(sound: np.ndarray, event: Event) -> np.ndarray:
@@ -376,7 +376,7 @@ def apply_event_level_effects(sound: np.ndarray, event: Event) -> np.ndarray:
 
 
 def synthesize(
-        event: Event, instruments_registry: Dict[str, Instrument]
+        event: Event, instruments_registry: dict[str, Instrument]
 ) -> np.ndarray:
     """
     Synthesize one sound event (loosely speaking, a played note).

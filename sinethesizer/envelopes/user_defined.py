@@ -6,13 +6,13 @@ Author: Nikolay Lysenko
 
 
 from math import ceil, floor
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 
 
 def create_user_defined_envelope(
-        event: 'sinethesizer.synth.core.Event', parts: List[Dict[str, Any]],
+        event: 'sinethesizer.synth.core.Event', parts: list[dict[str, Any]],
         ratio_at_zero_velocity: float = 0,
         envelope_values_on_velocity_order: float = 0
 ) -> np.ndarray:

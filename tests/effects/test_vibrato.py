@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict
+from typing import Any
 
 import numpy as np
 import pytest
@@ -67,7 +67,7 @@ from sinethesizer.synth.core import Event
 )
 def test_apply_vibrato(
         sound: np.ndarray, frame_rate: int, sound_frequency: float, kind: str,
-        kwargs: Dict[str, Any], expected: np.ndarray
+        kwargs: dict[str, Any], expected: np.ndarray
 ) -> None:
     """Test `apply_vibrato` function."""
     event = Event(

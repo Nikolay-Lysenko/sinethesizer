@@ -9,7 +9,7 @@ import math
 import random
 import warnings
 from functools import lru_cache
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Optional, Sequence
 
 import numpy as np
 from scipy.signal import convolve
@@ -63,7 +63,7 @@ def calculate_reflection_times(
         diffusion_delay_factor: float,
         diffusion_delay_random_range: float,
         random_numbers_generator: random.Random
-) -> List[float]:
+) -> list[float]:
     """
     Calculate delays with which reflected waves arrive to a listener.
 
@@ -272,7 +272,7 @@ class Room:
 
     def __init__(
             self,
-            dimensions: Tuple[float, float, float],
+            dimensions: tuple[float, float, float],
             reflection_decay_factor: float,
             sound_speed: float = 343
     ):
@@ -320,8 +320,8 @@ class Listener:
 
     def __init__(
             self,
-            location: Tuple[float, float, float],
-            direction: Tuple[float, float]
+            location: tuple[float, float, float],
+            direction: tuple[float, float]
     ):
         self._location = location
         self._direction = direction
@@ -361,8 +361,8 @@ class SoundSource:
 
     def __init__(
             self,
-            location: Tuple[float, float, float],
-            direction: Tuple[float, float, float],
+            location: tuple[float, float, float],
+            direction: tuple[float, float, float],
             angle: float
     ):
         self._location = location
@@ -396,9 +396,9 @@ class SoundSource:
 
 
 def generate_new_level_of_tiling(
-        previous_level: Dict[Tuple[int, ...], np.ndarray],
-        increment_pairs: Tuple[Tuple[float, float], ...]
-) -> Dict[Tuple[float, ...], np.ndarray]:
+        previous_level: dict[tuple[int, ...], np.ndarray],
+        increment_pairs: tuple[tuple[float, float], ...]
+) -> dict[tuple[float, ...], np.ndarray]:
     """
     Generate rooms reflected one more time than previously generated reflected rooms.
 
@@ -438,7 +438,7 @@ def generate_new_level_of_tiling(
 
 def generate_tiling(
         room: Room, listener: Listener, n_reflections: int
-) -> Dict[int,  Dict[Tuple[float, ...], np.ndarray]]:
+) -> dict[int, dict[tuple[float, ...], np.ndarray]]:
     """
     Generate data structure suitable for reflections analysis.
 

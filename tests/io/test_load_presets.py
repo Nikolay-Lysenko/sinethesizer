@@ -7,7 +7,6 @@ Author: Nikolay Lysenko
 
 import functools
 import os.path
-from typing import List, Dict
 
 import numpy as np
 import pytest
@@ -246,8 +245,8 @@ from sinethesizer.envelopes.ahdsr import (
     ]
 )
 def test_create_instruments_registry_with_file(
-        path_to_tmp_file: str, yaml_content: List[str],
-        expected: Dict[str, Instrument]
+        path_to_tmp_file: str, yaml_content: list[str],
+        expected: dict[str, Instrument]
 ) -> None:
     """Test `create_instruments_registry` function with single file."""
     with open(path_to_tmp_file, 'w') as tmp_yml_file:
@@ -388,8 +387,8 @@ def test_create_instruments_registry_with_file(
     ]
 )
 def test_create_instruments_registry_with_directory(
-        path_to_tmp_dir: str, yaml_contents: List[List[str]],
-        expected: Dict[str, Instrument]
+        path_to_tmp_dir: str, yaml_contents: list[list[str]],
+        expected: dict[str, Instrument]
 ) -> None:
     """Test `create_instruments_registry` function with directory."""
     for i, yaml_content in enumerate(yaml_contents):

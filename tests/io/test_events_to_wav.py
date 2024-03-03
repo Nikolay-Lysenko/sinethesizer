@@ -6,7 +6,7 @@ Author: Nikolay Lysenko
 
 
 import functools
-from typing import Any, Dict, List
+from typing import Any
 
 import pytest
 import numpy as np
@@ -84,7 +84,7 @@ from sinethesizer.synth.event_to_amplitude_factor import (
 )
 def test_add_event_to_timeline(
         timeline: np.ndarray, event: Event,
-        instruments_registry: Dict[str, Instrument], frame_rate: int,
+        instruments_registry: dict[str, Instrument], frame_rate: int,
         expected: np.ndarray
 ) -> None:
     """Test `add_event_to_timeline` function."""
@@ -229,7 +229,7 @@ def test_add_event_to_timeline(
     ]
 )
 def test_convert_events_to_timeline(
-        events: List[Event], settings: Dict[str, Any], expected: np.ndarray
+        events: list[Event], settings: dict[str, Any], expected: np.ndarray
 ) -> None:
     """Test `convert_events_to_timeline` function."""
     result = convert_events_to_timeline(events, settings)

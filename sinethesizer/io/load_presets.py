@@ -9,7 +9,7 @@ import functools
 import math
 import os
 import warnings
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 import yaml
 
@@ -22,7 +22,7 @@ from sinethesizer.synth.event_to_amplitude_factor import (
 )
 
 
-def create_envelope_fn(envelope_data: Dict[str, Any]) -> ENVELOPE_FN_TYPE:
+def create_envelope_fn(envelope_data: dict[str, Any]) -> ENVELOPE_FN_TYPE:
     """
     Create function that maps a sound event to envelope.
 
@@ -40,7 +40,7 @@ def create_envelope_fn(envelope_data: Dict[str, Any]) -> ENVELOPE_FN_TYPE:
 
 
 def convert_modulator(
-        modulator_data: Optional[Dict[str, Any]]
+        modulator_data: Optional[dict[str, Any]]
 ) -> Optional[Modulator]:
     """
     Convert representation of modulating wave to internal data structure.
@@ -66,8 +66,8 @@ def convert_modulator(
 
 
 def compute_frequency_ratios(
-        modulator_data: Dict[str, Any]
-) -> Tuple[float, float]:
+        modulator_data: dict[str, Any]
+) -> tuple[float, float]:
     """
     Compute ratios of carrier and modulator frequencies to that of fundamental.
 
@@ -105,7 +105,7 @@ def compute_frequency_ratios(
     return carrier_frequency_ratio, modulator_frequency_ratio
 
 
-def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
+def convert_modulated_wave(wave_data: dict[str, Any]) -> ModulatedWave:
     """
     Convert representation of modulated wave to internal data structure.
 
@@ -148,8 +148,8 @@ def convert_modulated_wave(wave_data: Dict[str, Any]) -> ModulatedWave:
 
 
 def norm_amplitudes_of_detuned_waves(
-        detuning_to_amplitude: Dict[float, float]
-) -> Dict[float, float]:
+        detuning_to_amplitude: dict[float, float]
+) -> dict[float, float]:
     """
     Norm amplitudes of detuned waves to sum up to 1.
 
@@ -164,7 +164,7 @@ def norm_amplitudes_of_detuned_waves(
 
 
 def create_event_to_amplitude_factor_fn(
-        fn_data: Dict[str, Any]
+        fn_data: dict[str, Any]
 ) -> EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE:
     """
     Create function for multiplicative contribution of event to amplitude.
@@ -185,8 +185,8 @@ def create_event_to_amplitude_factor_fn(
 
 
 def create_list_of_effect_fns(
-        effects_data: List[Dict[str, Any]]
-) -> List[EFFECT_FN_TYPE]:
+        effects_data: list[dict[str, Any]]
+) -> list[EFFECT_FN_TYPE]:
     """
     Create list of functions that apply sound effects to timelines.
 
@@ -206,7 +206,7 @@ def create_list_of_effect_fns(
     return effects_fns
 
 
-def convert_partials(partials_data: List[Dict[str, Any]]) -> List[Partial]:
+def convert_partials(partials_data: list[dict[str, Any]]) -> list[Partial]:
     """
     Convert representations of partials to internal data structures.
 
@@ -234,7 +234,7 @@ def convert_partials(partials_data: List[Dict[str, Any]]) -> List[Partial]:
     return partials
 
 
-def create_list_of_yaml_paths(input_path: str) -> List[str]:
+def create_list_of_yaml_paths(input_path: str) -> list[str]:
     """
     Create list of paths to YAML files with presets.
 
@@ -254,7 +254,7 @@ def create_list_of_yaml_paths(input_path: str) -> List[str]:
     return file_paths
 
 
-def create_instruments_registry(input_path: str) -> Dict[str, Any]:
+def create_instruments_registry(input_path: str) -> dict[str, Any]:
     """
     Create mapping from instrument names to their representations.
 

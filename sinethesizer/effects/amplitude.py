@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict
+from typing import Any
 
 import numpy as np
 
@@ -83,7 +83,7 @@ def apply_compressor(
 
 def apply_envelope_shaper(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        envelope_params: Dict[str, Any], quantile: float = 1, chunk_size_in_cycles: float = 3,
+        envelope_params: dict[str, Any], quantile: float = 1, chunk_size_in_cycles: float = 3,
         initial_rescaling_ratio: float = 0, forced_fading_ratio: float = 0
 ) -> np.ndarray:
     """

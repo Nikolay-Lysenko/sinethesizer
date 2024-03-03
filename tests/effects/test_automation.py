@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Union
 
 import numpy as np
 import pytest
@@ -73,7 +73,7 @@ from sinethesizer.oscillators import generate_mono_wave
 )
 def test_apply_automated_effect(
         sound: np.ndarray, event: Event, automated_effect_name: str,
-        break_points: List[Dict[str, Any]], expected: np.ndarray
+        break_points: list[dict[str, Any]], expected: np.ndarray
 ) -> None:
     """Test `apply_automated_effect` function."""
     result = apply_automated_effect(
@@ -169,10 +169,10 @@ def test_apply_automated_effect(
     ]
 )
 def test_apply_automated_effect_with_spectrogram_checks(
-        frequencies: List[float], frame_rate: int, automated_effect_name: str,
-        break_points: List[Dict[str, Union[float, List[float]]]],
-        spectrogram_params: Dict[str, Any],
-        expected: List[Tuple[int, int, np.ndarray]]
+        frequencies: list[float], frame_rate: int, automated_effect_name: str,
+        break_points: list[dict[str, Union[float, list[float]]]],
+        spectrogram_params: dict[str, Any],
+        expected: list[tuple[int, int, np.ndarray]]
 ) -> None:
     """Test `apply_automated_effect` function with spectrogram checks."""
     waves = [

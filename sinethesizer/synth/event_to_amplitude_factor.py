@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Callable, Dict
+from typing import Callable
 
 
 EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE = Callable[
@@ -32,7 +32,7 @@ def compute_amplitude_factor_as_power_of_velocity(
 
 
 def get_event_to_amplitude_factor_functions_registry(
-) -> Dict[str, EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE]:
+) -> dict[str, EVENT_TO_AMPLITUDE_FACTOR_FN_TYPE]:
     """
     Get mapping from amplitude factor functions' names to the functions itself.
 

@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 import pytest
@@ -126,8 +126,8 @@ from sinethesizer.oscillators import generate_mono_wave
     ]
 )
 def test_apply_equalizer(
-        frequencies: List[float], frame_rate: int, kind: str,
-        kwargs: Dict[str, Any], spectrogram_params: Dict[str, Any],
+        frequencies: list[float], frame_rate: int, kind: str,
+        kwargs: dict[str, Any], spectrogram_params: dict[str, Any],
         expected: np.ndarray
 ) -> None:
     """Test `apply_equalizer` function."""

@@ -11,8 +11,6 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import List
-
 import numpy as np
 from scipy.signal import convolve, firwin2
 
@@ -21,7 +19,7 @@ from sinethesizer.utils.misc import mix_with_original_sound
 
 def equalize_with_absolute_frequencies(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        breakpoint_frequencies: List[float], gains: List[float],
+        breakpoint_frequencies: list[float], gains: list[float],
         **kwargs
 ) -> np.ndarray:
     """
@@ -60,7 +58,7 @@ def equalize_with_absolute_frequencies(
 
 def equalize_with_relative_frequencies(
         sound: np.ndarray, event: 'sinethesizer.synth.core.Event',
-        breakpoint_frequencies_ratios: List[float], gains: List[float],
+        breakpoint_frequencies_ratios: list[float], gains: list[float],
         **kwargs
 ) -> np.ndarray:
     """

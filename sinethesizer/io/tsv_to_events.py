@@ -6,13 +6,13 @@ Author: Nikolay Lysenko
 
 
 import os
-from typing import Any, Dict, List
+from typing import Any
 
 from sinethesizer.synth.core import Event
 from sinethesizer.utils.music_theory import convert_note_to_frequency
 
 
-def set_types(events: List[Dict[str, str]]) -> List[Dict[str, Any]]:
+def set_types(events: list[dict[str, str]]) -> list[dict[str, Any]]:
     """
     Set types of parsed from TSV file fields.
 
@@ -43,8 +43,8 @@ def set_types(events: List[Dict[str, str]]) -> List[Dict[str, Any]]:
 
 
 def convert_tsv_to_events(
-        input_path: str, settings: Dict[str, Any]
-) -> List[Event]:
+        input_path: str, settings: dict[str, Any]
+) -> list[Event]:
     """
     Collect sound events (loosely speaking, played notes) from a TSV file.
 

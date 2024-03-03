@@ -5,7 +5,7 @@ Author: Nikolay Lysenko
 """
 
 
-from typing import Callable, Dict
+from typing import Callable
 
 import numpy as np
 
@@ -21,7 +21,7 @@ from sinethesizer.envelopes.user_defined import create_user_defined_envelope
 ENVELOPE_FN_TYPE = Callable[['sinethesizer.synth.core.Event'], np.ndarray]
 
 
-def get_envelopes_registry() -> Dict[str, ENVELOPE_FN_TYPE]:
+def get_envelopes_registry() -> dict[str, ENVELOPE_FN_TYPE]:
     """
     Get mapping from envelope names to functions that create them.
 

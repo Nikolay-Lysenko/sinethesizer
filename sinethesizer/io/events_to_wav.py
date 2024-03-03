@@ -6,7 +6,7 @@ Author: Nikolay Lysenko
 
 
 from math import ceil
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 import scipy.io.wavfile
@@ -15,7 +15,7 @@ from sinethesizer.synth.core import Event, Instrument, synthesize
 
 
 def create_empty_timeline(
-        events: List[Event], frame_rate: int, trailing_silence: float
+        events: list[Event], frame_rate: int, trailing_silence: float
 ) -> np.ndarray:
     """
     Create empty timeline of air pressure.
@@ -39,7 +39,7 @@ def create_empty_timeline(
 
 def add_event_to_timeline(
         timeline: np.ndarray, event: Event,
-        instruments_registry: Dict[str, Instrument], frame_rate: int
+        instruments_registry: dict[str, Instrument], frame_rate: int
 ) -> np.ndarray:
     """
     Add sound event to timeline.
@@ -66,7 +66,7 @@ def add_event_to_timeline(
     return timeline
 
 
-def convert_events_to_timeline(events: List[Event], settings: Dict[str, Any]) -> np.ndarray:
+def convert_events_to_timeline(events: list[Event], settings: dict[str, Any]) -> np.ndarray:
     """
     Convert events to array with pressure deviations timeline.
 
