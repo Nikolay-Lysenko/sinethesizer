@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sinethesizer"
+version = "0.6.2"
+description = "A standalone synthesizer that is controlled through text files in an extendable way"
+readme = "README.md"
+keywords = [
+    "additive_synthesis",
+    "adsr_envelope",
+    "ahdsr",
+    "filter_envelope",
+    "modulation_index",
+    "pm_synthesis",
+    "reverb",
+    "sound_effects",
+    "subtractive_synthesis",
+    "synthesizer",
+]
+urls = {Homepage = "https://github.com/Nikolay-Lysenko/sinethesizer"}
+authors = [{name = "Nikolay Lysenko", email = "nikolay-lysenco@yandex.ru"}]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Artistic Software",
+    "Topic :: Multimedia :: Sound/Audio :: Sound Synthesis",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3"
+]
+requires-python = ">= 3.9"
+dependencies = [
+    "numpy",
+    "pretty-midi",
+    "PyYAML",
+    "scipy"
+]
+
+[tool.setuptools]
+packages = ["sinethesizer"]
+
+[tool.setuptools.package-data]
+"sinethesizer" = ["default_config.yml"]
