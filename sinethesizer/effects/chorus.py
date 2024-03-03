@@ -36,9 +36,10 @@ def apply_chorus(
     """
     processed_copies = []
     for copy_params in copies_params:
-        delay_in_sec = copy_params.pop('delay')
-        gain = copy_params.pop('gain')
-        detuned_copy = apply_vibrato(sound, event, **copy_params)
+        delay_in_sec = copy_params['delay']
+        gain = copy_params['gain']
+        vibrato_params = {k: v for k, v in copy_params.items() if k not in ['delay', 'gain']}
+        detuned_copy = apply_vibrato(sound, event, **vibrato_params)
         detuned_copy *= gain
         n_frames_with_silence = int(round(delay_in_sec * event.frame_rate))
         silence = np.zeros((sound.shape[0], n_frames_with_silence))
