@@ -1,0 +1,1477 @@
+---
+- name: breathy_violon
+  partials:
+    - wave:  # 1st partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 0.99
+          max_frequency_ratio: 1.0101010101010102
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.15
+            max_attack_duration: 0.15
+            attack_degree: 1.2
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.05
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 1.05
+            sustain_level: 0.9
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.9
+            peak_value: 0.50118723
+            envelope_values_on_velocity_order: 1.0
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 2nd partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 2.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 1.98
+          max_frequency_ratio: 2.0202020202020203
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.16
+            max_attack_duration: 0.155
+            attack_degree: 1.19
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 1.04
+            sustain_level: 0.89
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.87
+            peak_value: 0.63095734
+            envelope_values_on_velocity_order: 1.05
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 3rd partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 3.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 2.9699999999999998
+          max_frequency_ratio: 3.0303030303030303
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.17
+            max_attack_duration: 0.16
+            attack_degree: 1.18
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 1.03
+            sustain_level: 0.88
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.84
+            peak_value: 0.79432823
+            envelope_values_on_velocity_order: 1.1
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 4th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 4.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 3.96
+          max_frequency_ratio: 4.040404040404041
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.18
+            max_attack_duration: 0.165
+            attack_degree: 1.17
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 1.02
+            sustain_level: 0.87
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.81
+            peak_value: 1.0
+            envelope_values_on_velocity_order: 1.15
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 5th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 5.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 4.95
+          max_frequency_ratio: 5.050505050505051
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.19
+            max_attack_duration: 0.17
+            attack_degree: 1.16
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 1.01
+            sustain_level: 0.86
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.78
+            peak_value: 0.25118864
+            envelope_values_on_velocity_order: 1.2
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 6th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 6.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 5.9399999999999995
+          max_frequency_ratio: 6.0606060606060606
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.2
+            max_attack_duration: 0.175
+            attack_degree: 1.15
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 1.0
+            sustain_level: 0.85
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.75
+            peak_value: 0.31622777
+            envelope_values_on_velocity_order: 1.25
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 7th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 7.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 6.93
+          max_frequency_ratio: 7.070707070707071
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.21
+            max_attack_duration: 0.18
+            attack_degree: 1.14
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.99
+            sustain_level: 0.84
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.72
+            peak_value: 0.19952623
+            envelope_values_on_velocity_order: 1.3
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 8th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 8.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 7.92
+          max_frequency_ratio: 8.080808080808081
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.22
+            max_attack_duration: 0.185
+            attack_degree: 1.13
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.98
+            sustain_level: 0.83
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.69
+            peak_value: 0.15848932
+            envelope_values_on_velocity_order: 1.35
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 9th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 9.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 8.91
+          max_frequency_ratio: 9.090909090909092
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.23
+            max_attack_duration: 0.19
+            attack_degree: 1.12
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.97
+            sustain_level: 0.82
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.66
+            peak_value: 0.25118864
+            envelope_values_on_velocity_order: 1.4
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 10th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 10.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 9.9
+          max_frequency_ratio: 10.101010101010102
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.24
+            max_attack_duration: 0.195
+            attack_degree: 1.11
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.96
+            sustain_level: 0.81
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.63
+            peak_value: 0.12589254
+            envelope_values_on_velocity_order: 1.45
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 11th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 11.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 10.89
+          max_frequency_ratio: 11.111111111111112
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.25
+            max_attack_duration: 0.2
+            attack_degree: 1.1
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.95
+            sustain_level: 0.8
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.6
+            peak_value: 0.1
+            envelope_values_on_velocity_order: 1.5
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 12th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 12.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 11.879999999999999
+          max_frequency_ratio: 12.121212121212121
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.26
+            max_attack_duration: 0.205
+            attack_degree: 1.09
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.94
+            sustain_level: 0.79
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.57
+            peak_value: 0.05011872
+            envelope_values_on_velocity_order: 1.55
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 13th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 13.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 12.87
+          max_frequency_ratio: 13.131313131313131
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.27
+            max_attack_duration: 0.21
+            attack_degree: 1.08
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.93
+            sustain_level: 0.78
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.54
+            peak_value: 0.03981072
+            envelope_values_on_velocity_order: 1.6
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 14th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 14.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 13.86
+          max_frequency_ratio: 14.141414141414142
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.28
+            max_attack_duration: 0.215
+            attack_degree: 1.07
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.92
+            sustain_level: 0.77
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.51
+            peak_value: 0.02511886
+            envelope_values_on_velocity_order: 1.65
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 15th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 15.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 14.85
+          max_frequency_ratio: 15.151515151515152
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.29
+            max_attack_duration: 0.22
+            attack_degree: 1.06
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.91
+            sustain_level: 0.76
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.48
+            peak_value: 0.01995262
+            envelope_values_on_velocity_order: 1.7
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 16th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 16.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 15.84
+          max_frequency_ratio: 16.161616161616163
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.3
+            max_attack_duration: 0.225
+            attack_degree: 1.05
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.9
+            sustain_level: 0.75
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.45
+            peak_value: 0.01995262
+            envelope_values_on_velocity_order: 1.75
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 17th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 17.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 16.83
+          max_frequency_ratio: 17.171717171717173
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.31
+            max_attack_duration: 0.23
+            attack_degree: 1.04
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.89
+            sustain_level: 0.74
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.42
+            peak_value: 0.01584893
+            envelope_values_on_velocity_order: 1.8
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 18th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 18.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 17.82
+          max_frequency_ratio: 18.181818181818183
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.32
+            max_attack_duration: 0.235
+            attack_degree: 1.03
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.88
+            sustain_level: 0.73
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.39
+            peak_value: 0.01258925
+            envelope_values_on_velocity_order: 1.85
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 19th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 19.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 18.81
+          max_frequency_ratio: 19.191919191919194
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.33
+            max_attack_duration: 0.24
+            attack_degree: 1.02
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.87
+            sustain_level: 0.72
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.36
+            peak_value: 0.01258925
+            envelope_values_on_velocity_order: 1.9
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 20th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 20.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 19.8
+          max_frequency_ratio: 20.202020202020204
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.34
+            max_attack_duration: 0.245
+            attack_degree: 1.01
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.86
+            sustain_level: 0.71
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.33
+            peak_value: 0.01258925
+            envelope_values_on_velocity_order: 1.95
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 21st partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 21.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 20.79
+          max_frequency_ratio: 21.212121212121215
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.35
+            max_attack_duration: 0.25
+            attack_degree: 1.0
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.85
+            sustain_level: 0.7
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.3
+            peak_value: 0.00794328
+            envelope_values_on_velocity_order: 2.0
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 22nd partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 22.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 21.78
+          max_frequency_ratio: 22.222222222222225
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.36
+            max_attack_duration: 0.255
+            attack_degree: 0.99
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.84
+            sustain_level: 0.69
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.27
+            peak_value: 0.01
+            envelope_values_on_velocity_order: 2.05
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 23rd partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 23.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 22.77
+          max_frequency_ratio: 23.232323232323235
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.37
+            max_attack_duration: 0.26
+            attack_degree: 0.98
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.83
+            sustain_level: 0.68
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.24
+            peak_value: 0.00794328
+            envelope_values_on_velocity_order: 2.1
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 24th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 24.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 23.759999999999998
+          max_frequency_ratio: 24.242424242424242
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.38
+            max_attack_duration: 0.265
+            attack_degree: 0.97
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.82
+            sustain_level: 0.67
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.21
+            peak_value: 0.00501187
+            envelope_values_on_velocity_order: 2.15
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 25th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 25.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 24.75
+          max_frequency_ratio: 25.252525252525253
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.39
+            max_attack_duration: 0.27
+            attack_degree: 0.96
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.81
+            sustain_level: 0.66
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.18
+            peak_value: 0.01
+            envelope_values_on_velocity_order: 2.2
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 26th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 26.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 25.74
+          max_frequency_ratio: 26.262626262626263
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.4
+            max_attack_duration: 0.275
+            attack_degree: 0.95
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.8
+            sustain_level: 0.65
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.15
+            peak_value: 0.00316228
+            envelope_values_on_velocity_order: 2.25
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 27th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 27.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 26.73
+          max_frequency_ratio: 27.272727272727273
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.41
+            max_attack_duration: 0.28
+            attack_degree: 0.94
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.79
+            sustain_level: 0.64
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.12
+            peak_value: 0.00501187
+            envelope_values_on_velocity_order: 2.3
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # 28th partial.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 28.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 27.72
+          max_frequency_ratio: 28.282828282828284
+          order: 3
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.42
+            max_attack_duration: 0.285
+            attack_degree: 0.93
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.025
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.78
+            sustain_level: 0.63
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.09
+            peak_value: 0.00398107
+            envelope_values_on_velocity_order: 2.35
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave:  # An inharmonic transient partial for attack.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 0.7
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 0.595
+          max_frequency_ratio: 0.8235294117647058
+          order: 5
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.1
+            max_attack_duration: 0.1
+            attack_degree: 1.5
+            hold_to_hds_max_ratio: 0.0
+            max_hold_duration: 0.0
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.4
+            sustain_level: 0
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.9
+            peak_value: 0.07943282
+            envelope_values_on_velocity_order: 1.035
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+        - name: vibrato
+          width: 2.0
+          frequency: 8
+    - wave:  # An inharmonic transient partial for attack.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 0.9
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 0.765
+          max_frequency_ratio: 1.0588235294117647
+          order: 5
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.12
+            max_attack_duration: 0.11
+            attack_degree: 1.46
+            hold_to_hds_max_ratio: 0.0
+            max_hold_duration: 0.0
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.4
+            sustain_level: 0
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.87
+            peak_value: 0.06309573
+            envelope_values_on_velocity_order: 1.045
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+        - name: vibrato
+          width: 2.0
+          frequency: 8
+    - wave:  # An inharmonic transient partial for attack.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 1.2
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 1.02
+          max_frequency_ratio: 1.411764705882353
+          order: 5
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.14
+            max_attack_duration: 0.12
+            attack_degree: 1.42
+            hold_to_hds_max_ratio: 0.0
+            max_hold_duration: 0.0
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.4
+            sustain_level: 0
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.84
+            peak_value: 0.1
+            envelope_values_on_velocity_order: 1.06
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+        - name: vibrato
+          width: 2.0
+          frequency: 8
+    - wave:  # An inharmonic transient partial for attack.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 1.5
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 1.275
+          max_frequency_ratio: 1.7647058823529411
+          order: 5
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.16
+            max_attack_duration: 0.13
+            attack_degree: 1.38
+            hold_to_hds_max_ratio: 0.0
+            max_hold_duration: 0.0
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.4
+            sustain_level: 0
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.81
+            peak_value: 0.12589254
+            envelope_values_on_velocity_order: 1.075
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+        - name: vibrato
+          width: 2.0
+          frequency: 8
+    - wave:  # An inharmonic transient partial for attack.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 3.1
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 2.635
+          max_frequency_ratio: 3.647058823529412
+          order: 5
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.18
+            max_attack_duration: 0.14
+            attack_degree: 1.34
+            hold_to_hds_max_ratio: 0.0
+            max_hold_duration: 0.0
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.4
+            sustain_level: 0
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.78
+            peak_value: 0.06309573
+            envelope_values_on_velocity_order: 1.155
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+        - name: vibrato
+          width: 2.0
+          frequency: 8
+    - wave:  # An inharmonic transient partial for attack.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 5.2
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 4.42
+          max_frequency_ratio: 6.11764705882353
+          order: 5
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.2
+            max_attack_duration: 0.15
+            attack_degree: 1.3
+            hold_to_hds_max_ratio: 0.0
+            max_hold_duration: 0.0
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.4
+            sustain_level: 0
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.75
+            peak_value: 0.05011872
+            envelope_values_on_velocity_order: 1.26
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+        - name: vibrato
+          width: 2.0
+          frequency: 8
+    - wave:  # An inharmonic transient partial for attack.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 8.4
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 7.14
+          max_frequency_ratio: 9.882352941176471
+          order: 5
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.22
+            max_attack_duration: 0.16
+            attack_degree: 1.26
+            hold_to_hds_max_ratio: 0.0
+            max_hold_duration: 0.0
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.4
+            sustain_level: 0
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.72
+            peak_value: 0.03981072
+            envelope_values_on_velocity_order: 1.42
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+        - name: vibrato
+          width: 2.0
+          frequency: 8
+    - wave:  # An inharmonic transient partial for attack.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 11.9
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 10.115
+          max_frequency_ratio: 14.0
+          order: 5
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.24
+            max_attack_duration: 0.17
+            attack_degree: 1.22
+            hold_to_hds_max_ratio: 0.0
+            max_hold_duration: 0.0
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 0.4
+            sustain_level: 0
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.69
+            peak_value: 0.05011872
+            envelope_values_on_velocity_order: 1.595
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+        - name: vibrato
+          width: 2.0
+          frequency: 8
+    - wave:  # Noise padding (blown noise).
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 1.0  # This value affects nothing.
+      amplitude_ratio: 1.0  # This value affects nothing.
+      effects:
+        - name: automation
+          automated_effect_name: equalizer
+          original_sound_weight: 0.0
+          gains:
+            - 0.8
+            - 0.8
+            - 1.2
+            - 0.2
+          break_points:
+            - relative_position: 0.0
+              breakpoint_frequencies:
+                - 0
+                - 2000
+                - 3000
+                - 20000
+            - relative_position: 0.05
+              breakpoint_frequencies:
+                - 0
+                - 8000
+                - 10000
+                - 20000
+            - relative_position: 0.1
+              breakpoint_frequencies:
+                - 0
+                - 10000
+                - 15000
+                - 20000
+            - relative_position: 1.0
+              breakpoint_frequencies:
+                - 0
+                - 10000
+                - 15000
+                - 20000
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.15
+            max_attack_duration: 0.15
+            attack_degree: 1.2
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.03
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 1.05
+            sustain_level: 0.9
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.9
+            peak_value: 0.00075
+            envelope_values_on_velocity_order: 1.0
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+  amplitude_scaling: 0.5
+  effects:
+    - name: equalizer  # Formants.
+      breakpoint_frequencies:
+        - 950
+        - 1000
+        - 1050
+        - 1900
+        - 2000
+        - 2100
+      gains:
+        - 1.0
+        - 1.5
+        - 1.0
+        - 1.0
+        - 1.3
+        - 1.0

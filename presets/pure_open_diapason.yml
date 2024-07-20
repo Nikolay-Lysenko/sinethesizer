@@ -1,0 +1,520 @@
+---
+- name: pure_open_diapason
+  partials:
+    - wave:  # 1st partial.
+        waveform: sine
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.125
+          max_attack_duration: 0.15
+          attack_degree: 1.1
+          hold_to_hds_max_ratio: 0.025
+          max_hold_duration: 0.05
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 1.1
+          sustain_level: 0.9
+          max_sustain_duration: 10.0
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.9
+        quasiperiodic_bandwidth: 0.0625
+      frequency_ratio: 1.0
+      amplitude_ratio: 1.0
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: vibrato
+          frequency: 7
+          width: 0.01
+          phase: 0.2153
+    - wave:  # 2nd partial.
+        waveform: sine
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.135
+          max_attack_duration: 0.15
+          attack_degree: 1.09
+          hold_to_hds_max_ratio: 0.025
+          max_hold_duration: 0.025
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 1.09
+          sustain_level: 0.875
+          max_sustain_duration: 10.0
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.87
+        quasiperiodic_bandwidth: 0.0625
+      frequency_ratio: 2.0
+      amplitude_ratio: 0.25118864
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.05
+      random_detuning_range: 0.005
+      effects:
+        - name: vibrato
+          frequency: 7
+          width: 0.04
+          phase: 5.158
+    - wave:  # 3rd partial.
+        waveform: sine
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.145
+          max_attack_duration: 0.15
+          attack_degree: 1.08
+          hold_to_hds_max_ratio: 0.025
+          max_hold_duration: 0.025
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 1.08
+          sustain_level: 0.85
+          max_sustain_duration: 10.0
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.84
+        quasiperiodic_bandwidth: 0.0625
+      frequency_ratio: 3.0
+      amplitude_ratio: 0.19952623
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.1
+      random_detuning_range: 0.005
+      effects:
+        - name: vibrato
+          frequency: 7
+          width: 0.07
+          phase: 0.8862
+    - wave:  # 4th partial.
+        waveform: sine
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.155
+          max_attack_duration: 0.15
+          attack_degree: 1.07
+          hold_to_hds_max_ratio: 0.025
+          max_hold_duration: 0.025
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 1.07
+          sustain_level: 0.825
+          max_sustain_duration: 10.0
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.81
+        quasiperiodic_bandwidth: 0.0625
+      frequency_ratio: 4.0
+      amplitude_ratio: 0.07943282
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.15
+      random_detuning_range: 0.005
+      effects:
+        - name: vibrato
+          frequency: 7
+          width: 0.1
+          phase: 2.6382
+    - wave:  # 5th partial.
+        waveform: sine
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.165
+          max_attack_duration: 0.15
+          attack_degree: 1.06
+          hold_to_hds_max_ratio: 0.025
+          max_hold_duration: 0.025
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 1.06
+          sustain_level: 0.8
+          max_sustain_duration: 10.0
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.78
+        quasiperiodic_bandwidth: 0.0625
+      frequency_ratio: 5.0
+      amplitude_ratio: 0.03162278
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.2
+      random_detuning_range: 0.005
+      effects:
+        - name: vibrato
+          frequency: 7
+          width: 0.13
+          phase: 3.098
+    - wave:  # 6th partial.
+        waveform: sine
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.175
+          max_attack_duration: 0.15
+          attack_degree: 1.05
+          hold_to_hds_max_ratio: 0.025
+          max_hold_duration: 0.025
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 1.05
+          sustain_level: 0.775
+          max_sustain_duration: 10.0
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.75
+        quasiperiodic_bandwidth: 0.0625
+      frequency_ratio: 6.0
+      amplitude_ratio: 0.01584893
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.25
+      random_detuning_range: 0.005
+      effects:
+        - name: vibrato
+          frequency: 7
+          width: 0.16
+          phase: 5.1218
+    - wave:  # 7th partial.
+        waveform: sine
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.185
+          max_attack_duration: 0.15
+          attack_degree: 1.04
+          hold_to_hds_max_ratio: 0.025
+          max_hold_duration: 0.025
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 1.04
+          sustain_level: 0.75
+          max_sustain_duration: 10.0
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.72
+        quasiperiodic_bandwidth: 0.0625
+      frequency_ratio: 7.0
+      amplitude_ratio: 0.02511886
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.3
+      random_detuning_range: 0.005
+      effects:
+        - name: vibrato
+          frequency: 7
+          width: 0.19
+          phase: 4.359
+    - wave:  # 8th partial.
+        waveform: sine
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.195
+          max_attack_duration: 0.15
+          attack_degree: 1.03
+          hold_to_hds_max_ratio: 0.025
+          max_hold_duration: 0.025
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 1.03
+          sustain_level: 0.725
+          max_sustain_duration: 10.0
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.69
+        quasiperiodic_bandwidth: 0.0625
+      frequency_ratio: 8.0
+      amplitude_ratio: 0.01
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.35
+      random_detuning_range: 0.005
+      effects:
+        - name: vibrato
+          frequency: 7
+          width: 0.22
+          phase: 5.7791
+    - wave:  # 9th partial.
+        waveform: sine
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.205
+          max_attack_duration: 0.15
+          attack_degree: 1.02
+          hold_to_hds_max_ratio: 0.025
+          max_hold_duration: 0.025
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 1.02
+          sustain_level: 0.7
+          max_sustain_duration: 10.0
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.66
+        quasiperiodic_bandwidth: 0.0625
+      frequency_ratio: 9.0
+      amplitude_ratio: 0.01258925
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.4
+      random_detuning_range: 0.005
+      effects:
+        - name: vibrato
+          frequency: 7
+          width: 0.25
+          phase: 6.2007
+    - wave:  # 10th partial.
+        waveform: sine
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.215
+          max_attack_duration: 0.15
+          attack_degree: 1.01
+          hold_to_hds_max_ratio: 0.025
+          max_hold_duration: 0.025
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 1.01
+          sustain_level: 0.675
+          max_sustain_duration: 10.0
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.63
+        quasiperiodic_bandwidth: 0.0625
+      frequency_ratio: 10.0
+      amplitude_ratio: 0.00398107
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.45
+      random_detuning_range: 0.005
+      effects:
+        - name: vibrato
+          frequency: 7
+          width: 0.28
+          phase: 0.2411
+    - wave:  # 11th partial.
+        waveform: sine
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.225
+          max_attack_duration: 0.15
+          attack_degree: 1.0
+          hold_to_hds_max_ratio: 0.025
+          max_hold_duration: 0.025
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 1.0
+          sustain_level: 0.65
+          max_sustain_duration: 10.0
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.6
+        quasiperiodic_bandwidth: 0.0625
+      frequency_ratio: 11.0
+      amplitude_ratio: 0.00501187
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.5
+      random_detuning_range: 0.005
+      effects:
+        - name: vibrato
+          frequency: 7
+          width: 0.31
+          phase: 3.8677
+    - wave:  # 12th partial.
+        waveform: sine
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.235
+          max_attack_duration: 0.15
+          attack_degree: 0.99
+          hold_to_hds_max_ratio: 0.025
+          max_hold_duration: 0.025
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 0.99
+          sustain_level: 0.625
+          max_sustain_duration: 10.0
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.57
+        quasiperiodic_bandwidth: 0.0625
+      frequency_ratio: 12.0
+      amplitude_ratio: 0.00251189
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.55
+      random_detuning_range: 0.005
+      effects:
+        - name: vibrato
+          frequency: 7
+          width: 0.34
+          phase: 0.0881
+    - wave:  # 13th partial.
+        waveform: sine
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          attack_to_ahds_max_ratio: 0.245
+          max_attack_duration: 0.15
+          attack_degree: 0.98
+          hold_to_hds_max_ratio: 0.025
+          max_hold_duration: 0.025
+          decay_to_ds_max_ratio: 1.0
+          max_decay_duration: 10.0
+          decay_degree: 0.98
+          sustain_level: 0.6
+          max_sustain_duration: 10.0
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 0.54
+        quasiperiodic_bandwidth: 0.0625
+      frequency_ratio: 13.0
+      amplitude_ratio: 0.00158489
+      event_to_amplitude_factor_fn:
+        name: power_fn_of_velocity
+        power: 1.6
+      random_detuning_range: 0.005
+      effects:
+        - name: vibrato
+          frequency: 7
+          width: 0.37
+          phase: 0.3494
+    - wave:  # 2nd partial attack transient.
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 2.0
+      amplitude_ratio: 1.0
+      random_detuning_range: 0.005
+      effects:
+        - name: filter
+          kind: relative
+          min_frequency_ratio: 1.98
+          max_frequency_ratio: 2.0202020202020203
+          order: 2
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.05
+            max_attack_duration: 0.05
+            attack_degree: 1.3
+            hold_to_hds_max_ratio: 0.0
+            max_hold_duration: 0.0
+            decay_to_ds_max_ratio: 0.25
+            max_decay_duration: 0.15
+            decay_degree: 1.1
+            sustain_level: 0.1
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.8
+            peak_value: 0.1
+            envelope_values_on_velocity_order: 1.05
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.01
+    - wave: # Noise padding (blown noise).
+        waveform: white_noise
+        amplitude_envelope_fn:
+          name: generic_ahdsr
+          max_attack_duration: 0.0  # Prevent instability at envelope shaper.
+          max_release_duration: 0.08
+          release_duration_on_velocity_order: 0.0
+          release_degree: 1.0
+      frequency_ratio: 1.0  # This value affects nothing.
+      amplitude_ratio: 1.0  # This value affects nothing.
+      effects:
+        - name: automation
+          automated_effect_name: filter
+          kind: relative
+          order: 3
+          break_points:
+            - relative_position: 0.0
+              max_frequency_ratio: 100.0
+            - relative_position: 0.05
+              max_frequency_ratio: 15.0
+            - relative_position: 0.1
+              max_frequency_ratio: 10.0
+            - relative_position: 1.0
+              max_frequency_ratio: 10.0
+        - name: automation
+          automated_effect_name: equalizer
+          kind: relative
+          break_points:
+            - relative_position: 0.0
+              gains:
+                - 1.0
+                - 5.0
+                - 1.0
+                - 1.0
+                - 5.0
+                - 1.0
+              breakpoint_frequencies_ratios:
+                - 3.5
+                - 4.1
+                - 4.7
+                - 5.2
+                - 5.7
+                - 6.2
+            - relative_position: 0.05
+              gains:
+                - 1.0
+                - 5.0
+                - 1.0
+                - 1.0
+                - 5.0
+                - 1.0
+              breakpoint_frequencies_ratios:
+                - 1.1
+                - 1.4
+                - 1.7
+                - 1.9
+                - 2.2
+                - 2.5
+            - relative_position: 0.1
+              gains:
+                - 1.0
+                - 2.0
+                - 1.0
+                - 1.0
+                - 2.0
+                - 1.0
+              breakpoint_frequencies_ratios:
+                - 1.1
+                - 1.4
+                - 1.7
+                - 1.9
+                - 2.2
+                - 2.5
+            - relative_position: 1.0
+              gains:
+                - 1.0
+                - 1.0
+              breakpoint_frequencies_ratios:
+                - 1.0
+                - 20.0
+        - name: envelope_shaper
+          envelope_params:
+            name: generic_ahdsr
+            attack_to_ahds_max_ratio: 0.125
+            max_attack_duration: 0.15
+            attack_degree: 1.1
+            hold_to_hds_max_ratio: 0.025
+            max_hold_duration: 0.03
+            decay_to_ds_max_ratio: 1.0
+            max_decay_duration: 10.0
+            decay_degree: 1.05
+            sustain_level: 0.9
+            max_sustain_duration: 10.0
+            max_release_duration: 0.08
+            release_duration_on_velocity_order: 0.0
+            release_degree: 0.9
+            peak_value: 0.0125
+            envelope_values_on_velocity_order: 1.0
+          quantile: 0.99
+          chunk_size_in_cycles: 5
+          forced_fading_ratio: 0.05
+  amplitude_scaling: 0.95
